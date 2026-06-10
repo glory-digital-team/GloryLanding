@@ -1,0 +1,24 @@
+@use "shared/styles/abstracts" as *;
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-sm;
+  font-weight: $fw-semibold; // Heading 3 — Semibold
+  letter-spacing: 0;
+  color: $color-text;
+  white-space: nowrap;
+}
+
+.mark {
+  flex-shrink: 0;
+}
+
+.word {
+  font-size: var(--logo-word-size, #{rem(24px)});
+  line-height: 1;
+}
+
+.invert {
+  color: $color-text-invert;
+}

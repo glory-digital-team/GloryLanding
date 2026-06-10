@@ -1,0 +1,36 @@
+@use "shared/styles/abstracts" as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  padding: $space-lg;
+  background-color: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-sm;
+}
+
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(44px);
+  height: rem(44px);
+  border-radius: $radius-md;
+  color: $color-primary;
+  background-color: $color-primary-soft;
+}
+
+.title {
+  font-size: rem(20px);
+  font-weight: $fw-bold;
+  letter-spacing: -0.01em;
+  color: $color-text;
+}
+
+.text {
+  font-size: rem(15px);
+  line-height: $lh-normal;
+  color: $color-text-muted;
+}

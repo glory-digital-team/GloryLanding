@@ -1,0 +1,258 @@
+@use "shared/styles/abstracts" as *;
+
+// Футер: тёмный #222224, контент 1120 (Figma 191:468).
+.footer {
+  // Моб. макет 273:5594: футер стыкуется с FAQ без зазора, углы 32
+  background-color: $color-bg-dark;
+  color: $color-text-invert;
+  border-radius: rem(32px) rem(32px) 0 0;
+
+  @include respond-to("md") {
+    // В макете между FAQ (заканчивается на 6823) и футером (6867) — 44px фона страницы.
+    margin-top: rem(44px);
+    border-radius: rem(64px) rem(64px) 0 0; // Figma 191:468: верхние углы 64
+  }
+}
+
+.inner {
+  @include container;
+
+  padding-block: rem(32px); // моб. макет: py 32
+
+  @include respond-to("md") {
+    padding-block: rem(80px); // как в макете (80 сверху/снизу)
+  }
+}
+
+// Верхний ряд: слева бренд, справа блок из трёх колонок
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: rem(32px); // моб. макет: бренд → навигация 32
+
+  @include respond-to("lg") {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: rem(80px);
+  }
+}
+
+// ── Колонка бренда ────────────────────────────────────────
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: rem(208px); // колонка бренда 208px (Figma 191:393)
+}
+
+.tagline {
+  margin-top: $space-md;
+  font-size: rem(14px);
+  line-height: rem(20px);
+  color: $color-text-faint; // #9CA3AF
+}
+
+.socials {
+  display: flex;
+  gap: $space-sm; // моб. макет 273:5601: иконки 28 через 8
+  margin-top: rem(19px);
+
+  @include respond-to("md") {
+    gap: $space-md;
+    margin-top: $space-lg;
+  }
+}
+
+.social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(28px); // моб. макет: socials 28×28
+  height: rem(28px);
+  color: $color-text-faint; // #9CA3AF
+  transition: color 0.18s ease;
+
+  &:hover {
+    color: $color-text-invert;
+  }
+
+  @include respond-to("md") {
+    width: rem(24px);
+    height: rem(24px);
+  }
+}
+
+// ── Колонки: мобильный макет 273:5611 — сетка 2×2 (184+12+184) ──
+.cols {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: rem(24px) rem(12px);
+
+  @include respond-to("sm") {
+    grid-template-columns: repeat(3, auto);
+    gap: rem(81px); // зазор между тремя колонками (Figma 200:219)
+  }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: rem(12px); // моб. макет: заголовок → список 12
+
+  @include respond-to("md") {
+    gap: $space-md;
+  }
+}
+
+// Моб. макет 273:5613: заголовки колонок — 14/20 Medium, капс, приглушённые.
+// Десктоп: «Навигация»/«Контакты» — Heading 4 (20/27.5); «Реквизиты» — 18/27.
+.colTitle {
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  line-height: rem(20px);
+  text-transform: uppercase;
+  color: $color-text-faint;
+
+  @include respond-to("md") {
+    font-size: rem(20px);
+    font-weight: $fw-semibold;
+    line-height: rem(27.5px);
+    text-transform: none;
+    color: $color-text-invert;
+  }
+}
+
+.colTitleSm {
+  @include respond-to("md") {
+    font-size: rem(18px);
+    line-height: rem(27px);
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md; // gap 16
+
+  li {
+    line-height: rem(24px); // строка пункта = 24 (Figma 191:478)
+  }
+}
+
+// Список реквизитов: строки идут плотнее (Figma 200:214/216: 8px)
+.listTight {
+  gap: rem(13px); // моб. макет 273:5626: строки через 13
+
+  @include respond-to("md") {
+    gap: $space-sm; // 8px
+  }
+}
+
+.link {
+  font-size: rem(16px);
+  font-weight: $fw-medium;
+  line-height: rem(24px); // Figma 191:478: строка 24
+  color: $color-text-faint; // #9CA3AF
+  transition: color 0.18s ease;
+
+  &:hover {
+    color: $color-text-invert;
+  }
+}
+
+.messengers {
+  display: none; // моб. макет: бейджей мессенджеров нет
+
+  @include respond-to("md") {
+    display: flex;
+    flex-wrap: wrap;
+    gap: rem(12px); // Figma 191:484: gap 12
+  }
+}
+
+// Моб. макет 273:5623: «Начать проект» в контактах — красная ссылка
+.ctaLink {
+  color: $color-primary;
+
+  &:hover {
+    color: $color-primary-hover;
+  }
+}
+
+// Элементы, существующие только в мобильной раскладке макета
+.mobileOnly {
+  @include respond-to("md") {
+    display: none;
+  }
+}
+
+.messenger {
+  display: inline-flex;
+  align-items: center;
+  padding: rem(8px) rem(14px);
+  font-size: rem(12px); // Caption: 12 / 400 / lh 18
+  font-weight: $fw-regular;
+  line-height: rem(18px);
+  color: $color-text-invert;
+  background-color: $color-badge-dark; // #1F2937
+  border-radius: $radius-pill;
+}
+
+.requisite {
+  max-width: rem(207px); // колонка реквизитов 206px → имя ИП переносится
+  font-size: rem(12px); // моб. макет 273:5627: 12/18
+  line-height: rem(18px);
+  color: $color-text-faint;
+
+  @include respond-to("md") {
+    font-size: rem(14px);
+    line-height: rem(20px);
+  }
+}
+
+// ── Нижняя полоса ─────────────────────────────────────────
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  margin-top: rem(32px); // моб. макет: navigation → separator 32
+  padding-top: rem(32px); // separator → © 32
+
+  // Figma 201:224: hairline 0.23px @ 70% → визуально ≈ 1px @ 16%
+  border-top: 1px solid rgb(255 255 255 / 16%);
+
+  @include respond-to("md") {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: rem(108px); // 60 отступ + 48 над разделителем (из макета)
+    padding-top: rem(12px); // Figma: разделитель (349) → строка (361) = 12
+  }
+}
+
+.copyright {
+  font-size: rem(12px);
+  line-height: rem(16px); // Figma 201:226: строка 16
+  color: $color-text-invert;
+}
+
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(16px); // моб. макет 273:5636: ссылки через 16, перенос строкой
+
+  @include respond-to("md") {
+    gap: $space-lg;
+  }
+}
+
+.legalLink {
+  font-size: rem(12px);
+  line-height: rem(16px);
+  color: $color-text-invert;
+  transition: opacity 0.18s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}

@@ -1,0 +1,7 @@
+// Единая точка входа для абстракций.
+// В компонентах: @use "shared/styles/abstracts" as *;
+// и далее доступны $color-primary, rem(), respond-to() и т.д.
+@forward "variables";
+@forward "functions";
+@forward "mixins";
+@forward "typography";

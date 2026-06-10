@@ -1,0 +1,43 @@
+@use "shared/styles/abstracts" as *;
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: rem(8px); // Figma Label: pb-8
+  width: 100%;
+}
+
+.label {
+  font-size: rem(14px); // Label Text: 14 / 500 / lh 20
+  font-weight: $fw-medium;
+  line-height: rem(20px);
+  color: $color-text-strong; // #0F0F0F
+}
+
+.input {
+  width: 100%;
+  height: rem(50px); // Field: h-50, px-17
+  padding: 0 rem(17px);
+  font-size: rem(16px);
+  color: $color-text;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: rem(10px);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+
+  &::placeholder {
+    color: $color-text-faint;
+  }
+
+  &:hover {
+    border-color: $color-border-strong;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.12);
+  }
+}

@@ -1,0 +1,17 @@
+@use "sass:math";
+@use "sass:map";
+@use "variables" as v;
+
+// px → rem (база 16px)
+@function rem($px) {
+  @return math.div($px, 16px) * 1rem;
+}
+
+// Безопасное получение брейкпоинта по имени
+@function breakpoint($name) {
+  @if not map.has-key(v.$breakpoints, $name) {
+    @error "Unknown breakpoint: #{$name}.";
+  }
+
+  @return map.get(v.$breakpoints, $name);
+}

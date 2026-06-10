@@ -1,0 +1,267 @@
+@use "shared/styles/abstracts" as *;
+
+.hero {
+  overflow-x: clip; // кубы заходят в правое поле — не даём появиться скроллу
+  background-color: $color-bg-soft; // #FAFAFA
+}
+
+.inner {
+  width: 100%;
+  max-width: $container-max;
+  margin-inline: auto;
+  padding-inline: $space-md;
+
+  // Моб. макет 284:246: колонка, иллюстрация сверху, pt 120 / pb 56, gap 32
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: rem(32px);
+  padding-block: rem(120px) rem(56px);
+
+  @include respond-to("lg") {
+    // Контентная область ровно 1120px (1168 − 2×24), как в макете
+    position: relative;
+    max-width: rem(1168px);
+    padding-inline: rem(24px);
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    min-height: calc(100vh + 80px);;
+    padding-block: 0; // центрируем контент по всей высоте экрана
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: rem(32px); // моб. макет: бейдж → текст → кнопки через 32
+  width: 100%;
+  max-width: rem(540px);
+
+  @include respond-to("lg") {
+    gap: $space-lg; // десктоп: gap 24
+    // Figma 155:1486: блок 757px (фрейм отзеркален — визуально текст слева, x 160)
+    flex: 0 0 auto;
+    width: rem(757px);
+    max-width: rem(757px);
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: rem(24px); // моб. макет 284:254: gap 24
+
+  @include respond-to("lg") {
+    gap: $space-md; // десктоп: gap 16
+  }
+}
+
+.title {
+  // Моб. макет 284:255 (Heading 2): 30 / 600 / lh 37.5 / ls −0.75
+  font-size: rem(30px);
+  font-weight: $fw-semibold;
+  line-height: rem(37.5px);
+  letter-spacing: rem(-0.75px);
+  color: $color-text; // #222224
+
+  @include respond-to("md") {
+    // Hero Display: 48 / 700 / lh 64.4
+    font-size: rem(48px);
+    font-weight: $fw-bold;
+    line-height: rem(64.4px);
+    letter-spacing: 0;
+  }
+}
+
+// Принудительный перенос строки — только на десктопе,
+// на мобильном заголовок переносится естественно (3 строки)
+.titleBreak {
+  display: none;
+
+  @include respond-to("md") {
+    display: inline;
+  }
+}
+
+// Моб. макет 284:255: «IT-решения» целиком на третьей строке
+.titleBreakMobile {
+  @include respond-to("md") {
+    display: none;
+  }
+}
+
+.accent {
+  color: $color-primary; // #CC0000 — вторая часть заголовка
+}
+
+.description {
+  // Моб. макет 284:256 (Body Base): 16 / 400 / lh 26
+  font-size: rem(16px);
+  line-height: rem(26px);
+  max-width: rem(669px); // ширина абзаца в макете (155:1490)
+  color: $color-text-muted; // #6B7280
+
+  @include respond-to("md") {
+    @include type-body-large; // 18px / 400 / lh 1.5
+  }
+}
+
+// Figma 155:1491: контейнер кнопок 336px, две кнопки равной ширины (flex 1) с gap 16
+.actions {
+  display: flex;
+  gap: $space-md; // gap 16
+  width: 100%;
+  max-width: rem(336px);
+
+  & > * {
+    flex: 1 1 0;
+  }
+}
+
+// ── Иллюстрация: кубы (Figma 155:1482, frame 406×493) ──────
+// Фрейм First Screen в макете отзеркален по горизонтали: на канвасе кубы
+// СПРАВА (x 948…1354 = правый край контента + 74). Внутренние координаты
+// заданы в «неотзеркаленной» системе, поэтому весь блок зеркалим scaleX(−1).
+.illustration {
+  position: relative;
+  flex-shrink: 0;
+  align-self: center;
+  width: rem(406px);
+  height: rem(493px);
+  transform: scaleX(-1);
+
+  // Моб. макет 284:247: блок кубов 250×303 = десктопный фрейм × 0.6157.
+  // Масштабируем трансформом, отрицательные поля сжимают layout-бокс
+  // до видимых 303px по вертикали: (493 − 303.5) / 2 = 94.75.
+  @include respond-down("md") {
+    margin-block: rem(-94.75px);
+    transform: scale(0.6157) scaleX(-1);
+  }
+
+  @include respond-to("lg") {
+    position: absolute;
+    top: 50%;
+    right: rem(-74px);
+    align-self: auto;
+    transform: translateY(-50%) scaleX(-1);
+  }
+}
+
+// Бокс — это bbox повёрнутого куба из макета; сам куб центрируется
+// внутри и поворачивается, как в Figma.
+.cubeBox {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cube {
+  flex: none;
+  will-change: translate, rotate;
+}
+
+// Большой тёмно-красный: bbox (153.57, 0) 252.43×252.49
+.cubeBox1 {
+  top: 0;
+  left: rem(153.57px);
+  width: rem(252.43px);
+  height: rem(252.49px);
+}
+
+.cube1 {
+  width: rem(212.82px);
+  height: rem(212.89px);
+  border-radius: rem(26.6px);
+  background: linear-gradient(135deg, #c00 0%, #900 100%);
+  box-shadow: 0 rem(27.71px) rem(55.42px) rgb(0 0 0 / 25%);
+  transform: rotate(168deg) scaleY(-1);
+  animation: drift1 9s ease-in-out -1s infinite alternate;
+}
+
+// Средний красный: bbox (121.17, 317.1) 175.84×175.9
+.cubeBox2 {
+  top: rem(317.1px);
+  left: rem(121.17px);
+  width: rem(175.84px);
+  height: rem(175.9px);
+}
+
+.cube2 {
+  width: rem(159.99px);
+  height: rem(160.05px);
+  border-radius: rem(24px);
+  background: linear-gradient(135deg, #f44 0%, #c00 100%);
+  box-shadow:
+    0 rem(20px) rem(25px) rgb(0 0 0 / 10%),
+    0 rem(8px) rem(10px) rgb(0 0 0 / 10%);
+  transform: rotate(-174deg) scaleY(-1);
+  animation: drift2 7s ease-in-out -3s infinite alternate;
+}
+
+// Малый светло-красный: bbox (0, 156.04) 181.01×181.08
+.cubeBox3 {
+  top: rem(156.04px);
+  left: 0;
+  width: rem(181.01px);
+  height: rem(181.08px);
+}
+
+.cube3 {
+  width: rem(128.02px);
+  height: rem(128.02px);
+  border-radius: rem(16px);
+  background: linear-gradient(135deg, #f66 0%, #f44 100%);
+  box-shadow:
+    0 rem(10px) rem(15px) rgb(0 0 0 / 10%),
+    0 rem(4px) rem(6px) rgb(0 0 0 / 10%);
+  transform: rotate(134.99deg) skew(-0.02deg) scaleY(-1);
+  animation: drift3 6s ease-in-out -2s infinite alternate;
+}
+
+// Разные траектории/амплитуды → хаотичное, «живое» движение.
+@keyframes drift1 {
+  from {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+
+  to {
+    translate: rem(14px) rem(-22px);
+    rotate: 5deg;
+  }
+}
+
+@keyframes drift2 {
+  from {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+
+  to {
+    translate: rem(-18px) rem(16px);
+    rotate: -6deg;
+  }
+}
+
+@keyframes drift3 {
+  from {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+
+  to {
+    translate: rem(20px) rem(12px);
+    rotate: 8deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cube1,
+  .cube2,
+  .cube3 {
+    animation: none;
+  }
+}

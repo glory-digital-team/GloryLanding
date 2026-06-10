@@ -1,0 +1,257 @@
+@use "shared/styles/abstracts" as *;
+
+.page {
+  --kit-border: #{$color-border};
+
+  min-height: 100vh;
+  padding: $space-2xl $space-lg $space-3xl;
+  background-color: $color-bg-dark;
+}
+
+// ── Вступление ────────────────────────────────────────────
+.intro {
+  max-width: $container-max;
+  margin: 0 auto $space-2xl;
+  text-align: center;
+}
+
+.introTitle {
+  margin-top: $space-lg;
+  font-size: rem(40px);
+  font-weight: $fw-extrabold;
+  letter-spacing: -0.02em;
+  color: $color-text-invert;
+}
+
+.introText {
+  max-width: 620px;
+  margin: $space-sm auto 0;
+  font-size: rem(16px);
+  line-height: $lh-normal;
+  color: rgb(255 255 255 / 60%);
+}
+
+// ── Сетка карточек ────────────────────────────────────────
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-xl;
+  max-width: $container-max;
+  margin: 0 auto;
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// ── Карточка-секция ───────────────────────────────────────
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: $color-bg;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-lg;
+}
+
+.cardWide {
+  @include respond-to("lg") {
+    grid-column: 1 / -1;
+  }
+}
+
+.cardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-md;
+  padding: $space-lg $space-xl;
+  background-color: $color-surface;
+  border-bottom: 1px solid $color-border;
+}
+
+.cardTitle {
+  font-size: rem(24px);
+  font-weight: $fw-bold;
+  letter-spacing: -0.01em;
+  color: $color-text;
+}
+
+.cardSubtitle {
+  margin-top: rem(2px);
+  font-size: rem(13px);
+  color: $color-text-muted;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xl;
+  padding: $space-xl;
+}
+
+// ── Группа внутри карточки ────────────────────────────────
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.groupLabel {
+  font-size: rem(13px);
+  font-weight: $fw-semibold;
+  color: $color-text-muted;
+}
+
+// ── Colors ────────────────────────────────────────────────
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: $space-md;
+}
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6px);
+}
+
+.swatchChip {
+  display: block;
+  height: rem(56px);
+  border-radius: $radius-md;
+}
+
+.swatchName {
+  font-size: rem(13px);
+  font-weight: $fw-medium;
+  color: $color-text;
+}
+
+.swatchValue {
+  font-size: rem(12px);
+  color: $color-text-faint;
+  text-transform: uppercase;
+}
+
+// ── Typography ────────────────────────────────────────────
+.typeScale {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.typeRow {
+  display: flex;
+  flex-direction: column;
+  gap: rem(2px);
+  padding-bottom: $space-md;
+  border-bottom: 1px solid $color-border;
+
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+}
+
+.typeMeta {
+  font-size: rem(12px);
+  color: $color-text-faint;
+}
+
+.typeSample {
+  color: $color-text;
+  line-height: $lh-snug;
+  letter-spacing: -0.01em;
+}
+
+.weights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-md;
+}
+
+.weightItem {
+  font-size: rem(18px);
+  color: $color-text;
+}
+
+// ── Icons ─────────────────────────────────────────────────
+.icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-md;
+}
+
+.iconCell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(48px);
+  height: rem(48px);
+  color: $color-text;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease;
+
+  &:hover {
+    color: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+// ── Buttons ───────────────────────────────────────────────
+.buttonsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-xl;
+}
+
+.buttonsCol {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  align-items: flex-start;
+}
+
+.iconButtons,
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-md;
+  align-items: center;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  max-width: 360px;
+}
+
+// ── Landing Components ────────────────────────────────────
+.headerDemo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-lg;
+  padding: rem(14px) $space-lg;
+  background-color: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $radius-pill;
+  box-shadow: $shadow-md;
+}
+
+.headerNav {
+  display: none;
+
+  @include respond-to("sm") {
+    @include flex(row, center, center, $space-lg);
+
+    font-size: rem(14px);
+    font-weight: $fw-medium;
+    color: $color-text-muted;
+  }
+}
