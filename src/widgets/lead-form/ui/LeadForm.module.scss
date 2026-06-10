@@ -1,0 +1,131 @@
+@use "shared/styles/abstracts" as *;
+
+.section {
+  padding: rem(48px) $space-md; // моб. макет 273:5409: px 16, py 48
+  background-color: $color-bg-soft; // #FAFAFA
+
+  @include respond-to("md") {
+    padding: 25px 0;
+  }
+}
+
+.card {
+  width: 100%;
+  max-width: rem(928px);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  padding: rem(32px) rem(16px); // моб. макет 273:5410: px 16, py 32
+  background-color: #fefefe;
+  border-radius: rem(32px);
+
+  // Figma 191:300: drop-shadow 0 0 66.8px rgb(0 0 0 / 4%) (без обводки).
+  box-shadow: 0 0 rem(66.8px) rgb(0 0 0 / 4%);
+
+  @include respond-to("md") {
+    margin-block: 70px; // секция 789: карта 100 сверху/снизу
+    padding: rem(80px);
+    border-radius: rem(48px);
+  }
+}
+
+.title {
+  // Моб. макет 273:5412 (Heading 3): 24 / 600 / lh 33
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  line-height: calc(33 / 24);
+  text-align: center; // заголовок центрирован (191:301)
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(36px);
+    font-weight: $fw-bold;
+    line-height: 1.25;
+    letter-spacing: rem(-0.9px); // Heading 1: ls -0.9
+  }
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: rem(18px); // моб. макет 273:5413: gap 18
+
+  // Моб. макет: Container pt 32 от заголовка
+  margin-top: rem(32px);
+
+  @include respond-to("md") {
+    gap: rem(20px);
+
+    // 20 (header pb) + 24 (container pt) = 44 от заголовка до полей.
+    margin-top: rem(44px);
+  }
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: rem(12px);
+  cursor: pointer;
+  color: $color-text-muted;
+
+  @include type-label; // 14 / 500
+}
+
+// Figma 191:308: квадрат 20×20, border 2px #D1D5DB, radius 4, без заливки.
+.checkbox {
+  flex-shrink: 0;
+  appearance: none;
+  width: rem(20px);
+  height: rem(20px);
+  margin-top: rem(2px);
+  background-color: #fff;
+  border: rem(2px) solid #d1d5db;
+  border-radius: rem(4px);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+
+  &:checked {
+    background-color: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+.policy {
+  // Figma 191:310: спан «Политика конфиденциальности» — основной красный (без подчёркивания).
+  color: $color-primary;
+  transition: color 0.18s ease;
+
+  &:hover {
+    color: $color-primary-hover;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: rem(18px);
+  margin-top: rem(24px); // моб. макет 273:5421: Buttons pt 24
+
+  @include respond-to("md") {
+    // Buttons 191:311: 36px отступ сверху от полей.
+    margin-top: rem(36px);
+  }
+}
+
+.fullBtn {
+  width: 100%;
+}
+
+// Вторичное действие — «мягкая» красная кнопка (#CC0000 @ 6%).
+.fullBtn[data-soft="true"] {
+  color: $color-primary;
+  background-color: rgb(204 0 0 / 6%);
+  border-color: transparent;
+
+  &:hover {
+    background-color: rgb(204 0 0 / 12%);
+    box-shadow: none;
+  }
+}

@@ -1,0 +1,160 @@
+// ───────────────────────────────────────────────────────────
+// Типографическая система «Глори.Цифра» — 1:1 со страницей токенов Figma.
+// Подключать миксины в компонентах: @use "shared/styles/abstracts" as *;
+// и далее @include type-hero-display; и т.д.
+// ───────────────────────────────────────────────────────────
+@use "functions" as fn;
+
+// Hero Headings
+@mixin type-hero-display {
+  font-size: fn.rem(48px);
+  font-weight: 700;
+  line-height: 1.342;
+  letter-spacing: 0;
+}
+
+@mixin type-hero-title {
+  font-size: fn.rem(40px);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+// Headings
+@mixin type-heading-1 {
+  font-size: fn.rem(36px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+@mixin type-heading-2 {
+  font-size: fn.rem(30px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+@mixin type-heading-3 {
+  font-size: fn.rem(24px);
+  font-weight: 600;
+  line-height: 1.375;
+  letter-spacing: 0;
+}
+
+@mixin type-heading-4 {
+  font-size: fn.rem(20px);
+  font-weight: 600;
+  line-height: 1.375;
+  letter-spacing: 0;
+}
+
+@mixin type-heading-5 {
+  font-size: fn.rem(18px);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+@mixin type-heading-6 {
+  font-size: fn.rem(16px);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+// Body
+@mixin type-body-large {
+  font-size: fn.rem(18px);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+@mixin type-body-base {
+  font-size: fn.rem(16px);
+  font-weight: 400;
+  line-height: 1.625;
+  letter-spacing: 0;
+}
+
+@mixin type-body-small {
+  font-size: fn.rem(14px);
+  font-weight: 400;
+  line-height: 1.429;
+  letter-spacing: 0;
+}
+
+// Interactive
+@mixin type-button {
+  font-size: fn.rem(16px);
+  font-weight: 500;
+  line-height: 1.625;
+  letter-spacing: 0;
+}
+
+@mixin type-label {
+  font-size: fn.rem(14px);
+  font-weight: 500;
+  line-height: 1.429;
+  letter-spacing: 0;
+}
+
+@mixin type-input {
+  font-size: fn.rem(16px);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+// Labels & Captions
+@mixin type-caption {
+  font-size: fn.rem(12px);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+@mixin type-caption-small {
+  font-size: fn.rem(12px);
+  font-weight: 400;
+  line-height: 1.333;
+  letter-spacing: 0;
+}
+
+// Special Purpose
+@mixin type-price {
+  font-size: fn.rem(30px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+@mixin type-card-title {
+  font-size: fn.rem(24px);
+  font-weight: 600;
+  line-height: 1.167;
+  letter-spacing: 0;
+}
+
+@mixin type-section-title {
+  font-size: fn.rem(18px);
+  font-weight: 700;
+  line-height: 1.556;
+  letter-spacing: 0;
+}
+
+@mixin type-eyebrow {
+  font-size: fn.rem(14px);
+  font-weight: 500;
+  line-height: 1.429;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+@mixin type-badge {
+  font-size: fn.rem(12px);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}

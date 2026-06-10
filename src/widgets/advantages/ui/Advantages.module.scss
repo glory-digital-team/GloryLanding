@@ -1,0 +1,177 @@
+@use "shared/styles/abstracts" as *;
+
+.advantages {
+  background-color: $color-bg; // белый фон секции
+}
+
+.inner {
+  width: 100%;
+  max-width: $container-max; // 1120 контентной ширины
+  margin-inline: auto;
+  padding-inline: $space-md;
+  padding-block: rem(36px) 0; // моб. макет 271:1484: pt 36, низ — без отступа
+  display: flex;
+  flex-direction: column;
+  gap: rem(36px); // моб. макет: header → cards 36
+
+  @include respond-to("lg") {
+    gap: rem(48px); // десктоп: header → grid 48
+  }
+
+  @include respond-to("lg") {
+    max-width: rem(1168px); // 1168 − 2×24 = 1120
+    padding-inline: rem(24px);
+    padding-block: rem(120px) 0; // макет: 120 сверху, низ 0 (карточки у нижнего края секции)
+  }
+}
+
+// ── Заголовок секции ───────────────────────────────────────
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: rem(12px); // eyebrow → heading-группа
+}
+
+.eyebrow {
+  @include type-label; // 14 / 500 / lh 1.429
+
+  color: $color-primary; // #CC0000
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px); // моб. макет 271:1487: заголовок → подзаголовок 16
+
+  @include respond-to("lg") {
+    gap: rem(10px);
+  }
+}
+
+.title {
+  // Моб. макет 271:1488 (Heading 3): 24 / 600 / lh 33
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  line-height: calc(33 / 24);
+  color: $color-text; // #222224
+
+  @include respond-to("md") {
+    font-size: rem(40px); // 40 / 700 / lh 60
+    font-weight: $fw-bold;
+    line-height: 1.5;
+  }
+}
+
+// Принудительные переносы: одни — только на мобильном, другие — только на десктопе
+.brMobile {
+  @include respond-to("md") {
+    display: none;
+  }
+}
+
+.brDesktop {
+  display: none;
+
+  @include respond-to("md") {
+    display: inline;
+  }
+}
+
+.subtitle {
+  @include type-body-base; // 16 / 400 / lh 1.625
+
+  max-width: rem(560px);
+  color: $color-text-muted; // #6B7280
+}
+
+// ── Сетка карточек ─────────────────────────────────────────
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: rem(16px); // моб. макет 271:1490: карточки через 16
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, 1fr);
+    gap: rem(24px); // десктоп: row+column gap 24
+  }
+}
+
+// Обычные карточки (155:1518…1520): p24, иконка 24 в боксе 48, gap 16/8.
+.iconWrap {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-self: flex-start; // не растягиваться на ширину карточки (flex-колонка)
+  align-items: center;
+  justify-content: center;
+  padding: rem(12px); // 12+24+12 = 48×48
+  border-radius: rem(12px);
+  color: $color-primary; // красная иконка
+  background-color: rgb(204 0 0 / 6%); // accent/transparent — мягкая красная подложка
+}
+
+.cardText {
+  display: flex;
+  flex-direction: column;
+  gap: rem(8px);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
+  min-height: rem(188px);
+  padding: rem(24px);
+  background-color: #fefefe; // #FEFEFE из макета
+  border-radius: rem(26px); // обводка в макете скрыта (strokePaints visible:false)
+  box-shadow: 0 0 rem(8px) rgb(0 0 0 / 6%); // drop-shadow 0 0 8 / 6%
+}
+
+// Первая карточка (202:433): p28, иконка 32 в боксе 64, gap 24/10.
+.cardLg {
+  gap: rem(24px);
+  padding: rem(28px);
+
+  .iconWrap {
+    padding: rem(16px); // 16+32+16 = 64×64
+  }
+
+  .cardText {
+    gap: rem(10px);
+  }
+}
+
+.cardTitle {
+  font-size: rem(20px); // Heading 4: 20 / 600 / lh 27.5
+  font-weight: $fw-semibold; // 600
+  line-height: calc(27.5 / 20);
+  color: $color-text; // #222224
+}
+
+.cardDesc {
+  @include type-body-small; // 14 / 400 / lh 1.429
+
+  color: $color-text-muted; // #6B7280
+}
+
+// Моб. макет 271:1491…1506: все карточки в «крупном» стиле —
+// p28, gap 24/10, иконка 32 в боксе 64
+@include respond-down("md") {
+  .card {
+    gap: rem(24px);
+    min-height: 0;
+    padding: rem(28px);
+  }
+
+  .iconWrap {
+    padding: rem(16px);
+
+    svg {
+      width: rem(32px);
+      height: rem(32px);
+    }
+  }
+
+  .cardText {
+    gap: rem(10px);
+  }
+}

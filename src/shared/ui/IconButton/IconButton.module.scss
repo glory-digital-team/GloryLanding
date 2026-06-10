@@ -1,0 +1,23 @@
+@use "shared/styles/abstracts" as *;
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(48px);
+  height: rem(48px);
+  border-radius: $radius-md;
+  color: $color-primary;
+  background-color: $color-primary-soft;
+  transition:
+    background-color 0.18s ease,
+    transform 0.06s ease;
+
+  &:hover {
+    background-color: #f6d6d6;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}

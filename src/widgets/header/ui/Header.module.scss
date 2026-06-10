@@ -1,0 +1,241 @@
+@use "shared/styles/abstracts" as *;
+
+// Плавающая «таблетка» по центру (Figma: Header 1120×72, radius 100, #FEFEFE).
+// Зафиксирована поверх страницы; при скролле фон становится «liquid glass».
+.header {
+  position: fixed;
+  inset: 0 0 auto; // top:0; left/right:0
+  z-index: 50;
+  padding: rem(20px) $space-md 0; // моб. макет 273:5705: x 16, y 20
+
+  @include respond-to("md") {
+    padding: rem(32px) $space-lg 0;
+  }
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-md;
+  width: 100%;
+  max-width: $container-max;
+  margin-inline: auto;
+  padding: rem(12px) rem(16px); // 48(кнопка)+24 = 72, как в макете (pad 12/16)
+  background-color: #fefefe;
+  border-radius: $radius-pill;
+
+  // Figma: обводки нет, только мягкая тень-свечение (0 0 16, чёрный 8%)
+  box-shadow: 0 0 rem(16px) rgb(0 0 0 / 8%);
+
+  // Моб. макет: pill 380×56 — pad 8/16, фон 80% + blur 16, тень 0 0 32 8%
+  @include respond-down("md") {
+    padding: rem(8px) rem(16px);
+    background-color: rgb(254 254 254 / 80%);
+    box-shadow: 0 0 rem(32px) rgb(0 0 0 / 8%);
+    backdrop-filter: blur(16px);
+  }
+
+  transition:
+    background-color 0.4s ease,
+    box-shadow 0.4s ease,
+    backdrop-filter 0.4s ease,
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+// Режим фиксации (после скролла): матовое стекло.
+.scrolled .inner {
+  background-color: rgb(254 254 254 / 62%);
+  box-shadow:
+    0 8px 32px rgb(0 0 0 / 10%),
+    inset 0 1px 0 rgb(255 255 255 / 70%);
+  backdrop-filter: blur(20px) saturate(180%);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .scrolled .inner {
+    background-color: rgb(254 254 254 / 62%);
+  }
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  &:hover {
+    transform: scale(1.04);
+  }
+
+  // Моб. макет 273:5708: словесная часть 20px (Heading 4)
+  @include respond-down("md") {
+    --logo-word-size: #{rem(20px)};
+  }
+}
+
+// CTA-кнопка в pill — на мобильном скрыта (273:5713 hidden)
+.cta {
+  display: none;
+
+  @include respond-to("md") {
+    display: inline-flex;
+  }
+}
+
+// Бургер (Figma 273:5714): полоски 20×2 #C00 radius 100.
+// SVG 32×32 (viewBox 100): полоска 60ед ≈ 20px, штрих 6ед ≈ 2px — как в макете.
+.burger {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: rem(32px);
+  height: rem(32px);
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  @include respond-to("md") {
+    display: none;
+  }
+}
+
+// Морфинг бургер ↔ крестик: каждый крайний путь = прямая полоска,
+// продолжающаяся дугой в диагональ крестика. stroke-dasharray показывает
+// только отрезок пути, stroke-dashoffset сдвигает его: при открытии меню
+// видимый отрезок «утекает» по дуге из прямой в диагональ.
+.burgerLine {
+  fill: none;
+  stroke: $color-primary;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 60 207; // видна только прямая полоска (первые 60ед)
+  transition:
+    stroke-dasharray 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.burgerLineMid {
+  stroke-dasharray: 60 60;
+}
+
+.menuOpen .burger {
+  .burgerLine {
+    stroke-dasharray: 90 207;
+    stroke-dashoffset: -134; // окно уезжает в хвост пути — на диагональ
+  }
+
+  .burgerLineMid {
+    stroke-dasharray: 1 60;
+    stroke-dashoffset: -30; // средняя стягивается в точку под центром крестика
+  }
+}
+
+// Выпадающее мобильное меню — продолжение «таблетки»
+.mobileMenu {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  max-width: $container-max;
+  margin-inline: auto;
+  margin-top: rem(8px);
+  padding: rem(16px);
+  visibility: hidden;
+  background-color: rgb(254 254 254 / 92%);
+  border-radius: rem(28px);
+  box-shadow: 0 0 rem(32px) rgb(0 0 0 / 8%);
+  opacity: 0;
+  backdrop-filter: blur(16px);
+  translate: 0 rem(-8px);
+  transition:
+    opacity 0.25s ease,
+    translate 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0.25s;
+
+  @include respond-to("md") {
+    display: none;
+  }
+}
+
+.menuOpen .mobileMenu {
+  visibility: visible;
+  opacity: 1;
+  translate: 0 0;
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileLink {
+  @include type-label; // 14px / 500, как ссылки в pill
+
+  padding: rem(12px) rem(8px);
+  font-size: rem(16px);
+  color: $color-text;
+  border-radius: rem(12px);
+
+  &:active {
+    color: $color-primary;
+    background-color: rgb(0 0 0 / 3%);
+  }
+}
+
+.mobileCta {
+  width: 100%;
+  margin-top: $space-sm;
+}
+
+.nav {
+  display: none;
+
+  @include respond-to("md") {
+    @include flex(row, center, center, rem(32px)); // gap 32 как в макете
+  }
+}
+
+.link {
+  @include type-label; // 14px / 500 / lh 1.429
+
+  position: relative;
+  color: $color-text;
+  transition: color 0.2s ease;
+
+  // подчёркивание-«пилюля», вырастающее из центра при наведении
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: rem(-6px);
+    left: 50%;
+    width: 0;
+    height: rem(2px);
+    background-color: $color-primary;
+    border-radius: $radius-pill;
+    transform: translateX(-50%);
+    transition: width 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  &:hover {
+    color: $color-primary;
+
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inner,
+  .logo,
+  .link::after,
+  .burgerLine {
+    transition: none;
+  }
+}

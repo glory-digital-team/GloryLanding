@@ -1,0 +1,197 @@
+@use "shared/styles/abstracts" as *;
+
+.faq {
+  // В макете заливка #FAFAFA у «FAQ container» 191:326 ВЫКЛЮЧЕНА —
+  // секция лежит на белом фоне страницы.
+  background-color: $color-bg;
+}
+
+.inner {
+  // Контентная ширина макета — ровно 1120px (content-box + боковые поля).
+  // ВАЖНО: без width:100% — в content-box она считается без padding,
+  // и блок становится шире вьюпорта (412 + 32 = 444).
+  box-sizing: content-box;
+  max-width: $container-max;
+  margin-inline: auto;
+  padding-inline: $space-md;
+  padding-block: rem(48px); // моб. макет 273:5441: py 48
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px); // моб. макет: title → list 16
+
+  @include respond-to("lg") {
+    padding-inline: rem(24px);
+    padding-block: rem(80px);
+    gap: rem(48px);
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+}
+
+.title {
+  // Моб. макет 273:5444 (Heading 3): 24 / 600 / lh 33
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  line-height: calc(33 / 24);
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(40px);
+    font-weight: $fw-bold;
+    line-height: 1.5;
+  }
+}
+
+.subtitle {
+  @include type-body-base; // 16 / 400 / lh 1.625
+
+  max-width: rem(560px);
+  color: $color-text-muted;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px); // моб. макет 273:5446: карточки через 16
+
+  @include respond-to("lg") {
+    gap: rem(28px);
+  }
+}
+
+.item {
+  background-color: #fefefe;
+  border-radius: rem(48px); // Figma: закрытый вопрос — radius 48
+  box-shadow: 0 0 rem(66.8px) rgb(0 0 0 / 6%); // drop-shadow 0 0 66.8 / 6% (191:332)
+  transition:
+    box-shadow 0.25s ease,
+    border-radius 0.3s ease;
+
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+}
+
+.itemOpen {
+  border-radius: rem(32px); // Figma: раскрытый вопрос — radius 32
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(10px);
+  width: 100%;
+  padding: rem(32px);
+  text-align: left;
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  line-height: calc(33 / 24);
+  color: $color-text-strong;
+  cursor: pointer;
+  transition: padding-bottom 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+// Раскрытый вопрос (Figma 191:336, h=161): вопрос → ответ ровно 10px.
+.itemOpen .question {
+  padding-bottom: rem(10px);
+}
+
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: rem(24px);
+  height: rem(24px);
+  color: $color-text-muted;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.itemOpen .icon {
+  transform: rotate(180deg);
+}
+
+// Плавное раскрытие через grid-template-rows 0fr → 1fr.
+.answerWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.itemOpen .answerWrap {
+  grid-template-rows: 1fr;
+}
+
+.answer {
+  overflow: hidden;
+  margin: 0 rem(32px);
+  padding-bottom: 0;
+  font-size: rem(18px);
+  font-weight: $fw-regular;
+  line-height: calc(27 / 18);
+  color: $color-text;
+  opacity: 0;
+  transition:
+    padding-top 0.35s ease,
+    padding-bottom 0.35s ease,
+    opacity 0.3s ease 0.05s;
+}
+
+.itemOpen .answer {
+  padding-bottom: rem(32px);
+  opacity: 1;
+}
+
+// Ссылка «Портфолио» в ответе — красная, Medium (Figma I191:336;85:750)
+.answerLink {
+  font-weight: $fw-medium;
+  color: $color-primary;
+  transition: color 0.18s ease;
+
+  &:hover {
+    color: $color-primary-hover;
+  }
+}
+
+// Моб. макет 273:5491: карточка-вопрос 380×84 — pad 16, вопрос 16/26,
+// ответ 14/20; радиус карточки меньше десктопного
+@include respond-down("md") {
+  .item,
+  .itemOpen {
+    border-radius: rem(24px);
+  }
+
+  .question {
+    padding: rem(16px);
+    font-size: rem(16px);
+    line-height: calc(26 / 16);
+  }
+
+  .itemOpen .question {
+    padding-bottom: rem(10px);
+  }
+
+  .answer {
+    margin: 0 rem(16px);
+    font-size: rem(14px);
+    line-height: calc(20 / 14);
+  }
+
+  .itemOpen .answer {
+    padding-bottom: rem(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .answerWrap,
+  .answer,
+  .icon {
+    transition: none;
+  }
+}

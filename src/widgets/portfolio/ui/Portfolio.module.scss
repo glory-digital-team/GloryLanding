@@ -1,0 +1,384 @@
+@use "shared/styles/abstracts" as *;
+
+// Figma «Portfolio» 184:967 — все размеры/позиции 1:1 с макетом (1440).
+.portfolio {
+  background-color: $color-bg;
+}
+
+.inner {
+  // Контентная ширина макета — ровно 1120px (content-box + боковые поля).
+  box-sizing: content-box;
+  max-width: $container-max;
+  margin-inline: auto;
+  padding-inline: $space-md;
+  padding-block: rem(48px) rem(32px); // моб. макет 273:5314: pt 48 / pb 32
+  display: flex;
+  flex-direction: column;
+  gap: rem(24px); // моб. макет: title → cards 24
+
+  @include respond-to("lg") {
+    padding-inline: rem(24px);
+    padding-block: rem(80px); // отступы секции 80 сверху/снизу
+    gap: rem(48px); // Title (60) → Cards: 188 − 80 − 60 = 48
+  }
+}
+
+.title {
+  // Моб. макет 273:5315 (Heading 3): 24 / 600 / lh 33
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  line-height: calc(33 / 24);
+  color: $color-text;
+
+  @include respond-to("md") {
+    // Hero Headings/Hero Title: 40 / 700 / lh 60
+    font-size: rem(40px);
+    font-weight: $fw-bold;
+    line-height: 1.5;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: rem(10px); // моб. макет 273:5316: карточки через 10
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, 1fr);
+    gap: rem(19px) rem(24px); // Figma 184:966: row 19 / column 24
+  }
+}
+
+// ── Карточка 548×548, r36 ─────────────────────────────────
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: rem(36px);
+  color: $color-text-invert;
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.4s ease;
+  will-change: transform;
+
+  &:hover {
+    transform: translateY(rem(-6px));
+    box-shadow: $shadow-lg;
+  }
+}
+
+// Фоны карточек + цвета текста/бейджей (точные значения нод Figma)
+.cardBlue {
+  --card-color: #0e3daf;
+  --card-color-0: rgb(14 61 175 / 0%);
+  --badge-color: #2650b7;
+
+  background-color: #0e3daf;
+}
+
+.cardLight {
+  --card-color: #e8f4fc;
+  --card-color-0: rgb(232 244 252 / 0%);
+  --badge-color: #222224;
+
+  background-color: #e8f4fc;
+  color: $color-text; // #222224
+}
+
+.cardGreen {
+  --card-color: #68ae53;
+  --card-color-0: rgb(104 174 83 / 0%);
+  --badge-color: #222224;
+
+  background-color: #68ae53;
+}
+
+.cardDark {
+  --card-color: #1f1f1f;
+  --card-color-0: rgb(31 31 31 / 0%);
+  --badge-color: #1f1f1f;
+
+  background-color: #1f1f1f;
+}
+
+// ── Бейджи: белые таблетки, Button Text 16/500/26 ─────────
+.tags {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(12px);
+  padding: rem(36px) rem(36px) 0;
+}
+
+.tag {
+  padding: rem(8px) rem(14px);
+  font-size: rem(16px);
+  font-weight: $fw-medium;
+  line-height: rem(26px);
+  white-space: nowrap;
+  color: var(--badge-color, #222224);
+  background-color: #fff;
+  border-radius: rem(100px);
+}
+
+// ── Текстовый блок снизу: градиент цветом карточки ────────
+.text {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: rem(8px);
+  width: 100%;
+  padding: 0 rem(36px) rem(36px);
+  background: linear-gradient(to bottom, var(--card-color-0), var(--card-color));
+}
+
+// У ESIS и Tienda текстовый блок дополнительно размывает фон (2px)
+.textBlur {
+  backdrop-filter: blur(2px);
+}
+
+.cardTitle {
+  font-size: rem(36px); // Heading 1: 36 / 700 / lh 45 / ls −0.9
+  font-weight: $fw-bold;
+  line-height: rem(45px);
+  letter-spacing: rem(-0.9px);
+}
+
+.cardSubtitle {
+  @include type-body-large; // 18 / 400 / lh 27
+}
+
+// ── Изображения проектов (точные позиции из макета) ───────
+// ИИ Говори: телефон 336.61×445.8, rotate(−14°), bbox (241, 142) 434.47×514
+.imageGovori {
+  position: absolute;
+  top: rem(142px);
+  left: rem(241px);
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(434.47px);
+  height: rem(514px);
+
+  img {
+    flex: none;
+    width: rem(336.61px);
+    height: rem(445.8px);
+    object-fit: cover;
+    transform: rotate(-14deg);
+  }
+}
+
+// ESIS: скрин 546×328.22 в (115, 239)
+.imageEsis {
+  position: absolute;
+  top: rem(239px);
+  left: rem(115px);
+  z-index: 0;
+  width: rem(546px);
+  height: rem(328.22px);
+  object-fit: cover;
+}
+
+// Tienda: логотип 208.63×102.89, центр по X (+0.31), top 215
+.imageTienda {
+  position: absolute;
+  top: rem(215px);
+  left: calc(50% + #{rem(0.31px)});
+  z-index: 0;
+  width: rem(208.63px);
+  height: rem(102.89px);
+  transform: translateX(-50%);
+}
+
+// ── Lunes (180:902) ────────────────────────────────────────
+// Текстура поверх #1f1f1f (1048.85×534.83, opacity 50%)
+.lunesTexture {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url("/portfolio/lunes-texture.png");
+  background-position: top left;
+  background-size: rem(1048.85px) rem(534.83px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+// Рукописный «Beauty by Moonlight» (Antro Vectra, рендер из Figma):
+// центр бокса 372.22×123.38 в (45.72, 50% − 68.59)
+.lunesScript {
+  position: absolute;
+  top: calc(50% - #{rem(68.59px)}); // центр бокса 372×123 на 68.59 выше середины
+  left: rem(231.82px);
+  z-index: 1;
+  width: rem(405px);
+  height: rem(122px);
+  max-width: none;
+  transform: translate(-50%, -50%);
+}
+
+// Луна (группа 184:953) — точный рендер видимой области из Figma,
+// уже с запечённой текстурой/бленд-режимами; лежит в правом нижнем углу.
+.lunesMoon {
+  position: absolute;
+  top: rem(205.26px);
+  left: rem(242.53px);
+  z-index: 1;
+  width: rem(305.47px);
+  height: rem(342.74px);
+  max-width: none;
+  pointer-events: none;
+}
+
+// ── Мобильный макет 273:5316: карточка 380×380 (десктоп 548 × 0.6934) ──
+@include respond-down("md") {
+  .tags {
+    padding: rem(24px) rem(24px) 0; // бейджи на (24, 24)
+  }
+
+  // Бейдж-таблетка 34px: 12/18 + pad 8/14
+  .tag {
+    font-size: rem(12px);
+    line-height: rem(18px);
+  }
+
+  .text {
+    padding: 0 rem(24px) rem(24px);
+  }
+
+  // ИИ Говори: bbox телефона 309.13×365.72 в (156, 154.95) — десктоп × 0.7115
+  .imageGovori {
+    top: rem(154.95px);
+    left: rem(156px);
+    transform: scale(0.7115);
+    transform-origin: top left;
+  }
+
+  // ESIS: скрин 416×250 в (107, 151)
+  .imageEsis {
+    top: rem(151px);
+    left: rem(107px);
+    width: rem(416px);
+    height: rem(250px);
+  }
+
+  // Tienda: логотип × 0.6934, центр по X сохраняется
+  .imageTienda {
+    top: rem(149.08px);
+    width: rem(144.66px);
+    height: rem(71.34px);
+  }
+
+  // Lunes: текстура и слои × 0.6934
+  .lunesTexture {
+    background-size: rem(727.27px) rem(370.85px);
+  }
+
+  .lunesScript {
+    top: calc(50% - #{rem(47.56px)});
+    left: rem(160.75px);
+    width: rem(280.83px);
+    height: rem(84.6px);
+  }
+
+  .lunesMoon {
+    top: rem(142.33px);
+    left: rem(168.19px);
+    width: rem(211.81px);
+    height: rem(237.65px);
+  }
+}
+
+// ── Индивидуальные hover-анимации карточек ─────────────────
+$pf-ease: cubic-bezier(0.22, 1, 0.36, 1);
+$pf-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+.imageGovori img,
+.imageEsis,
+.imageTienda {
+  transition:
+    transform 0.7s $pf-ease,
+    filter 0.7s $pf-ease;
+  will-change: transform;
+}
+
+// ИИ Говори: телефон выпрямляется и приподнимается — «берут в руку».
+.cardBlue:hover .imageGovori img {
+  transform: rotate(-8deg) translateY(rem(-14px)) scale(1.04);
+}
+
+// ESIS: скриншот подъезжает вверх — показывает больше интерфейса.
+.cardLight:hover .imageEsis {
+  transform: translateY(rem(-16px)) scale(1.025);
+}
+
+// Tienda: логотип «выстреливает» с пружинным перелётом.
+.cardGreen:hover .imageTienda {
+  transform: translateX(-50%) scale(1.12);
+  transition-timing-function: $pf-spring;
+}
+
+// Lunes: луна и леттеринг — запечённые прямоугольные рендеры с фоном,
+// их нельзя двигать или подсвечивать (видны швы). Вместо этого по всей
+// карточке равномерно проходит диагональный «лунный блик».
+.cardDark::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  z-index: 2;
+  width: 45%;
+  background: linear-gradient(
+    105deg,
+    transparent,
+    rgb(255 255 255 / 5%) 35%,
+    rgb(255 255 255 / 10%) 50%,
+    rgb(255 255 255 / 5%) 65%,
+    transparent
+  );
+  transform: skewX(-14deg);
+  pointer-events: none;
+  transition: transform 1.15s $pf-ease;
+}
+
+.cardDark:hover::before {
+  transform: translateX(360%) skewX(-14deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .imageGovori img,
+  .imageEsis,
+  .imageTienda,
+  .cardDark::before {
+    transition: none;
+  }
+
+  .cardDark:hover::before {
+    transform: skewX(-14deg);
+  }
+
+  .cardBlue:hover .imageGovori img {
+    transform: rotate(-14deg);
+  }
+
+  .cardLight:hover .imageEsis {
+    transform: none;
+  }
+
+  .cardGreen:hover .imageTienda {
+    transform: translateX(-50%);
+  }
+
+}

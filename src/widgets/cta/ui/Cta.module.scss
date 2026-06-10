@@ -1,0 +1,241 @@
+@use "shared/styles/abstracts" as *;
+
+.cta {
+  background-color: $color-bg;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: rem(24px);
+  width: 100%;
+  max-width: $container-max; // 1120
+  min-height: rem(539px); // моб. макет 271:1531: карта 380×539
+  margin-inline: auto;
+  margin-block: rem(32px); // моб. макет 271:1530: py 32
+  overflow: hidden; // обрезаем графику по скруглению карточки
+  background-color: #f6f6f6; // #F6F6F6 из макета
+  border-radius: rem(32px);
+  padding: rem(24px);
+
+  @include respond-to("lg") {
+    // Фреймы секций в макете стыкуются встык: CTA Block 155:1554 имеет
+    // pad-top 120 и pad-bottom 120 → карта отстоит на 120 от сетки Cards
+    // (у Cards pad-bottom 0) и на 120 от тёмной полосы Bento.
+    display: block;
+    margin-block: 6.1rem;
+    min-height: rem(500px);
+    border-radius: rem(64px);
+    padding: rem(55px) rem(40px);
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; // моб. макет 271:1532: кнопка по центру
+  gap: rem(24px); // моб. макет: текст-группа → кнопка 24
+
+  @include respond-to("lg") {
+    align-items: flex-start;
+    gap: rem(36px); // десктоп: текст-группа → кнопка 36
+    max-width: rem(619px); // ширина текстового блока 155:1556
+
+    // карточка центрирует контент по вертикали (align CENTER в макете)
+    min-height: rem(390px); // 500 − 2×55
+    justify-content: center;
+  }
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px); // заголовок → подзаголовок
+  width: 100%;
+}
+
+// Кнопка «Подробнее» фиксированной ширины 160px (моб. 271:1536, десктоп 155:1560)
+.button {
+  width: rem(160px);
+}
+
+.title {
+  // Моб. макет 271:1534 (Heading 3): 24 / 600 / lh 33
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  line-height: calc(33 / 24);
+  color: $color-text; // #222224
+
+  @include respond-to("md") {
+    font-size: rem(40px); // 40 / 700 / lh 60
+    font-weight: $fw-bold;
+    line-height: 1.5;
+    white-space: nowrap; // заголовок в одну строку (нода 619×60)
+  }
+}
+
+.subtitle {
+  // Моб. макет 271:1535 (Body Small): 14 / 400 / lh 20, по центру
+  font-size: rem(14px);
+  line-height: rem(20px);
+  text-align: center;
+  color: $color-text-muted; // #6B7280
+
+  @include respond-to("md") {
+    @include type-body-large; // 18 / 400
+
+    line-height: rem(26px); // нода 155:1559 lh26px (а не 1.5 = 27px)
+    text-align: left;
+  }
+}
+
+// Принудительные переносы подзаголовка — только на мобильном
+.brMobile {
+  @include respond-to("md") {
+    display: none;
+  }
+}
+
+// ── Декоративная графика справа (Figma Group 24 155:1561) ──
+// Обёртки .ctaLayer позиционированы left/top как группы макета и несут
+// drop-shadow-эффекты; изометрия — на внутренних элементах. Единственная
+// анимация — стрелки часов, вращающиеся на стеклянной грани (см. ниже).
+.graphic {
+  // Моб. макет 271:1552: графика над текстом, 331.9×258.3 = десктоп × 0.79.
+  // Масштабируем трансформом; отрицательные поля сжимают layout-бокс
+  // по вертикали: (327 − 258.3) / 2 = 34.35.
+  position: relative;
+  order: -1; // в DOM графика после текста, на мобильном — сверху
+  align-self: center;
+  width: rem(420px);
+  height: rem(327px);
+  margin-block: rem(-34.35px);
+  overflow: visible;
+  transform: scale(0.79);
+
+  @include respond-to("lg") {
+    position: absolute;
+    top: rem(87px);
+    right: rem(41px); // 1120 − 659 − 420
+    order: 0;
+    align-self: auto;
+    margin-block: 0;
+    transform: none;
+  }
+}
+
+.graphic :global(.ctaLayer) {
+  position: absolute;
+}
+
+// Изометрические внутренности (матрицы нод canvas.fig, origin 0 0)
+.graphic :global(.ctaIsoSquare) {
+  width: rem(242.37px);
+  height: rem(242.37px);
+  transform: matrix(0.8662, -0.4998, 0.8662, 0.4998, 0, 121.13);
+  transform-origin: 0 0;
+}
+
+.graphic :global(.ctaIsoFace) {
+  width: rem(176.03px);
+  height: rem(174.42px);
+  transform: matrix(0.8662, -0.4998, 0.8662, 0.4998, 0, 87.97);
+  transform-origin: 0 0;
+}
+
+// Group 6 — красная «подушка»
+.graphic :global(.ctaRedDiamond) {
+  top: rem(111.77px);
+  left: rem(22.85px);
+}
+
+// Group 7 — градиентная грань; розовое свечение из макета
+.graphic :global(.ctaGradSquare) {
+  top: rem(84.41px);
+  left: 0;
+  filter: drop-shadow(0 rem(66px) rem(52.78px) rgb(255 88 114 / 50%));
+}
+
+// Group 10 — малая красная грань; алое свечение
+.graphic :global(.ctaRedFace) {
+  top: rem(73.85px);
+  left: rem(51.92px);
+  filter: drop-shadow(0 rem(22.4px) rem(29.03px) #ff3038);
+}
+
+// Group 8 — белая матовая «подушка»: фон 50% + background blur 26.39
+.graphic :global(.ctaWhiteDiamond) {
+  top: rem(27.37px);
+  left: rem(22.98px);
+  width: rem(374.3px);
+  height: rem(215.23px);
+  clip-path: path(
+    "M17.15 130.69C-4.91 118.36 -5.24 83.09 13.57 73.19L147.09 9.56C169.18 -3.19 204.99 -3.19 227.08 9.56L359.61 72.54C380.06 82.76 379.11 117.95 357.02 130.69L227.08 205.67C204.99 218.41 169.18 218.41 147.09 205.67L17.15 130.69Z"
+  );
+  background: rgb(255 255 255 / 50%);
+  backdrop-filter: blur(26.39px);
+}
+
+// Group 9 — белая матовая грань: фон 50% + background blur 26.39
+.graphic :global(.ctaWhiteSquare) {
+  top: 0;
+  left: rem(0.13px);
+}
+
+.graphic :global(.ctaGlassSquare) {
+  background: rgb(255 255 255 / 50%);
+  border-radius: rem(46.18px);
+  backdrop-filter: blur(26.39px);
+}
+
+.graphic :global(.ctaGlassEdge) {
+  position: absolute;
+  inset: 0;
+}
+
+// Group 11 — часы (матрица содержит и поворот, и позицию изометрии)
+.graphic :global(.ctaSwoosh) {
+  top: 0;
+  left: 0;
+}
+
+.graphic :global(.ctaSwooshSvg) {
+  display: block;
+  overflow: visible; // стрелки при вращении выходят за исходный viewBox
+  transform: matrix(0.8377, -0.5461, 0.8921, 0.4519, 155.04, 96.92);
+  transform-origin: 0 0;
+}
+
+// Стрелки вращаются вокруг общей оси (9.01, 68.5 в координатах viewBox).
+// Изометрическая матрица обёртки наклоняет плоскость вращения, поэтому
+// стрелки «лежат» на стеклянной грани, как у настоящих часов на циферблате.
+.graphic :global(.ctaMinuteHand),
+.graphic :global(.ctaHourHand) {
+  transform-box: view-box;
+  transform-origin: 9.01px 68.5px;
+}
+
+// Длинная стрелка тикает раз в секунду (полный круг за минуту),
+// короткая ползёт плавно — в 12 раз медленнее.
+.graphic :global(.ctaMinuteHand) {
+  animation: cta-hand-spin 60s steps(60) infinite;
+}
+
+.graphic :global(.ctaHourHand) {
+  animation: cta-hand-spin 720s linear infinite;
+}
+
+@keyframes cta-hand-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .graphic :global(.ctaMinuteHand),
+  .graphic :global(.ctaHourHand) {
+    animation: none;
+  }
+}

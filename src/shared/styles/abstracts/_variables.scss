@@ -1,0 +1,93 @@
+// ───────────────────────────────────────────────────────────
+// Дизайн-токены проекта «Глори.Цифра».
+// Здесь НЕТ вывода CSS — только значения, доступные через @use.
+// Источник: Figma «Glory Цифра (Copy)» — точные значения извлечены
+// из бинаря canvas.fig (декодирование kiwi-схемы документа).
+// ───────────────────────────────────────────────────────────
+
+// ── Цвета (точные значения из canvas.fig) ─────────────────
+// Бренд
+$color-primary: #c00; // фирменный красный (#CC0000)
+$color-primary-hover: #a30000; // тёмнее на hover
+$color-primary-soft: #fbe9e9; // светло-красная подложка (icon-button, иконки)
+
+// Нейтральные / фон
+$color-bg: #fff; // основной фон
+$color-bg-soft: #fafafa; // фон первого экрана (#FAFAFA)
+$color-bg-dark: #222224; // футер / тёмные блоки (#222224)
+$color-surface: #fafafa; // светлые поверхности / шапки секций
+$color-surface-2: #f5f6f8; // вложенные карточки / инпуты
+$color-badge-dark: #1f2937; // бейджи в футере (#1F2937)
+
+// Текст
+$color-text: #222224; // основной (#222224)
+$color-text-strong: #0f0f0f; // самый тёмный (#0F0F0F)
+$color-text-muted: #6b7280; // вторичный (#6B7280)
+$color-text-faint: #9ca3af; // подписи / на тёмном (#9CA3AF)
+$color-text-invert: #fff; // на тёмном фоне
+
+// Линии
+$color-border: #e5e7eb; // обычные границы (#E5E7EB)
+$color-border-strong: #d7d9de; // акцентные границы (outline-кнопка)
+$color-border-dark: #2e2e2e; // границы на тёмном
+
+// ── Типографика ───────────────────────────────────────────
+$font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+$font-size-base: 16px;
+$line-height-base: 1.6;
+
+// Шкала размеров (px → используем через rem())
+$fs-display: 56px; // крупные заголовки секций
+$fs-h1: 40px;
+$fs-h2: 32px;
+$fs-h3: 24px;
+$fs-h4: 20px;
+$fs-lg: 18px;
+$fs-md: 16px;
+$fs-sm: 14px;
+$fs-xs: 12px;
+
+// Веса
+$fw-regular: 400;
+$fw-medium: 500;
+$fw-semibold: 600;
+$fw-bold: 700;
+$fw-extrabold: 800;
+
+// Межстрочные
+$lh-tight: 1.1;
+$lh-snug: 1.25;
+$lh-normal: 1.5;
+$lh-relaxed: 1.6;
+
+// ── Отступы / радиусы ─────────────────────────────────────
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 16px;
+$space-lg: 24px;
+$space-xl: 40px;
+$space-2xl: 64px;
+$space-3xl: 96px;
+
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 24px;
+$radius-pill: 999px; // кнопки/бейджи-таблетки
+
+// ── Тени ──────────────────────────────────────────────────
+$shadow-sm: 0 1px 2px rgb(0 0 0 / 4%);
+$shadow-md: 0 4px 16px rgb(0 0 0 / 6%);
+$shadow-lg: 0 12px 32px rgb(0 0 0 / 8%);
+
+// ── Контейнер ─────────────────────────────────────────────
+$container-max: 1120px; // ширина контента макета (1440 − 2×160)
+
+// ── Брейкпоинты (используются миксином respond-to) ─────────
+$breakpoints: (
+  "sm": 640px,
+  "md": 768px,
+  "lg": 1024px,
+  "xl": 1280px,
+);

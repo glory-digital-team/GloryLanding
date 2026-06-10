@@ -1,0 +1,958 @@
+@use "shared/styles/abstracts" as *;
+
+// Премиум-изинг hover-анимаций карточек bento
+$bento-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+// Пружинный изинг с лёгким перелётом — для «игрушечных» фигур
+$bento-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// Figma «Bento» 155:1580 — все размеры/позиции 1:1 с макетом (1440).
+.bento {
+  background-color: $color-bg-dark; // #222224
+}
+
+.inner {
+  // Контентная ширина макета — ровно 1120px (content-box + боковые поля).
+  box-sizing: content-box;
+  max-width: $container-max;
+  margin-inline: auto;
+  padding-inline: $space-md;
+  padding-block: rem(48px); // моб. макет 275:212: py 48
+  display: flex;
+  flex-direction: column;
+  gap: rem(32px); // моб. макет: header → карусель 32
+
+  @include respond-to("lg") {
+    padding-inline: rem(24px);
+    padding-block: rem(80px); // отступы секции 80 сверху/снизу
+    gap: 6rem; // Header (60) → сетка: 140 − 60 = 80
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  // Моб. макет 275:216 (Heading 3): 24 / 600 / lh 33
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  line-height: calc(33 / 24);
+  color: $color-text-invert;
+
+  @include respond-to("md") {
+    // Hero Headings/Hero Title: 40 / 700 / lh 60 / ls 0
+    font-size: rem(40px);
+    font-weight: $fw-bold;
+    line-height: 1.5;
+  }
+}
+
+// Перенос заголовка «…задачи. / В одних руках.» — только на мобильном
+.brMobile {
+  @include respond-to("md") {
+    display: none;
+  }
+}
+
+// ── Сетка bento: десктоп — колонки 262 / 453 / 357, gap 24;
+// мобильный макет 275:218 — горизонтальная карусель карточек 360×360.
+.grid {
+  display: flex;
+  flex-direction: row;
+  gap: rem(24px);
+
+  // Карусель «выезжает» за правый край: скролл на всю ширину, контент с полями
+  margin-inline: rem(-16px);
+  padding-inline: rem(16px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: rem(16px);
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include respond-to("lg") {
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+}
+
+.col {
+  display: contents; // мобильная карусель: карточки — прямые flex-дети .grid
+
+  @include respond-to("lg") {
+    display: flex;
+    flex-direction: column;
+    gap: rem(24px);
+  }
+
+  &:nth-child(1) {
+    @include respond-to("lg") {
+      flex: 262;
+    }
+  }
+
+  &:nth-child(2) {
+    @include respond-to("lg") {
+      flex: 453;
+    }
+  }
+
+  &:nth-child(3) {
+    @include respond-to("lg") {
+      flex: 357;
+    }
+  }
+}
+
+// Мобильная карусель: карточки 360×360 в порядке макета
+// Design → AI → Support → Лендинги → UX/UI → SEO → Создание сайта
+@include respond-down("lg") {
+  .card {
+    flex: none;
+    width: rem(360px);
+    height: rem(360px);
+    min-height: 0;
+    scroll-snap-align: start;
+  }
+
+  .design {
+    order: 1;
+  }
+
+  .ai {
+    order: 2;
+  }
+
+  .square {
+    order: 3; // Поддержка
+  }
+
+  .wide {
+    order: 4; // Лендинги
+  }
+
+  .squareWide {
+    order: 7; // Создание сайта
+  }
+
+  .light {
+    order: 5; // UX/UI (тоже .squareWide — переопределяем позже по каскаду)
+  }
+
+  .seo {
+    order: 6; // SEO (тоже .wide — переопределяем позже по каскаду)
+  }
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: rem(188px);
+  overflow: hidden;
+  border-radius: rem(26px);
+  isolation: isolate;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+
+  // Рамка макета (0.881 solid rgba(255,255,255,0.52)) — оверлеем,
+  // чтобы не смещать координаты абсолютных слоёв внутри карточки.
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    border: 0.881px solid rgb(255 255 255 / 52%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(rem(-4px));
+  }
+}
+
+// Высоты карточек (как в макете).
+.tall {
+  @include respond-to("lg") {
+    height: rem(400px);
+  }
+}
+
+.square {
+  @include respond-to("lg") {
+    height: rem(262px);
+  }
+}
+
+.squareWide {
+  @include respond-to("lg") {
+    height: rem(262px);
+  }
+}
+
+.wide {
+  @include respond-to("lg") {
+    height: rem(188px);
+  }
+}
+
+// Фоны карточек.
+.design,
+.dark {
+  background-color: #242428;
+}
+
+.seo {
+  background-color: #141317;
+}
+
+.light {
+  background-color: #f3f4f5;
+
+  &::after {
+    content: none; // у светлой UX/UI-карточки рамки в макете нет
+  }
+}
+
+.ai {
+  background-color: $color-primary; // #CC0000
+}
+
+// ── Заголовки карточек: Heading 1 — 36 / 700 / lh 45 / ls −0.9
+.cardTitle {
+  position: absolute;
+  top: rem(24px); // моб. макет 275:220: текст в карточке на (24, 24)
+  left: rem(24px);
+  z-index: 2;
+  font-size: rem(36px);
+  font-weight: $fw-bold;
+  line-height: rem(45px);
+  letter-spacing: rem(-0.9px);
+  white-space: nowrap;
+  color: $color-text-invert;
+
+  @include respond-to("lg") {
+    top: rem(32px);
+    left: rem(32px);
+  }
+}
+
+// «Поддержка» / «SEO и маркетинг» — точно по центру карточки.
+.cardTitleCenter {
+  top: calc(50% - #{rem(22px)});
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+// ── Свечения (SVG-рендеры из Figma с запечённым blur) ─────
+.glow {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  transition:
+    transform 0.7s $bento-ease,
+    opacity 0.7s $bento-ease;
+
+  img {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+  }
+}
+
+// Поддержка: фиолетовое 333² (68, −195), синее 217² (184, 145)
+.glowSupport1 {
+  top: rem(-195px);
+  left: rem(68px);
+  width: rem(333px);
+  height: rem(333px);
+
+  img {
+    inset: -43.57%;
+    width: 187.14%;
+    height: 187.14%;
+  }
+}
+
+// Зелёное 224.95² (−112, 218) и синее 224.95² (128, −202) — поверх зерна
+.glowSupportGreen,
+.glowSupportBlue {
+  z-index: 1;
+  width: rem(224.95px);
+  height: rem(224.95px);
+
+  img {
+    inset: -52.29%;
+    width: 204.58%;
+    height: 204.58%;
+  }
+}
+
+.glowSupportGreen {
+  top: rem(218px);
+  left: rem(-112px);
+}
+
+.glowSupportBlue {
+  top: rem(-202px);
+  left: rem(128px);
+}
+
+// SEO: оранжевое 224.95² (−112, −112), фиолетовое 217² (320, 102)
+.glowSeo1 {
+  top: rem(-112px);
+  left: rem(-112px);
+  width: rem(224.95px);
+  height: rem(224.95px);
+
+  img {
+    inset: -52.29%;
+    width: 204.58%;
+    height: 204.58%;
+  }
+}
+
+.glowSeo2 {
+  top: rem(102px);
+  left: rem(320px);
+  width: rem(217px);
+  height: rem(217px);
+
+  img {
+    inset: -52.29%;
+    width: 204.58%;
+    height: 204.58%;
+  }
+}
+
+// AI: белое 191.95² (−73, 244), оранжевое 191.95² (261, 210)
+.glowAi1,
+.glowAi2 {
+  width: rem(191.95px);
+  height: rem(191.95px);
+
+  img {
+    inset: -52.29%;
+    width: 204.58%;
+    height: 204.58%;
+  }
+}
+
+.glowAi1 {
+  top: rem(244px);
+  left: rem(-73px);
+}
+
+.glowAi2 {
+  top: rem(210px);
+  left: rem(261px);
+}
+
+// UX/UI: красное 242.79² (−152, 234) — поверх иллюстрации (порядок слоёв макета)
+.glowUx {
+  top: rem(234px);
+  left: rem(-152px);
+  width: rem(242.79px);
+  height: rem(242.79px);
+  z-index: 3;
+
+  img {
+    inset: -52.29%;
+    width: 204.58%;
+    height: 204.58%;
+  }
+}
+
+// Создание сайта: фиолетовое 333² (138, −215) — поверх заголовка
+.glowWebsites {
+  top: rem(-215px);
+  left: rem(138px);
+  width: rem(333px);
+  height: rem(333px);
+  z-index: 2;
+
+  img {
+    inset: -43.57%;
+    width: 187.14%;
+    height: 187.14%;
+  }
+}
+
+// ── Зерно (noise, mix-blend soft-light 20%) ────────────────
+.noise {
+  position: absolute;
+  z-index: 1;
+  background-image: url("/bento/noise.png");
+  background-position: top left;
+  background-size: rem(264.15px) rem(264.15px);
+  mix-blend-mode: soft-light;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.noiseSupport {
+  top: 0;
+  left: 0;
+  width: rem(264px);
+  height: rem(264px);
+}
+
+.noiseSeo {
+  top: 0;
+  left: 0;
+  width: rem(441px);
+  height: rem(191px);
+}
+
+.noiseAi {
+  inset: 0;
+}
+
+// ── «Дизайн»: фигуры-инструменты (155:2372) ───────────────
+.designArt {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+// Повёрнутые «артборды» с рамкой 2.191 rgba(255,255,255,0.2)
+.artboardBox {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    flex: none;
+    background: #242428;
+    border: 2.191px solid rgb(255 255 255 / 20%);
+    transition: transform 0.6s $bento-ease;
+  }
+}
+
+.artboard1 {
+  top: rem(201px);
+  left: rem(119.93px);
+  width: rem(358.07px);
+  height: rem(446.42px);
+
+  span {
+    width: rem(108.92px);
+    height: rem(468.72px);
+    transform: rotate(-35deg);
+  }
+}
+
+.artboard2 {
+  top: rem(287.61px);
+  left: rem(-87px);
+  width: rem(178.72px);
+  height: rem(376.08px);
+
+  span {
+    width: rem(142.81px);
+    height: rem(363.54px);
+    transform: rotate(5.78deg);
+  }
+}
+
+.designCircle {
+  position: absolute;
+  top: rem(248.75px);
+  left: rem(192.11px);
+  width: rem(100.78px);
+  height: rem(101.21px);
+  transition: transform 0.6s $bento-ease;
+  animation: design-drift-a 7s ease-in-out -2s infinite alternate;
+}
+
+.designSquare {
+  position: absolute;
+  top: rem(332.88px);
+  left: rem(112.36px);
+  width: rem(92.45px);
+  height: rem(92.45px);
+  background: #a259ff;
+  transition: transform 0.6s $bento-ease;
+  animation: design-drift-b 9s ease-in-out -4s infinite alternate;
+}
+
+.designPolygonBox {
+  position: absolute;
+  top: rem(282.32px);
+  left: rem(-30.69px);
+  width: rem(142.92px);
+  height: rem(142.92px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: design-drift-c 8s ease-in-out -1s infinite alternate;
+
+  img {
+    flex: none;
+    width: rem(107.8px);
+    height: rem(94.32px);
+    transform: rotate(-45deg);
+    transition: transform 0.6s $bento-ease;
+  }
+}
+
+// ── «Лендинги»: карусель окон-скриншотов (Illustration 155:2382) ──
+// Контейнер стоит ровно там, где фрейм иллюстрации в макете; окна ездят
+// по слотам внутри, низ обрезается краем карточки (overflow: hidden).
+.landingsArt {
+  position: absolute;
+  top: rem(81px);
+  left: rem(58px);
+  z-index: 1;
+  width: rem(573px);
+  height: rem(248px);
+  pointer-events: none;
+  transition: translate 0.6s $bento-ease;
+}
+
+.landingsWindow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  transform-origin: 0 0;
+  filter: drop-shadow(0 rem(14px) rem(30px) rgb(0 0 0 / 45%));
+  transition:
+    transform 1.25s $bento-ease,
+    z-index 1.25s linear;
+  will-change: transform;
+}
+
+// При наведении вся «витрина» слегка приподнимается (как раньше).
+.card:hover .landingsArt {
+  translate: 0 rem(-8px);
+}
+
+// ── «UX/UI» (155:3117) ─────────────────────────────────────
+// Рамка-выделение со скобками и текстом UX/UI 124.39 Medium
+.uxFrame {
+  position: absolute;
+  top: rem(44px);
+  right: rem(59.21px);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(350.79px);
+  height: rem(126.88px);
+}
+
+.uxBracket {
+  flex: none;
+  width: rem(7.46px);
+  height: rem(126.88px);
+}
+
+.uxLines {
+  position: relative;
+  flex: none;
+  width: rem(335.86px);
+  height: rem(118.17px);
+
+  img {
+    position: absolute;
+    inset: -0.39% 0;
+    display: block;
+    width: 100%;
+    height: 100.78%;
+    max-width: none;
+  }
+}
+
+.uxTitle {
+  position: absolute;
+  top: calc(50% - #{rem(75.26px)});
+  left: calc(50% - #{rem(172.91px)});
+  font-size: rem(124.39px);
+  font-weight: $fw-medium;
+  line-height: normal;
+  white-space: nowrap;
+  color: #000;
+}
+
+// Красный лейбл-«курсор» (как имя слоя в Figma)
+.uxName {
+  position: absolute;
+  top: rem(196.18px);
+  right: rem(88.79px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: rem(216.32px);
+  height: rem(24.37px);
+  padding: rem(1.35px) rem(5.42px);
+  font-size: rem(14.9px);
+  font-weight: $fw-medium;
+  line-height: rem(21.67px);
+  letter-spacing: rem(0.149px);
+  white-space: nowrap;
+  color: #fff;
+  background: $color-primary;
+  filter: drop-shadow(0 1.354px 2.708px rgb(0 0 0 / 16%));
+}
+
+// «Живое» печатание подписи внутри красного лейбла
+.typing {
+  display: inline-flex;
+  align-items: center;
+  white-space: pre;
+}
+
+.typingCaret {
+  display: inline-block;
+  flex: none;
+  width: rem(1.5px);
+  height: rem(15px);
+  margin-left: rem(2px);
+  background: #fff;
+  animation: typing-blink 1.06s steps(2, start) infinite;
+}
+
+@keyframes typing-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+// Курсор-стрелка (Editor / Move), отзеркален по горизонтали
+.uxCursor {
+  position: absolute;
+  top: rem(140.29px);
+  right: rem(36px);
+  z-index: 2;
+  width: rem(61.9px);
+  height: rem(61.9px);
+  transform: scaleX(-1);
+
+  img {
+    position: absolute;
+    inset: 0 -1.7% -11.74% 0;
+    display: block;
+    width: 101.7%;
+    height: 111.74%;
+    max-width: none;
+  }
+}
+
+// ── «AI Решения» (155:3096): AI 112/127.14 + Решения 40/60 ─
+.aiTitle {
+  position: absolute;
+  top: calc(50% + #{rem(0.5px)});
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: rem(7px);
+  width: rem(179px);
+  font-weight: $fw-bold;
+  text-align: center;
+  color: $color-text-invert;
+  transform: translate(-50%, -50%);
+  transition: transform 0.6s $bento-ease;
+
+  span:first-child {
+    width: 100%;
+    font-size: rem(80px);
+    line-height: 1.135;
+
+    @include respond-to("md") {
+      font-size: rem(112px);
+      line-height: rem(127.143px);
+    }
+  }
+
+  span:last-child {
+    width: 100%;
+    font-size: rem(28px);
+    line-height: 1.5;
+
+    @include respond-to("md") {
+      font-size: rem(40px);
+      line-height: rem(60px);
+    }
+  }
+}
+
+// ── «Создание сайта»: Solidity-сниппет (IBM Plex Mono 12/16)
+.code {
+  position: absolute;
+  top: rem(104px);
+  left: rem(36px);
+  z-index: 1;
+  width: rem(300px);
+  margin: 0;
+  font-family: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  font-size: rem(12px);
+  font-style: normal;
+  line-height: rem(16px);
+  color: #737479;
+  white-space: pre-wrap;
+  pointer-events: none;
+  transition: transform 0.9s $bento-ease;
+
+  // Подсветка синтаксиса — цвета спанов из макета
+  i {
+    font-style: normal;
+    color: #77d62b;
+  }
+
+  em {
+    font-style: normal;
+    color: #e6db5a;
+  }
+
+  u {
+    text-decoration: none;
+    color: #42cbe2;
+  }
+
+  b {
+    font-weight: inherit;
+    color: #fff;
+  }
+}
+
+.codeShadow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  height: rem(82px);
+  background: linear-gradient(to bottom, rgb(36 36 40 / 0%), #242428);
+  pointer-events: none;
+}
+
+// ── Hover-анимации карточек (каждой — своя, по содержимому) ─
+// «Дизайн»: фигуры-инструменты живут и в покое — едва заметный дрейф
+// (animation назначены в базовых блоках выше; анимируется независимое
+// свойство translate, не конфликтует с hover-transform).
+@keyframes design-drift-a {
+  from {
+    translate: 0 0;
+  }
+
+  to {
+    translate: rem(4px) rem(-6px);
+  }
+}
+
+@keyframes design-drift-b {
+  from {
+    translate: 0 0;
+  }
+
+  to {
+    translate: rem(-5px) rem(4px);
+  }
+}
+
+@keyframes design-drift-c {
+  from {
+    translate: 0 0;
+  }
+
+  to {
+    translate: rem(3px) rem(5px);
+  }
+}
+
+// На hover инструменты «оживают» с пружиной и каскадной задержкой.
+.design {
+  .artboardBox span,
+  .designCircle,
+  .designSquare,
+  .designPolygonBox img {
+    transition: transform 0.7s $bento-spring;
+  }
+}
+
+.design:hover {
+  .artboard1 span {
+    transform: rotate(-29deg);
+    transition-delay: 0.05s;
+  }
+
+  .artboard2 span {
+    transform: rotate(10deg);
+  }
+
+  .designCircle {
+    transform: translate(rem(10px), rem(-14px)) rotate(14deg) scale(1.12);
+  }
+
+  .designSquare {
+    transform: translate(rem(-8px), rem(8px)) rotate(-11deg) scale(1.06);
+    transition-delay: 0.04s;
+  }
+
+  .designPolygonBox img {
+    transform: rotate(-21deg) scale(1.12);
+    transition-delay: 0.08s;
+  }
+}
+
+// «Поддержка»: ореолы сходятся, как пульс входящего звонка.
+.card:hover .glowSupport1 {
+  transform: translate(rem(-14px), rem(18px)) scale(1.12);
+}
+
+.card:hover .glowSupportGreen {
+  transform: translate(rem(14px), rem(-16px)) scale(1.12);
+}
+
+.card:hover .glowSupportBlue {
+  transform: translate(rem(-12px), rem(14px)) scale(1.12);
+}
+
+
+// «SEO и маркетинг»: градиенты меняются местами — рост «трафика».
+.seo:hover .glowSeo1 {
+  transform: translate(rem(22px), rem(14px)) scale(1.15);
+}
+
+.seo:hover .glowSeo2 {
+  transform: translate(rem(-26px), rem(-12px)) scale(1.15);
+}
+
+// «UX/UI»: курсор «дотягивается» до лейбла, лейбл отвечает сдвигом —
+// микросценарий выделения слоя в редакторе.
+.uxCursor,
+.uxName {
+  transition: transform 0.5s $bento-ease;
+}
+
+.light:hover {
+  .uxCursor {
+    transform: scaleX(-1) translate(rem(14px), rem(-10px)) scale(0.92);
+  }
+
+  .uxName {
+    transform: translate(rem(-4px), rem(-3px));
+    transition-delay: 0.08s;
+  }
+}
+
+// «AI Решения»: заголовок «дышит», ореолы разгораются.
+.ai:hover {
+  .aiTitle {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+
+  .glowAi1 {
+    transform: translate(rem(10px), rem(-12px)) scale(1.18);
+  }
+
+  .glowAi2 {
+    transform: translate(rem(-12px), rem(-10px)) scale(1.18);
+  }
+}
+
+// «Создание сайта»: код «проскролливается», как при живом ревью.
+.card:hover .code {
+  transform: translateY(rem(-22px));
+}
+
+.card:hover .glowWebsites {
+  transform: translate(rem(-16px), rem(14px)) scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+  }
+
+  .glow,
+  .landingsArt,
+  .landingsWindow,
+  .code,
+  .aiTitle,
+  .uxCursor,
+  .uxName,
+  .designArt .artboardBox span,
+  .designCircle,
+  .designSquare,
+  .designPolygonBox img {
+    transition: none;
+  }
+
+  .designCircle,
+  .designSquare,
+  .designPolygonBox,
+  .typingCaret {
+    animation: none;
+  }
+
+  .card:hover .glowSupport1,
+  .card:hover .glowSupportGreen,
+  .card:hover .glowSupportBlue,
+  .card:hover .code,
+  .card:hover .glowWebsites,
+  .seo:hover .glowSeo1,
+  .seo:hover .glowSeo2 {
+    transform: none;
+  }
+
+  .card:hover .landingsArt {
+    translate: 0 0;
+  }
+
+  .design:hover {
+    .artboard1 span {
+      transform: rotate(-35deg);
+    }
+
+    .artboard2 span {
+      transform: rotate(5.78deg);
+    }
+
+    .designCircle,
+    .designSquare {
+      transform: none;
+    }
+
+    .designPolygonBox img {
+      transform: rotate(-45deg);
+    }
+  }
+
+  .light:hover {
+    .uxCursor {
+      transform: scaleX(-1);
+    }
+
+    .uxName {
+      transform: none;
+    }
+  }
+
+  .ai:hover {
+    .aiTitle {
+      transform: translate(-50%, -50%);
+    }
+
+    .glowAi1,
+    .glowAi2 {
+      transform: none;
+    }
+  }
+}

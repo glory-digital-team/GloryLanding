@@ -1,0 +1,6 @@
+@use "shared/styles/abstracts" as *;
+
+// Первый экран: общий фон #FAFAFA под плавающей шапкой и hero.
+.firstScreen {
+  background-color: $color-bg-soft;
+}

@@ -1,0 +1,32 @@
+@use "shared/styles/abstracts" as *;
+
+.badge {
+  @include type-badge; // 12px / 400 / lh 1.5 (строка 18px) — Badge Text
+
+  display: inline-flex;
+  align-items: center;
+  gap: rem(8px);
+  border-radius: $radius-pill;
+  white-space: nowrap;
+}
+
+// ── Размеры ───────────────────────────────────────────────
+// 12px × lh1.5 = 18px + 2×8 = 34px (как в макете)
+.sm {
+  padding: rem(6px) rem(12px);
+}
+
+.md {
+  padding: rem(8px) rem(14px);
+}
+
+// ── Варианты ──────────────────────────────────────────────
+.dark {
+  color: $color-text-invert;
+  background-color: $color-bg-dark;
+}
+
+.soft {
+  color: $color-primary;
+  background-color: $color-primary-soft;
+}
