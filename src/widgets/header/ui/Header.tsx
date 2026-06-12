@@ -53,9 +53,9 @@ export function Header() {
         </Button>
 
         {/* Figma 273:5714: бургер, три полоски 20×2 #C00, radius 100.
-            Морфинг в крестик: видимый отрезок каждой линии (stroke-dash)
-            скользит по пути «прямая → дуга → диагональ», линия буквально
-            перетекает в крестик. Геометрия путей — в Header.module.scss. */}
+            Анимация дизайнера — «слияние»: крайние полоски съезжаются к центру
+            и поворачиваются в крестик, средняя растворяется, вся иконка
+            при этом проворачивается. */}
         <button
           type="button"
           className={styles.burger}
@@ -63,17 +63,11 @@ export function Header() {
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
-          <svg viewBox="0 0 100 100" aria-hidden="true">
-            <path
-              className={styles.burgerLine}
-              d="M 20,29 H 80 C 80,29 94.5,28.8 94.5,66.7 C 94.5,78 91,81.7 85.3,81.7 C 79.6,81.7 75,75 75,75 L 25,25"
-            />
-            <path className={cn(styles.burgerLine, styles.burgerLineMid)} d="M 20,50 H 80" />
-            <path
-              className={styles.burgerLine}
-              d="M 20,71 H 80 C 80,71 94.5,71.2 94.5,33.3 C 94.5,22 91,18.3 85.3,18.3 C 79.6,18.3 75,25 75,25 L 25,75"
-            />
-          </svg>
+          <span className={styles.burgerBox} aria-hidden="true">
+            <span className={cn(styles.burgerLine, styles.burgerLineTop)} />
+            <span className={cn(styles.burgerLine, styles.burgerLineMid)} />
+            <span className={cn(styles.burgerLine, styles.burgerLineBot)} />
+          </span>
         </button>
       </div>
 

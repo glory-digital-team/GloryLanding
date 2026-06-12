@@ -2,8 +2,9 @@
 
 // Футер: тёмный #222224, контент 1120 (Figma 191:468).
 .footer {
-  // Моб. макет 273:5594: футер стыкуется с FAQ без зазора, углы 32
-  background-color: $color-bg-dark;
+  // Моб. макет 273:5594: футер стыкуется с FAQ без зазора, углы 32.
+  // Правка дизайнера: фон темнее основного тёмного — #121213 (191:468).
+  background-color: $color-bg-footer;
   color: $color-text-invert;
   border-radius: rem(32px) rem(32px) 0 0;
 
@@ -63,22 +64,32 @@
   }
 }
 
+// Правка дизайнера: иконки соцсетей цветные (выгруженные SVG 28×28, скругление 8)
 .social {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: rem(28px); // моб. макет: socials 28×28
+  width: rem(28px);
   height: rem(28px);
-  color: $color-text-faint; // #9CA3AF
-  transition: color 0.18s ease;
+  border-radius: rem(8px);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
 
   &:hover {
-    color: $color-text-invert;
+    transform: translateY(-2px);
+    box-shadow: 0 rem(6px) rem(14px) rgb(0 0 0 / 35%);
   }
 
-  @include respond-to("md") {
-    width: rem(24px);
-    height: rem(24px);
+  img {
+    display: block;
+    border-radius: inherit;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social:hover {
+    transform: none;
   }
 }
 
@@ -104,8 +115,8 @@
   }
 }
 
-// Моб. макет 273:5613: заголовки колонок — 14/20 Medium, капс, приглушённые.
-// Десктоп: «Навигация»/«Контакты» — Heading 4 (20/27.5); «Реквизиты» — 18/27.
+// Заголовки колонок: капс, приглушённые (#9CA3AF).
+// Моб. 273:5613 — 14/20 Medium; десктоп 191:410 — 18/27 Medium.
 .colTitle {
   font-size: rem(14px);
   font-weight: $fw-medium;
@@ -113,16 +124,6 @@
   text-transform: uppercase;
   color: $color-text-faint;
 
-  @include respond-to("md") {
-    font-size: rem(20px);
-    font-weight: $fw-semibold;
-    line-height: rem(27.5px);
-    text-transform: none;
-    color: $color-text-invert;
-  }
-}
-
-.colTitleSm {
   @include respond-to("md") {
     font-size: rem(18px);
     line-height: rem(27px);
@@ -152,57 +153,40 @@
   font-size: rem(16px);
   font-weight: $fw-medium;
   line-height: rem(24px); // Figma 191:478: строка 24
-  color: $color-text-faint; // #9CA3AF
+  color: $color-text-invert; // пункты списков — белые (191:414)
   transition: color 0.18s ease;
 
   &:hover {
-    color: $color-text-invert;
+    color: $color-text-faint;
   }
 }
 
-.messengers {
-  display: none; // моб. макет: бейджей мессенджеров нет
-
-  @include respond-to("md") {
-    display: flex;
-    flex-wrap: wrap;
-    gap: rem(12px); // Figma 191:484: gap 12
-  }
+// Email в контактах подчёркнут (Figma 270:610)
+.linkUnderline {
+  text-decoration: underline;
+  text-underline-position: from-font;
 }
 
-// Моб. макет 273:5623: «Начать проект» в контактах — красная ссылка
-.ctaLink {
-  color: $color-primary;
-
-  &:hover {
-    color: $color-primary-hover;
-  }
-}
-
-// Элементы, существующие только в мобильной раскладке макета
+// Элементы, существующие только в одной раскладке макета
 .mobileOnly {
   @include respond-to("md") {
     display: none;
   }
 }
 
-.messenger {
-  display: inline-flex;
-  align-items: center;
-  padding: rem(8px) rem(14px);
-  font-size: rem(12px); // Caption: 12 / 400 / lh 18
-  font-weight: $fw-regular;
-  line-height: rem(18px);
-  color: $color-text-invert;
-  background-color: $color-badge-dark; // #1F2937
-  border-radius: $radius-pill;
+.desktopOnly {
+  display: none;
+
+  @include respond-to("md") {
+    display: flex;
+  }
 }
 
 .requisite {
   max-width: rem(207px); // колонка реквизитов 206px → имя ИП переносится
   font-size: rem(12px); // моб. макет 273:5627: 12/18
   line-height: rem(18px);
-  color: $color-text-faint;
+  color: $color-text-invert; // Figma 270:620: реквизиты белые
 
   @include respond-to("md") {
     font-size: rem(14px);
@@ -247,8 +231,14 @@
 }
 
 .legalLink {
+  // Сбрасываем стили <button> — «Политика конфиденциальности» открывает модалку
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
   font-size: rem(12px);
-  line-height: rem(16px);
+  line-height: rem(18px);
   color: $color-text-invert;
   transition: opacity 0.18s ease;
 

@@ -1,0 +1,608 @@
+@use "shared/styles/abstracts" as *;
+
+// Конфигуратор стоимости (Figma «CTA» 337:385 + мобайл 337:4773).
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: rem(24px);
+  background: rgb(15 15 15 / 75%);
+  animation: fade-in 0.25s ease both;
+
+  @include respond-down("md") {
+    padding: 0;
+  }
+}
+
+.card {
+  position: relative;
+  width: min(rem(1121px), 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: rem(48px);
+  padding: rem(80px) rem(56px);
+  background: #fefefe;
+  border-radius: rem(36px);
+  box-shadow: 0 0 rem(66.8px) rgb(0 0 0 / 4%);
+  animation: pop-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @include respond-down("md") {
+    // Мобайл: модалка на весь экран (Figma 337:4773)
+    width: 100%;
+    height: 100%;
+    gap: rem(32px);
+    padding: rem(68px) rem(24px) rem(32px);
+    border-radius: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .card {
+    animation: none;
+  }
+}
+
+.close {
+  position: absolute;
+  top: rem(24px);
+  right: rem(24px);
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: $color-primary; // красный крестик (Figma 337:4789)
+  cursor: pointer;
+  transition: color 0.18s ease;
+
+  &:hover {
+    color: $color-primary-hover;
+  }
+
+  @include respond-down("md") {
+    top: rem(10px);
+    right: rem(16px);
+  }
+}
+
+.title {
+  font-size: rem(36px);
+  font-weight: $fw-bold;
+  line-height: rem(45px);
+  letter-spacing: rem(-0.9px);
+  text-align: center;
+  color: $color-text;
+
+  @include respond-down("md") {
+    font-size: rem(27px); // моб. 337:5042: заголовок в 2 строки, 66/2
+    line-height: rem(33px);
+    letter-spacing: rem(-0.6px);
+  }
+}
+
+.titleBreak {
+  display: none;
+
+  @include respond-down("md") {
+    display: block;
+  }
+}
+
+// ── Раскладка: слева шаги, справа чек ─────────────────────
+.layout {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: rem(48px);
+
+  @include respond-down("md") {
+    flex-direction: column;
+    gap: rem(24px);
+  }
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: rem(28px);
+  width: rem(641px);
+  max-width: 100%;
+
+  @include respond-down("md") {
+    width: 100%;
+    flex: 1;
+  }
+}
+
+.desktopReceipt {
+  flex-shrink: 0;
+
+  @include respond-down("md") {
+    display: none;
+  }
+}
+
+.mobileReceipt {
+  display: none;
+
+  @include respond-down("md") {
+    display: block;
+
+    &:empty {
+      display: none;
+    }
+  }
+}
+
+// ── Прогресс-бар: 4 сегмента (Figma 337:389) ──────────────
+.progress {
+  display: flex;
+  gap: rem(8px);
+  height: rem(8px);
+}
+
+.progressSeg {
+  flex: 1;
+  border-radius: $radius-pill;
+  background: #ececec;
+  transition: background-color 0.3s ease;
+}
+
+.progressSegActive {
+  background: $color-primary;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.stepTitle {
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  line-height: rem(33px);
+  color: $color-text-strong;
+}
+
+// ── Кнопки-опции (Figma 337:399) ──────────────────────────
+.optionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: rem(16px);
+
+  @include respond-down("md") {
+    grid-template-columns: 1fr;
+  }
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: rem(8px);
+  min-height: rem(86px);
+  padding: rem(17px) rem(13px);
+  background: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: rem(14px);
+  font-family: inherit;
+  font-size: rem(16px);
+  font-weight: $fw-medium;
+  line-height: rem(26px);
+  text-align: left;
+  color: $color-text-strong;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease-out,
+    background-color 0.2s ease-out,
+    box-shadow 0.2s ease-out;
+
+  &:hover {
+    border-color: $color-primary;
+  }
+
+  img {
+    flex-shrink: 0;
+  }
+}
+
+.optionSelected {
+  border-color: $color-primary;
+  background: $color-primary-soft;
+  box-shadow: 0 0 0 1px $color-primary inset;
+}
+
+// Чекбокс модулей (шаг 2, Figma 337:5304)
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: rem(20px);
+  height: rem(20px);
+  border: 1.5px solid #d1d5db;
+  border-radius: rem(6px);
+  background: $color-bg;
+  color: $color-text-invert;
+  transition:
+    background-color 0.2s ease-out,
+    border-color 0.2s ease-out;
+}
+
+.checkboxChecked {
+  border-color: $color-primary;
+  background: $color-primary;
+}
+
+.optionCheck {
+  gap: rem(12px);
+}
+
+// «Исходные данные» — три компактные опции (Figma 337:708)
+.sourceRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: rem(16px);
+
+  @include respond-down("md") {
+    grid-template-columns: 1fr;
+  }
+}
+
+.optionSource {
+  justify-content: center;
+  min-height: rem(66px);
+  text-align: center;
+}
+
+// ── Поля (шаги 3–4) ───────────────────────────────────────
+.detailsStep {
+  display: flex;
+  flex-direction: column;
+  gap: rem(8px);
+}
+
+.fieldLabel {
+  margin-top: rem(16px);
+  font-size: rem(16px);
+  font-weight: $fw-medium;
+  line-height: rem(24px);
+  color: $color-text;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.input {
+  width: 100%;
+  height: rem(50px);
+  padding: 0 rem(16px);
+  border: 1px solid $color-border;
+  border-radius: rem(12px);
+  background: $color-bg;
+  font-family: inherit;
+  font-size: rem(16px);
+  color: $color-text;
+  transition: border-color 0.2s ease-out;
+
+  &::placeholder {
+    color: $color-text-faint;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+  }
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: rem(12px);
+  margin-top: rem(16px);
+  font-size: rem(14px);
+  line-height: rem(20px);
+  color: $color-text-muted;
+  cursor: pointer;
+}
+
+.consentBox {
+  flex-shrink: 0;
+  width: rem(20px);
+  height: rem(20px);
+  margin-top: rem(1px);
+  accent-color: $color-primary;
+  cursor: pointer;
+}
+
+.policyLink {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: $color-primary;
+  cursor: pointer;
+
+  &:hover {
+    color: $color-primary-hover;
+  }
+}
+
+// ── Кнопки навигации по шагам ─────────────────────────────
+.actions {
+  display: flex;
+  align-items: center;
+  gap: rem(16px);
+  padding-top: rem(8px);
+}
+
+.backBtn {
+  padding: rem(11px) rem(24px);
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: rem(16px);
+  font-weight: $fw-medium;
+  line-height: rem(26px);
+  color: $color-primary;
+  cursor: pointer;
+  transition: color 0.2s ease-out;
+
+  &:hover {
+    color: $color-primary-hover;
+  }
+
+  @include respond-down("md") {
+    padding-inline: rem(12px);
+  }
+}
+
+.nextBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: rem(8px);
+  flex: 1;
+  height: rem(48px);
+  padding: 0 rem(20px);
+  border: 0;
+  border-radius: $radius-pill;
+  background: $color-primary;
+  font-family: inherit;
+  font-size: rem(16px);
+  font-weight: $fw-medium;
+  line-height: rem(26px);
+  color: $color-text-invert;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-out,
+    opacity 0.18s ease;
+
+  &:hover {
+    background: $color-primary-hover;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+// ── Чек «Ваш проект» (Figma 337:422) ──────────────────────
+.receipt {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: rem(320px);
+  min-height: rem(361px);
+  padding: rem(24px);
+  background: $color-bg-soft;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+}
+
+.receiptTitle {
+  font-size: rem(20px);
+  font-weight: $fw-semibold;
+  line-height: rem(27.5px);
+  color: $color-text;
+}
+
+.receiptRows {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
+  padding-block: rem(16px);
+  margin-top: rem(16px);
+}
+
+.receiptRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(8px);
+  font-size: rem(16px);
+  line-height: rem(26px);
+  color: $color-text-muted;
+
+  b {
+    font-weight: $fw-medium;
+    color: $color-text;
+  }
+}
+
+.receiptPlus {
+  color: #27ae60 !important; // «+50 000₽» — зелёный, как в макете
+}
+
+// Бейджи срочности (Figma 337:727 и варианты Receipt)
+.urgencyBadge {
+  padding: rem(4px) rem(8px);
+  border-radius: $radius-pill;
+  font-size: rem(12px);
+  line-height: rem(18px);
+  white-space: nowrap;
+}
+
+.tone-orange {
+  color: #e8862c;
+  background: #fdf1e3;
+}
+
+.tone-blue {
+  color: #4d8fd6;
+  background: #e4f0fb;
+}
+
+.tone-green {
+  color: #2bae66;
+  background: #e2f6ea;
+}
+
+.receiptLine {
+  border: 0;
+  border-top: 1px solid $color-border;
+}
+
+.receiptFinal {
+  display: flex;
+  flex-direction: column;
+  gap: rem(8px);
+  padding-top: rem(12px);
+}
+
+.receiptFinalLabel {
+  font-size: rem(16px);
+  line-height: rem(26px);
+  color: $color-text-muted;
+}
+
+.receiptFinalValue {
+  font-size: rem(30px);
+  font-weight: $fw-bold;
+  line-height: rem(36px);
+  color: $color-primary;
+
+  @include respond-down("md") {
+    font-size: rem(24px); // моб. 337:5206
+    line-height: rem(33px);
+  }
+}
+
+// Мобильный сворачиваемый чек (Figma 337:5202 / 369:762)
+.receiptMobile {
+  width: 100%;
+  min-height: 0;
+  padding: rem(16px);
+}
+
+.receiptToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(8px);
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.receiptChevron {
+  flex-shrink: 0;
+  color: $color-text-muted;
+  transition: rotate 0.2s ease;
+}
+
+.receiptChevronOpen {
+  rotate: 180deg;
+}
+
+.receiptDetails {
+  margin-top: rem(16px);
+
+  .receiptTitle {
+    margin-top: rem(16px);
+  }
+
+  .receiptRows {
+    margin-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+// ── Состояние «заявка отправлена» ─────────────────────────
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: rem(16px);
+  max-width: rem(480px);
+  margin-inline: auto;
+  padding-block: rem(24px);
+  text-align: center;
+}
+
+.successIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(64px);
+  height: rem(64px);
+  border-radius: 50%;
+  background: #e2f6ea;
+  color: #2bae66;
+}
+
+.successTitle {
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  line-height: rem(33px);
+  color: $color-text-strong;
+}
+
+.successText {
+  font-size: rem(16px);
+  line-height: rem(26px);
+  color: $color-text-muted;
+}
+
+.success .nextBtn {
+  flex: 0 0 auto;
+  min-width: rem(200px);
+}
