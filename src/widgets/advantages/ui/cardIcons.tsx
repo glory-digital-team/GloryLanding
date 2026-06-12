@@ -3,9 +3,9 @@ import type { SVGProps } from "react";
 // Иконки карточек секции «Почему выбирают нас» (Figma «Cards» 155:1516).
 // Заливочные векторы (fill), геометрия декодирована 1:1 из canvas.fig
 // (fillGeometry → path, viewBox 0 0 24 24). Цвет наследуется через currentColor.
-export type CardIconName = "shield" | "target" | "grid" | "document";
+export type CardIconName = "shield" | "target" | "grid" | "document" | "arrow-up-right";
 
-const paths: Record<CardIconName, string> = {
+const paths: Record<Exclude<CardIconName, "arrow-up-right">, string> = {
   shield:
     "M12.12 22.24C12.27 22.24 12.53 22.19 12.77 22.05C18.33 18.93 20.23 17.62 20.23 14.05L20.23 6.58C20.23 5.55 19.79 5.23 18.96 4.88C17.81 4.4 14.09 3.06 12.94 2.66C12.67 2.58 12.39 2.52 12.12 2.52C11.84 2.52 11.56 2.6 11.3 2.66C10.15 3 6.42 4.41 5.27 4.88C4.45 5.22 4 5.55 4 6.58L4 14.05C4 17.62 5.91 18.92 11.46 22.05C11.71 22.19 11.96 22.24 12.12 22.24ZM12.12 20.48C11.96 20.48 11.8 20.42 11.51 20.24C7 17.51 5.55 16.71 5.55 13.69L5.55 6.88C5.55 6.55 5.61 6.42 5.88 6.32C7.37 5.73 10.25 4.76 11.72 4.18C11.88 4.11 12.01 4.09 12.12 4.09C12.22 4.09 12.35 4.12 12.51 4.18C13.98 4.76 16.84 5.8 18.36 6.32C18.62 6.41 18.68 6.55 18.68 6.88L18.68 13.69C18.68 16.71 17.23 17.5 12.72 20.24C12.44 20.42 12.27 20.48 12.12 20.48Z M11.06 16.54C11.38 16.54 11.66 16.38 11.84 16.09L16.31 9.06C16.42 8.88 16.55 8.66 16.55 8.44C16.55 8.01 16.16 7.72 15.75 7.72C15.49 7.72 15.25 7.87 15.07 8.16L11.02 14.67L9.09 12.18C8.86 11.86 8.64 11.78 8.38 11.78C7.95 11.78 7.62 12.12 7.62 12.56C7.62 12.76 7.71 12.98 7.85 13.16L10.22 16.09C10.47 16.41 10.73 16.54 11.06 16.54Z",
   target:
@@ -22,6 +22,28 @@ interface CardIconProps extends Omit<SVGProps<SVGSVGElement>, "name"> {
 }
 
 export function CardIcon({ name, size = 24, ...rest }: CardIconProps) {
+  // «Стрелка вверх-вправо» (4-я карточка макета) — контурная, остальные заливочные.
+  if (name === "arrow-up-right") {
+    return (
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.8}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+        focusable="false"
+        {...rest}
+      >
+        <path d="M6 18 18 6" />
+        <path d="M9 6h9v9" />
+      </svg>
+    );
+  }
+
   return (
     <svg
       width={size}

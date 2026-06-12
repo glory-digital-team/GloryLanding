@@ -10,43 +10,14 @@
   gap: $space-xs; // gap 4 между иконкой и текстом (как в макете)
   border-radius: $radius-pill; // кнопки-таблетки, как в макете
   white-space: nowrap;
-  overflow: hidden; // для блика-«волны»
   border: 1px solid transparent;
+
+  // Анимации кнопок — строго по спеке дизайнера: только цвета, 200ms ease-out
   transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.25s ease,
-    transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 200ms ease-out,
+    border-color 200ms ease-out,
+    color 200ms ease-out,
     opacity 0.18s ease;
-
-  // Диагональный блик, пробегающий слева направо при наведении.
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      120deg,
-      transparent 30%,
-      rgb(255 255 255 / 35%) 50%,
-      transparent 70%
-    );
-    translate: -120% 0;
-    transition: translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-    pointer-events: none;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-
-    &::before {
-      translate: 120% 0;
-    }
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
 
   &:disabled {
     opacity: 0.5;
@@ -56,15 +27,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .button {
-    transition: background-color 0.2s ease, color 0.2s ease;
-
-    &:hover {
-      transform: none;
-    }
-
-    &::before {
-      display: none;
-    }
+    transition: none;
   }
 }
 
@@ -87,13 +50,13 @@
 }
 
 // ── Варианты ──────────────────────────────────────────────
+// Спека: #CC0000 → hover #AF0000
 .primary {
   color: $color-text-invert;
   background-color: $color-primary;
 
   &:hover {
     background-color: $color-primary-hover;
-    box-shadow: 0 rem(10px) rem(24px) rgb(204 0 0 / 32%);
   }
 }
 
@@ -102,9 +65,21 @@
   background-color: transparent;
   border-color: $color-text; // обводка #222224, как в макете
 
+  // Спека дизайнера: на hover контурная кнопка заливается фирменным красным
   &:hover {
-    background-color: $color-text;
+    background-color: $color-primary;
+    border-color: $color-primary;
     color: $color-text-invert;
+  }
+}
+
+// Решение команды: рядом с красной primary-кнопкой (hero) secondary
+// не перекрашивается на hover, чтобы не было двух красных кнопок рядом.
+.calm {
+  &:hover {
+    background-color: transparent;
+    border-color: $color-text;
+    color: $color-text;
   }
 }
 
@@ -114,6 +89,5 @@
 
   &:hover {
     background-color: #000;
-    box-shadow: 0 rem(10px) rem(24px) rgb(0 0 0 / 25%);
   }
 }

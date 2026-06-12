@@ -42,7 +42,9 @@ export function Hero() {
 
           <div className={styles.actions}>
             <Button variant="primary">Начать проект</Button>
-            <Button variant="secondary">Подробнее</Button>
+            <Button variant="secondary" calm>
+              Подробнее
+            </Button>
           </div>
         </div>
       </div>

@@ -1,0 +1,154 @@
+@use "shared/styles/abstracts" as *;
+
+// Правый drawer юридической информации (Figma 369:1340, Desktop - 6).
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  justify-content: flex-end;
+  background: rgb(15 15 15 / 65%);
+  animation: fade-in 0.25s ease both;
+}
+
+.drawer {
+  display: flex;
+  flex-direction: column;
+  width: min(rem(672px), 100%);
+  height: 100%;
+  background: $color-bg;
+  box-shadow: rem(-20px) 0 rem(30px) rgb(0 0 0 / 60%);
+  animation: slide-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    translate: 40px 0;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .drawer {
+    animation: none;
+  }
+}
+
+// ── Шапка ─────────────────────────────────────────────────
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: rem(24px) rem(32px);
+}
+
+.eyebrow {
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  line-height: rem(20px);
+  text-transform: uppercase;
+  color: $color-primary;
+}
+
+.title {
+  padding-top: rem(4px);
+  font-size: rem(20px);
+  font-weight: $fw-semibold;
+  line-height: rem(27.5px);
+  color: $color-bg-footer; // #121213
+}
+
+.close {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: $color-text;
+  cursor: pointer;
+  transition: color 0.18s ease;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+// ── Контент ───────────────────────────────────────────────
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: rem(32px);
+}
+
+.section {
+  & + & {
+    margin-top: rem(32px);
+  }
+}
+
+.sectionTitle {
+  padding-bottom: rem(9px);
+  border-bottom: 1px solid $color-border;
+  font-size: rem(18px);
+  font-weight: $fw-medium;
+  line-height: rem(27px);
+  color: $color-bg-footer;
+}
+
+.paragraph {
+  padding-top: rem(12px);
+  font-size: rem(14px);
+  line-height: rem(20px);
+  color: $color-text-faint; // #9CA3AF — как в макете
+}
+
+.revision {
+  margin-top: rem(32px);
+  padding-top: rem(17px);
+  border-top: 1px solid $color-border;
+  font-size: rem(12px);
+  line-height: rem(16px);
+  color: $color-text-muted;
+}
+
+// ── Низ с кнопкой ─────────────────────────────────────────
+.foot {
+  flex-shrink: 0;
+  padding: rem(20px) rem(32px);
+  border-top: 1px solid $color-border;
+}
+
+.closeBtn {
+  width: 100%;
+  height: rem(44px);
+  border: 0;
+  border-radius: rem(14px);
+  background: $color-primary;
+  color: $color-text-invert;
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  line-height: rem(20px);
+  cursor: pointer;
+  transition: background-color 0.2s ease-out;
+
+  &:hover {
+    background: $color-primary-hover;
+  }
+}

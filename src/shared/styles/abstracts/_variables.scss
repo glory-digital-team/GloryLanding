@@ -8,13 +8,14 @@
 // ── Цвета (точные значения из canvas.fig) ─────────────────
 // Бренд
 $color-primary: #c00; // фирменный красный (#CC0000)
-$color-primary-hover: #a30000; // тёмнее на hover
+$color-primary-hover: #af0000; // тёмнее на hover (спека дизайнера)
 $color-primary-soft: #fbe9e9; // светло-красная подложка (icon-button, иконки)
 
 // Нейтральные / фон
 $color-bg: #fff; // основной фон
 $color-bg-soft: #fafafa; // фон первого экрана (#FAFAFA)
-$color-bg-dark: #222224; // футер / тёмные блоки (#222224)
+$color-bg-dark: #222224; // тёмные блоки (#222224)
+$color-bg-footer: #121213; // футер — темнее тёмных блоков (Figma 191:468)
 $color-surface: #fafafa; // светлые поверхности / шапки секций
 $color-surface-2: #f5f6f8; // вложенные карточки / инпуты
 $color-badge-dark: #1f2937; // бейджи в футере (#1F2937)

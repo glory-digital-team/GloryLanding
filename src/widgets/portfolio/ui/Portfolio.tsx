@@ -7,7 +7,7 @@ export function Portfolio() {
   return (
     <section className={styles.portfolio} id="portfolio">
       <div className={styles.inner}>
-        <h2 className={styles.title}>Решения, которые работают</h2>
+        <h2 className={styles.title}>Наши проекты</h2>
 
         <div className={styles.grid}>
           {/* ИИ Говори — 202:306, синяя */}

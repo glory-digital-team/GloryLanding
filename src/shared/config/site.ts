@@ -17,8 +17,13 @@ export const siteConfig = {
     { label: "Портфолио", href: "#portfolio" },
     { label: "Частые вопросы", href: "#faq" },
   ] satisfies NavItem[],
-  // Нижняя навигация в футере
+  // Навигация в футере: десктопный макет (191:411) и мобильный (273:5614) различаются
   footerNav: [
+    { label: "Направления", href: "#services" },
+    { label: "Портфолио", href: "#portfolio" },
+    { label: "Частые вопросы", href: "#faq" },
+  ] satisfies NavItem[],
+  footerNavMobile: [
     { label: "Направления", href: "#services" },
     { label: "Кейсы", href: "#portfolio" },
     { label: "Начать проект", href: "#lead-form" },
@@ -26,24 +31,25 @@ export const siteConfig = {
   contacts: {
     phone: "8 (964) 638-04-80",
     phoneHref: "tel:+79646380480",
-    email: "goshaf01@ya.ru",
-    emailHref: "mailto:goshaf01@ya.ru",
+    email: "info@глори.digital",
+    // IDN-домен в mailto — через punycode, чтобы ссылка работала везде
+    emailHref: "mailto:info@xn--c1akimk.digital",
   },
+  // Цветные иконки соцсетей (Figma 270:595, выгружены в /public/socials)
   socials: [
-    { label: "ВКонтакте", href: "https://vk.com/", icon: "vk" as const },
-    { label: "Telegram", href: "https://t.me/", icon: "telegram" as const },
+    { label: "ВКонтакте", href: "https://vk.com/", src: "/socials/vk.svg" },
+    { label: "Telegram", href: "https://t.me/", src: "/socials/telegram.svg" },
+    { label: "MAX", href: "https://max.ru/", src: "/socials/max.svg" },
   ],
-  // Бейджи-мессенджеры рядом с контактами (Figma: #1F2937)
-  messengers: ["Telegram", "MAX"],
   requisites: [
     "ИП Фомкин Георгий Андреевич",
     "ИНН: 771471030731",
     "ОГРНИП: 325774600762382",
   ],
   legal: [
-    { label: "Политика конфиденциальности", href: "#" },
-    { label: "Оферта", href: "#" },
-    { label: "Согласие на обработку ПДн", href: "#" },
+    { label: "Политика конфиденциальности", href: "#", doc: "policy" },
+    { label: "Оферта", href: "#", doc: null },
+    { label: "Согласие на обработку ПДн", href: "#", doc: null },
   ],
   copyright: "© 2026 Глори.Цифра",
 } as const;

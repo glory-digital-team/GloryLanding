@@ -1,4 +1,4 @@
-import { Button } from "@/shared/ui/Button";
+import { ConfiguratorTrigger } from "@/widgets/configurator";
 import { CtaGraphic } from "./CtaGraphic";
 import styles from "./Cta.module.scss";
 
@@ -16,9 +16,10 @@ export function Cta() {
               Обсудим детали и зафиксируем точные условия на следующем шаге.
             </p>
           </div>
-          <Button variant="secondary" className={styles.button}>
+          {/* Открывает модальный конфигуратор (Figma: «всплывающий Конфигуратор» из CTA-блока) */}
+          <ConfiguratorTrigger variant="secondary" className={styles.button}>
             Подробнее
-          </Button>
+          </ConfiguratorTrigger>
         </div>
 
         <CtaGraphic className={styles.graphic} />

@@ -13,6 +13,8 @@ interface BaseProps {
   iconLeft?: IconName;
   /** Иконка справа от текста. */
   iconRight?: IconName;
+  /** Спокойный hover без перекраски — для secondary рядом с красной primary. */
+  calm?: boolean;
   children: ReactNode;
 }
 
@@ -26,12 +28,13 @@ export function Button({
   size = "md",
   iconLeft,
   iconRight,
+  calm,
   className,
   children,
   ...rest
 }: ButtonProps) {
   const iconSize = size === "lg" ? 20 : 18;
-  const classes = cn(styles.button, styles[variant], styles[size], className);
+  const classes = cn(styles.button, styles[variant], styles[size], calm && styles.calm, className);
 
   const content = (
     <>
