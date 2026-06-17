@@ -12,7 +12,7 @@
 }
 
 .card {
-  max-width: rem(560);
+  max-width: rem(560px);
   width: 100%;
   text-align: center;
   display: flex;
@@ -22,7 +22,7 @@
 }
 
 .code {
-  font-size: clamp(rem(96), 18vw, rem(160));
+  font-size: clamp(rem(96px), 18vw, rem(160px));
   line-height: 0.9;
   font-weight: $fw-extrabold;
   letter-spacing: -0.03em;
@@ -43,7 +43,7 @@
   line-height: $lh-relaxed;
   color: $color-text-muted;
   margin: 0;
-  max-width: rem(420);
+  max-width: rem(420px);
 }
 
 .actions {
