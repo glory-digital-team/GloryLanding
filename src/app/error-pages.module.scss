@@ -1,0 +1,55 @@
+@use "shared/styles/abstracts" as *;
+
+.wrap {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-xl $space-md;
+  background:
+    radial-gradient(120% 80% at 50% -10%, $color-primary-soft 0%, transparent 55%),
+    $color-bg-soft;
+}
+
+.card {
+  max-width: rem(560);
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-md;
+}
+
+.code {
+  font-size: clamp(rem(96), 18vw, rem(160));
+  line-height: 0.9;
+  font-weight: $fw-extrabold;
+  letter-spacing: -0.03em;
+  color: $color-primary;
+  margin: 0;
+}
+
+.title {
+  font-size: $fs-h2;
+  line-height: $lh-snug;
+  font-weight: $fw-bold;
+  color: $color-text-strong;
+  margin: 0;
+}
+
+.text {
+  font-size: $fs-lg;
+  line-height: $lh-relaxed;
+  color: $color-text-muted;
+  margin: 0;
+  max-width: rem(420);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-sm;
+  justify-content: center;
+  margin-top: $space-sm;
+}
