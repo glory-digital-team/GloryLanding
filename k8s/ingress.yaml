@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: glory-landing
+  namespace: glory-landing
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls.certresolver: le
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - xn--c1akimk.digital
+        - www.xn--c1akimk.digital
+  rules:
+    # глори.digital
+    - host: xn--c1akimk.digital
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: glory-landing
+                port:
+                  number: 80
+    # www.глори.digital
+    - host: www.xn--c1akimk.digital
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: glory-landing
+                port:
+                  number: 80

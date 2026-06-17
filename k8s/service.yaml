@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: glory-landing
+  namespace: glory-landing
+spec:
+  selector:
+    app: glory-landing
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
