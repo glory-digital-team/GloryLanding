@@ -16,7 +16,7 @@ env:
   IMAGE_NAME: ghcr.io/glory-digital-team/glorylanding
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -33,10 +33,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build image (load locally + push to GHCR)
         uses: docker/build-push-action@v6
         with:
           context: .
+          load: true
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:latest
@@ -44,25 +45,34 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Deploy to k3s over SSH
+      - name: Prepare SSH
         env:
-          IMAGE: ghcr.io/glory-digital-team/glorylanding:sha-${{ github.sha }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          set -euo pipefail
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Ship image into k3s containerd
+        env:
+          IMAGE: ${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          set -euo pipefail
+          docker save "$IMAGE" | gzip -1 | \
+            ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes "${SSH_USER}@${SSH_HOST}" \
+            "gunzip | k3s ctr -n k8s.io images import -"
+
+      - name: Apply manifests + rollout
+        env:
+          IMAGE: ${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          set -euo pipefail
           SSH="ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes ${SSH_USER}@${SSH_HOST}"
-          # Render manifests with the immutable image tag and apply on the cluster.
           for f in k8s/namespace.yaml k8s/deployment.yaml k8s/service.yaml k8s/ingress.yaml; do
             sed "s|__IMAGE__|${IMAGE}|g" "$f"
             echo "---"

@@ -25,6 +25,7 @@ spec:
       containers:
         - name: glory-landing
           image: __IMAGE__
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
           env:
