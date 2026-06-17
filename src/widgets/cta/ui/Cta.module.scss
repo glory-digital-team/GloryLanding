@@ -208,34 +208,10 @@
   transform-origin: 0 0;
 }
 
-// Стрелки вращаются вокруг общей оси (9.01, 68.5 в координатах viewBox).
-// Изометрическая матрица обёртки наклоняет плоскость вращения, поэтому
-// стрелки «лежат» на стеклянной грани, как у настоящих часов на циферблате.
+// Стрелки статичны — застывший «росчерк» в позе 12:20 (как в макете).
+// transform-origin оставлен на общей оси, чтобы геометрия совпадала с исходной.
 .graphic :global(.ctaMinuteHand),
 .graphic :global(.ctaHourHand) {
   transform-box: view-box;
   transform-origin: 9.01px 68.5px;
-}
-
-// Длинная стрелка тикает раз в секунду (полный круг за минуту),
-// короткая ползёт плавно — в 12 раз медленнее.
-.graphic :global(.ctaMinuteHand) {
-  animation: cta-hand-spin 60s steps(60) infinite;
-}
-
-.graphic :global(.ctaHourHand) {
-  animation: cta-hand-spin 720s linear infinite;
-}
-
-@keyframes cta-hand-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .graphic :global(.ctaMinuteHand),
-  .graphic :global(.ctaHourHand) {
-    animation: none;
-  }
 }
