@@ -1,4 +1,14 @@
 @use "shared/styles/abstracts" as *;
+@use "sass:math";
+
+// Позиции изображений в карточке заданы в координатах макета (карточка 548px).
+// Чтобы композиция не «ломалась» на промежуточных ширинах, переводим их в
+// контейнерные единицы: 1cqw = 1% ширины карточки. Карточка объявлена
+// container-type: inline-size, поэтому всё масштабируется пропорционально
+// при любой ширине (issue #3).
+@function cqw($px) {
+  @return math.div($px, 548) * 100cqw;
+}
 
 // Figma «Portfolio» 184:967 — все размеры/позиции 1:1 с макетом (1440).
 .portfolio {
@@ -52,6 +62,7 @@
 // ── Карточка 548×548, r36 ─────────────────────────────────
 .card {
   position: relative;
+  container-type: inline-size; // база для cqw — позиции изображений масштабируются с карточкой
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -157,19 +168,19 @@
 // ИИ Говори: телефон 336.61×445.8, rotate(−14°), bbox (241, 142) 434.47×514
 .imageGovori {
   position: absolute;
-  top: rem(142px);
-  left: rem(241px);
+  top: cqw(142);
+  left: cqw(241);
   z-index: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: rem(434.47px);
-  height: rem(514px);
+  width: cqw(434.47);
+  height: cqw(514);
 
   img {
     flex: none;
-    width: rem(336.61px);
-    height: rem(445.8px);
+    width: cqw(336.61);
+    height: cqw(445.8);
     object-fit: cover;
     transform: rotate(-14deg);
   }
@@ -178,22 +189,22 @@
 // ESIS: скрин 546×328.22 в (115, 239)
 .imageEsis {
   position: absolute;
-  top: rem(239px);
-  left: rem(115px);
+  top: cqw(239);
+  left: cqw(115);
   z-index: 0;
-  width: rem(546px);
-  height: rem(328.22px);
+  width: cqw(546);
+  height: cqw(328.22);
   object-fit: cover;
 }
 
 // Tienda: логотип 208.63×102.89, центр по X (+0.31), top 215
 .imageTienda {
   position: absolute;
-  top: rem(215px);
-  left: calc(50% + #{rem(0.31px)});
+  top: cqw(215);
+  left: calc(50% + #{cqw(0.31)});
   z-index: 0;
-  width: rem(208.63px);
-  height: rem(102.89px);
+  width: cqw(208.63);
+  height: cqw(102.89);
   transform: translateX(-50%);
 }
 
@@ -205,7 +216,7 @@
   z-index: 0;
   background-image: url("/portfolio/lunes-texture.png");
   background-position: top left;
-  background-size: rem(1048.85px) rem(534.83px);
+  background-size: cqw(1048.85) cqw(534.83);
   opacity: 0.5;
   pointer-events: none;
 }
@@ -214,11 +225,11 @@
 // центр бокса 372.22×123.38 в (45.72, 50% − 68.59)
 .lunesScript {
   position: absolute;
-  top: calc(50% - #{rem(68.59px)}); // центр бокса 372×123 на 68.59 выше середины
-  left: rem(231.82px);
+  top: calc(50% - #{cqw(68.59)}); // центр бокса 372×123 на 68.59 выше середины
+  left: cqw(231.82);
   z-index: 1;
-  width: rem(405px);
-  height: rem(122px);
+  width: cqw(405);
+  height: cqw(122);
   max-width: none;
   transform: translate(-50%, -50%);
 }
@@ -227,16 +238,18 @@
 // уже с запечённой текстурой/бленд-режимами; лежит в правом нижнем углу.
 .lunesMoon {
   position: absolute;
-  top: rem(205.26px);
-  left: rem(242.53px);
+  top: cqw(205.26);
+  left: cqw(242.53);
   z-index: 1;
-  width: rem(305.47px);
-  height: rem(342.74px);
+  width: cqw(305.47);
+  height: cqw(342.74);
   max-width: none;
   pointer-events: none;
 }
 
-// ── Мобильный макет 273:5316: карточка 380×380 (десктоп 548 × 0.6934) ──
+// ── Мобильный макет 273:5316 ──────────────────────────────
+// Позиции изображений теперь в cqw и масштабируются автоматически —
+// здесь правим только типографику бейджей и отступы текстовых блоков.
 @include respond-down("md") {
   .tags {
     padding: rem(24px) rem(24px) 0; // бейджи на (24, 24)
@@ -250,48 +263,6 @@
 
   .text {
     padding: 0 rem(24px) rem(24px);
-  }
-
-  // ИИ Говори: bbox телефона 309.13×365.72 в (156, 154.95) — десктоп × 0.7115
-  .imageGovori {
-    top: rem(154.95px);
-    left: rem(156px);
-    transform: scale(0.7115);
-    transform-origin: top left;
-  }
-
-  // ESIS: скрин 416×250 в (107, 151)
-  .imageEsis {
-    top: rem(151px);
-    left: rem(107px);
-    width: rem(416px);
-    height: rem(250px);
-  }
-
-  // Tienda: логотип × 0.6934, центр по X сохраняется
-  .imageTienda {
-    top: rem(149.08px);
-    width: rem(144.66px);
-    height: rem(71.34px);
-  }
-
-  // Lunes: текстура и слои × 0.6934
-  .lunesTexture {
-    background-size: rem(727.27px) rem(370.85px);
-  }
-
-  .lunesScript {
-    top: calc(50% - #{rem(47.56px)});
-    left: rem(160.75px);
-    width: rem(280.83px);
-    height: rem(84.6px);
-  }
-
-  .lunesMoon {
-    top: rem(142.33px);
-    left: rem(168.19px);
-    width: rem(211.81px);
-    height: rem(237.65px);
   }
 }
 

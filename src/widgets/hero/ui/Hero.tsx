@@ -41,8 +41,10 @@ export function Hero() {
           </div>
 
           <div className={styles.actions}>
-            <Button variant="primary">Начать проект</Button>
-            <Button variant="secondary" calm>
+            <Button variant="primary" href="#lead-form">
+              Начать проект
+            </Button>
+            <Button variant="secondary" calm href="#services">
               Подробнее
             </Button>
           </div>
