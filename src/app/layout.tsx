@@ -5,7 +5,16 @@ import { Analytics } from "@/shared/analytics";
 import { siteConfig } from "@/shared/config";
 import "./styles/index.scss";
 
+const siteUrl = new URL("https://xn--c1akimk.digital");
+const previewImage = {
+  url: "/og-image-v2.png",
+  width: 1200,
+  height: 630,
+  alt: siteConfig.name,
+};
+
 export const metadata: Metadata = {
+  metadataBase: siteUrl,
   title: siteConfig.name,
   description: siteConfig.description,
   // Фавикон «Глори.Цифра» (issue #8): SVG для современных браузеров,
@@ -19,6 +28,21 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   manifest: "/site.webmanifest",
+  openGraph: {
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: "/",
+    siteName: siteConfig.name,
+    images: [previewImage],
+    locale: "ru_RU",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [previewImage.url],
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
