@@ -2,12 +2,13 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { createPublicConfiguratorLead } from "@/shared/api/crm";
 import { cn, formatRuPhone, isCompleteRuPhone, useOverlays } from "@/shared/lib";
 import {
-  MIN_BASE_PRICE,
   MODULES,
   PROJECT_TYPES,
   SOURCE_OPTIONS,
+  formatPrice,
   urgencyFromDate,
 } from "../model/config";
 import { Receipt } from "./Receipt";
@@ -36,9 +37,13 @@ export function ConfiguratorModal() {
   const [launchDate, setLaunchDate] = useState("");
   const [sourceId, setSourceId] = useState<string | null>(null);
   const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
+  const [pending, setPending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   const reset = useCallback(() => {
     setStep(0);
@@ -47,9 +52,13 @@ export function ConfiguratorModal() {
     setLaunchDate("");
     setSourceId(null);
     setName("");
+    setCompany("");
+    setEmail("");
     setPhone("");
     setConsent(false);
+    setPending(false);
     setSubmitted(false);
+    setError("");
   }, []);
 
   const close = useCallback(() => {
@@ -70,13 +79,14 @@ export function ConfiguratorModal() {
   }, [configuratorOpen, close]);
 
   const selectedType = PROJECT_TYPES.find((t) => t.id === typeId) ?? null;
-  const basePrice = selectedType?.basePrice ?? MIN_BASE_PRICE;
+  const priceAvailable = selectedType !== null;
+  const basePrice = selectedType?.basePrice ?? 0;
   const modulesTotal = useMemo(
     () => MODULES.filter((m) => moduleIds.has(m.id)).reduce((sum, m) => sum + m.price, 0),
     [moduleIds],
   );
   const urgency = urgencyFromDate(launchDate);
-  const total = Math.max(basePrice + modulesTotal + (urgency?.delta ?? 0), MIN_BASE_PRICE);
+  const total = priceAvailable ? Math.max(basePrice + modulesTotal + (urgency?.delta ?? 0), 0) : 0;
 
   if (!configuratorOpen) return null;
 
@@ -93,20 +103,46 @@ export function ConfiguratorModal() {
     (step === 0 && typeId !== null) ||
     step === 1 ||
     step === 2 ||
-    (step === 3 && name.trim().length > 0 && isCompleteRuPhone(phone) && consent);
+    (step === 3 &&
+      name.trim().length > 0 &&
+      company.trim().length > 0 &&
+      isCompleteRuPhone(phone) &&
+      consent);
 
   const next = () => {
     if (step < TOTAL_STEPS - 1) setStep(step + 1);
   };
 
-  const submit = (e: FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (step < TOTAL_STEPS - 1) {
       next();
       return;
     }
-    // Бэкенда пока нет — фиксируем заявку локально и показываем подтверждение
-    setSubmitted(true);
+    setError("");
+    setPending(true);
+    try {
+      await createPublicConfiguratorLead({
+        requester_name: name.trim() || null,
+        requester_email: email.trim() || null,
+        requester_phone: phone,
+        company_name: company.trim(),
+        service_type_code: mapServiceType(typeId),
+        note: buildConfiguratorNote({
+          typeId,
+          moduleIds,
+          launchDate,
+          sourceId,
+          total,
+        }),
+        forecast_amount: total,
+      });
+      setSubmitted(true);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Не удалось отправить заявку");
+    } finally {
+      setPending(false);
+    }
   };
 
   return (
@@ -171,6 +207,7 @@ export function ConfiguratorModal() {
                   modulesTotal={modulesTotal}
                   urgency={urgency}
                   total={total}
+                  priceAvailable={priceAvailable}
                   collapsible
                 />
               </div>
@@ -290,6 +327,24 @@ export function ConfiguratorModal() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
+                  <input
+                    type="text"
+                    className={styles.input}
+                    placeholder="Компания"
+                    autoComplete="organization"
+                    aria-label="Компания"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                  />
+                  <input
+                    type="email"
+                    className={styles.input}
+                    placeholder="Email"
+                    autoComplete="email"
+                    aria-label="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                   <label className={styles.fieldLabel} htmlFor="conf-phone">
                     Телефон
                   </label>
@@ -314,6 +369,7 @@ export function ConfiguratorModal() {
                       <PolicyInlineLink />
                     </span>
                   </label>
+                  {error ? <p className={styles.error}>{error}</p> : null}
                 </div>
               )}
 
@@ -323,8 +379,8 @@ export function ConfiguratorModal() {
                     Назад
                   </button>
                 )}
-                <button type="submit" className={styles.nextBtn} disabled={!stepValid}>
-                  Далее
+                <button type="submit" className={styles.nextBtn} disabled={!stepValid || pending}>
+                  {step === TOTAL_STEPS - 1 ? (pending ? "Отправляем..." : "Отправить") : "Далее"}
                   <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                     <path
                       d="m9 6 6 6-6 6"
@@ -345,6 +401,7 @@ export function ConfiguratorModal() {
                 modulesTotal={modulesTotal}
                 urgency={urgency}
                 total={total}
+                priceAvailable={priceAvailable}
               />
             </div>
           </div>
@@ -362,4 +419,38 @@ function PolicyInlineLink() {
       Политика конфиденциальности
     </button>
   );
+}
+
+function mapServiceType(typeId: string | null): string | null {
+  if (typeId === "site") return "website";
+  if (typeId === "promo") return "landing";
+  if (typeId === "ai") return "ai_solution";
+  if (typeId === "mobile") return "mobile_app";
+  return null;
+}
+
+function buildConfiguratorNote({
+  typeId,
+  moduleIds,
+  launchDate,
+  sourceId,
+  total,
+}: {
+  typeId: string | null;
+  moduleIds: Set<string>;
+  launchDate: string;
+  sourceId: string | null;
+  total: number;
+}): string {
+  const typeLabel = PROJECT_TYPES.find((item) => item.id === typeId)?.label ?? "не выбрано";
+  const modules = MODULES.filter((item) => moduleIds.has(item.id)).map((item) => item.label);
+  const source = SOURCE_OPTIONS.find((item) => item.id === sourceId)?.label ?? "не указано";
+  return [
+    "Заявка из публичного конфигуратора.",
+    `Услуга: ${typeLabel}.`,
+    `Модули: ${modules.length > 0 ? modules.join(", ") : "без дополнительных модулей"}.`,
+    `Желаемый запуск: ${launchDate || "не указан"}.`,
+    `Исходные данные: ${source}.`,
+    `Предварительный бюджет: от ${formatPrice(total)}.`,
+  ].join("\n");
 }

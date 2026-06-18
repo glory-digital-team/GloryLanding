@@ -10,19 +10,27 @@ interface ReceiptProps {
   modulesTotal: number;
   urgency: Urgency | null;
   total: number;
+  priceAvailable: boolean;
   /** Мобильный режим: чек сворачивается до строки с итогом (Figma 337:5202/369:762). */
   collapsible?: boolean;
 }
 
 // Чек «Ваш проект» (Figma «Receipt» 337:422).
-export function Receipt({ basePrice, modulesTotal, urgency, total, collapsible }: ReceiptProps) {
+export function Receipt({
+  basePrice,
+  modulesTotal,
+  urgency,
+  total,
+  priceAvailable,
+  collapsible,
+}: ReceiptProps) {
   const [open, setOpen] = useState(false);
 
   const rows = (
     <div className={styles.receiptRows}>
       <div className={styles.receiptRow}>
         <span>Базовая стоимость:</span>
-        <b>{formatPrice(basePrice)}</b>
+        <b>{priceAvailable ? formatPrice(basePrice) : "-"}</b>
       </div>
       <div className={styles.receiptRow}>
         <span>Дополнительно:</span>
@@ -48,7 +56,9 @@ export function Receipt({ basePrice, modulesTotal, urgency, total, collapsible }
   const finalPrice = (
     <div className={styles.receiptFinal}>
       <span className={styles.receiptFinalLabel}>Предварительно:</span>
-      <span className={styles.receiptFinalValue}>от {formatPrice(total)}</span>
+      <span className={styles.receiptFinalValue}>
+        {priceAvailable ? `от ${formatPrice(total)}` : "Выберите услугу"}
+      </span>
     </div>
   );
 
