@@ -38,6 +38,60 @@ export class PublicCrmError extends Error {
   }
 }
 
+const FIELD_LABELS: Record<string, string> = {
+  company_name: "Компания",
+  requester_name: "Имя",
+  requester_email: "Email",
+  requester_phone: "Телефон",
+  service_type_code: "Тип услуги",
+  forecast_amount: "Бюджет",
+};
+
+function formatValidationItem(item: unknown): string | null {
+  if (typeof item === "string") return item;
+  if (!item || typeof item !== "object") return null;
+
+  const data = item as { loc?: unknown; msg?: unknown; message?: unknown };
+  const message = typeof data.msg === "string"
+    ? data.msg
+    : typeof data.message === "string"
+      ? data.message
+      : null;
+  if (!message) return null;
+
+  const normalizedMessage = message === "Field required" ? "обязательное поле" : message;
+
+  if (Array.isArray(data.loc)) {
+    for (let i = data.loc.length - 1; i >= 0; i -= 1) {
+      const field = data.loc[i];
+      if (typeof field === "string" && FIELD_LABELS[field]) {
+        return `${FIELD_LABELS[field]}: ${normalizedMessage}`;
+      }
+    }
+  }
+
+  return normalizedMessage;
+}
+
+export function getPublicApiErrorMessage(payload: unknown, fallback: string): string {
+  if (typeof payload === "string") return payload;
+  if (!payload || typeof payload !== "object") return fallback;
+
+  const data = payload as { detail?: unknown; message?: unknown; error?: unknown };
+  const candidate = data.detail ?? data.message ?? data.error;
+
+  if (typeof candidate === "string") return candidate;
+  if (Array.isArray(candidate)) {
+    const messages = candidate.map(formatValidationItem).filter(Boolean);
+    return messages.length > 0 ? messages.join(". ") : fallback;
+  }
+  if (candidate && typeof candidate === "object") {
+    return formatValidationItem(candidate) ?? fallback;
+  }
+
+  return fallback;
+}
+
 async function postJson<T>(path: string, payload: unknown): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
     method: "POST",
@@ -47,8 +101,7 @@ async function postJson<T>(path: string, payload: unknown): Promise<T> {
   if (!response.ok) {
     let detail = "Не удалось отправить заявку";
     try {
-      const data = (await response.json()) as { detail?: string; message?: string };
-      detail = data.detail || data.message || detail;
+      detail = getPublicApiErrorMessage(await response.json(), detail);
     } catch {
       // Body is optional for gateway errors.
     }
