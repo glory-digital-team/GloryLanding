@@ -158,6 +158,38 @@
   }
 }
 
+.answer p {
+  margin: 0;
+}
+
+// CTA-ссылка под ответом — акцентная строка-кнопка (доп. конверсия).
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(6px);
+  margin-top: rem(16px);
+  padding: 0;
+  font-size: rem(18px);
+  font-weight: $fw-medium;
+  line-height: 1.2;
+  color: $color-primary;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition:
+    gap 0.2s ease,
+    color 0.18s ease;
+
+  &:hover {
+    gap: rem(10px);
+    color: $color-primary-hover;
+  }
+}
+
+.ctaIcon {
+  flex-shrink: 0;
+}
+
 // Моб. макет 273:5491: карточка-вопрос 380×84 — pad 16, вопрос 16/26,
 // ответ 14/20; радиус карточки меньше десктопного
 @include respond-down("md") {
@@ -184,6 +216,11 @@
 
   .itemOpen .answer {
     padding-bottom: rem(16px);
+  }
+
+  .cta {
+    margin-top: rem(12px);
+    font-size: rem(14px);
   }
 }
 
