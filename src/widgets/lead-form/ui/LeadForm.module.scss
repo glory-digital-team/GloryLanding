@@ -118,6 +118,22 @@
   }
 }
 
+.error,
+.status {
+  margin: 0;
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  line-height: rem(20px);
+}
+
+.error {
+  color: #b42318;
+}
+
+.status {
+  color: #1f7a4d;
+}
+
 .actions {
   display: flex;
   flex-direction: column;
