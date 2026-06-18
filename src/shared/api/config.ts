@@ -1,6 +1,6 @@
 "use client";
 
-import { PublicCrmError } from "./crm";
+import { getPublicApiErrorMessage, PublicCrmError } from "./crm";
 
 export interface PublicConfiguratorCalculateRequest {
   service_type_code: string;
@@ -33,8 +33,7 @@ async function postJson<T>(path: string, payload: unknown): Promise<T> {
   if (!response.ok) {
     let detail = "Расчёт временно недоступен";
     try {
-      const data = (await response.json()) as { detail?: string; message?: string };
-      detail = data.detail || data.message || detail;
+      detail = getPublicApiErrorMessage(await response.json(), detail);
     } catch {
       // Gateway errors may not return JSON.
     }
