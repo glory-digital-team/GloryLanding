@@ -2,6 +2,14 @@
   "name": "glory",
   "version": "0.1.0",
   "private": true,
+  "browserslist": [
+    "last 3 versions",
+    "Safari >= 14",
+    "iOS >= 14",
+    "Firefox ESR",
+    "> 0.3%",
+    "not dead"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
