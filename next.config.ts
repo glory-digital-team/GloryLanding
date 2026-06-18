@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
         source: "/crm/:path*",
         destination: `${crmGatewayUrl}/crm/:path*`,
       },
+      {
+        source: "/config/:path*",
+        destination: `${crmGatewayUrl}/config/:path*`,
+      },
     ];
   },
 };

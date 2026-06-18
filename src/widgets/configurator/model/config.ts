@@ -6,27 +6,46 @@ export interface ProjectType {
   id: string;
   label: string;
   icon: string;
-  basePrice: number;
+  serviceTypeCode: string;
 }
 
 export const PROJECT_TYPES: ProjectType[] = [
-  { id: "site", label: "Создание сайтов", icon: "/configurator/site.svg", basePrice: 100_000 },
-  { id: "promo", label: "Лендинг / Промо", icon: "/configurator/promo.svg", basePrice: 100_000 },
-  { id: "ai", label: "AI-решения", icon: "/configurator/ai.svg", basePrice: 200_000 },
-  { id: "mobile", label: "Мобильная разработка", icon: "/configurator/mobile.svg", basePrice: 250_000 },
+  {
+    id: "site",
+    label: "Создание сайтов",
+    icon: "/configurator/site.svg",
+    serviceTypeCode: "web_development",
+  },
+  {
+    id: "promo",
+    label: "Лендинг / Промо",
+    icon: "/configurator/promo.svg",
+    serviceTypeCode: "web_development",
+  },
+  {
+    id: "ai",
+    label: "AI-решения",
+    icon: "/configurator/ai.svg",
+    serviceTypeCode: "business_automation",
+  },
+  {
+    id: "mobile",
+    label: "Мобильная разработка",
+    icon: "/configurator/mobile.svg",
+    serviceTypeCode: "mobile_app",
+  },
 ];
 
 export interface ProjectModule {
   id: string;
   label: string;
-  price: number;
 }
 
 export const MODULES: ProjectModule[] = [
-  { id: "crm", label: "Автоматический обмен с CRM и 1С", price: 50_000 },
-  { id: "payments", label: "Приём платежей на сайте", price: 50_000 },
-  { id: "cabinet", label: "Личный кабинет для клиентов", price: 50_000 },
-  { id: "search", label: "Умный поиск и рекомендации", price: 50_000 },
+  { id: "crm", label: "Автоматический обмен с CRM и 1С" },
+  { id: "payments", label: "Приём платежей на сайте" },
+  { id: "cabinet", label: "Личный кабинет для клиентов" },
+  { id: "search", label: "Умный поиск и рекомендации" },
 ];
 
 export interface SourceOption {
@@ -45,14 +64,24 @@ export type UrgencyTone = "orange" | "blue" | "green";
 
 export interface Urgency {
   id: string;
+  code: string;
   label: string;
-  delta: number;
   tone: UrgencyTone;
 }
 
-const URGENT: Urgency = { id: "urgent", label: "Срочный запуск", delta: 50_000, tone: "orange" };
-const OPTIMAL: Urgency = { id: "optimal", label: "Оптимальный запуск", delta: 0, tone: "blue" };
-const DELAYED: Urgency = { id: "delayed", label: "Отложенный запуск", delta: -50_000, tone: "green" };
+const URGENT: Urgency = { id: "urgent", code: "urgent", label: "Срочный запуск", tone: "orange" };
+const OPTIMAL: Urgency = {
+  id: "optimal",
+  code: "accelerated",
+  label: "Оптимальный запуск",
+  tone: "blue",
+};
+const DELAYED: Urgency = {
+  id: "delayed",
+  code: "standard",
+  label: "Отложенный запуск",
+  tone: "green",
+};
 
 /** Срочность выводится из желаемой даты запуска. */
 export function urgencyFromDate(dateValue: string): Urgency | null {
@@ -65,11 +94,11 @@ export function urgencyFromDate(dateValue: string): Urgency | null {
   return DELAYED;
 }
 
-/** Минимальная ставка — для чека, пока тип проекта не выбран. */
-export const MIN_BASE_PRICE = PROJECT_TYPES.reduce(
-  (min, t) => Math.min(min, t.basePrice),
-  Infinity,
-);
+export function riskLevelFromSource(sourceId: string | null): string {
+  if (sourceId === "idea") return "idea_only";
+  if (sourceId === "concept") return "no_tz";
+  return "full_specs";
+}
 
 export function formatPrice(value: number): string {
   return `${value.toLocaleString("ru-RU")} ₽`;

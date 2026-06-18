@@ -2,6 +2,10 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import {
+  calculatePublicConfigurator,
+  type PublicConfiguratorCalculateResponse,
+} from "@/shared/api/config";
 import { createPublicConfiguratorLead } from "@/shared/api/crm";
 import { cn, formatRuPhone, isCompleteRuPhone, useOverlays } from "@/shared/lib";
 import {
@@ -9,12 +13,23 @@ import {
   PROJECT_TYPES,
   SOURCE_OPTIONS,
   formatPrice,
+  riskLevelFromSource,
   urgencyFromDate,
 } from "../model/config";
 import { Receipt } from "./Receipt";
 import styles from "./Configurator.module.scss";
 
 const TOTAL_STEPS = 4;
+
+type EstimateState = {
+  key: string;
+  data: PublicConfiguratorCalculateResponse;
+};
+
+type EstimateErrorState = {
+  key: string;
+  message: string;
+};
 
 // Заголовки шагов — из ранних фреймов конфигуратора в макете
 // (100:1189 / 100:1752 / 100:2294); в финальных фреймах заголовок
@@ -42,6 +57,9 @@ export function ConfiguratorModal() {
   const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
   const [pending, setPending] = useState(false);
+  const [estimate, setEstimate] = useState<EstimateState | null>(null);
+  const [estimating, setEstimating] = useState(false);
+  const [estimateError, setEstimateError] = useState<EstimateErrorState | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
@@ -57,6 +75,9 @@ export function ConfiguratorModal() {
     setPhone("");
     setConsent(false);
     setPending(false);
+    setEstimate(null);
+    setEstimating(false);
+    setEstimateError(null);
     setSubmitted(false);
     setError("");
   }, []);
@@ -79,14 +100,66 @@ export function ConfiguratorModal() {
   }, [configuratorOpen, close]);
 
   const selectedType = PROJECT_TYPES.find((t) => t.id === typeId) ?? null;
-  const priceAvailable = selectedType !== null;
-  const basePrice = selectedType?.basePrice ?? 0;
-  const modulesTotal = useMemo(
-    () => MODULES.filter((m) => moduleIds.has(m.id)).reduce((sum, m) => sum + m.price, 0),
-    [moduleIds],
-  );
   const urgency = urgencyFromDate(launchDate);
-  const total = priceAvailable ? Math.max(basePrice + modulesTotal + (urgency?.delta ?? 0), 0) : 0;
+  const moduleCodes = useMemo(() => Array.from(moduleIds).sort(), [moduleIds]);
+  const estimateKey = selectedType
+    ? [
+        selectedType.serviceTypeCode,
+        selectedType.id,
+        moduleCodes.join(","),
+        urgency?.code ?? "standard",
+        riskLevelFromSource(sourceId),
+        launchDate || "",
+      ].join("|")
+    : "";
+  const activeEstimate = estimate?.key === estimateKey ? estimate.data : null;
+  const activeEstimateError = estimateError?.key === estimateKey ? estimateError.message : "";
+  const priceAvailable = selectedType !== null && activeEstimate !== null && !activeEstimateError;
+  const total = activeEstimate?.total ?? null;
+
+  useEffect(() => {
+    if (!selectedType || !estimateKey) return;
+
+    let cancelled = false;
+    const currentEstimateKey = estimateKey;
+
+    const timer = window.setTimeout(() => {
+      setEstimating(true);
+      setEstimateError(null);
+      calculatePublicConfigurator({
+        service_type_code: selectedType.serviceTypeCode,
+        module_codes: moduleCodes,
+        urgency_level_code: urgency?.code ?? "standard",
+        risk_level_code: riskLevelFromSource(sourceId),
+        has_tz: sourceId === "ready",
+        deadline: launchDate || null,
+        metadata: {
+          public_project_type_id: selectedType.id,
+        },
+      })
+        .then((nextEstimate) => {
+          if (cancelled) return;
+          setEstimate({ key: currentEstimateKey, data: nextEstimate });
+          setEstimateError(null);
+        })
+        .catch((cause) => {
+          if (cancelled) return;
+          setEstimate(null);
+          setEstimateError({
+            key: currentEstimateKey,
+            message: cause instanceof Error ? cause.message : "Расчёт временно недоступен",
+          });
+        })
+        .finally(() => {
+          if (!cancelled) setEstimating(false);
+        });
+    }, 450);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [estimateKey, launchDate, moduleCodes, selectedType, sourceId, urgency?.code]);
 
   if (!configuratorOpen) return null;
 
@@ -134,6 +207,7 @@ export function ConfiguratorModal() {
           launchDate,
           sourceId,
           total,
+          calculationRequestId: activeEstimate?.calculation_request_id ?? null,
         }),
         forecast_amount: total,
       });
@@ -203,11 +277,14 @@ export function ConfiguratorModal() {
                   (Figma 369:756/762). */}
               <div className={styles.mobileReceipt}>
                 <Receipt
-                  basePrice={basePrice}
-                  modulesTotal={modulesTotal}
+                  moduleCount={moduleIds.size}
                   urgency={urgency}
                   total={total}
+                  minAmount={activeEstimate?.estimate_min_amount}
+                  maxAmount={activeEstimate?.estimate_max_amount}
                   priceAvailable={priceAvailable}
+                  pending={estimating}
+                  error={activeEstimateError}
                   collapsible
                 />
               </div>
@@ -397,11 +474,14 @@ export function ConfiguratorModal() {
 
             <div className={styles.desktopReceipt}>
               <Receipt
-                basePrice={basePrice}
-                modulesTotal={modulesTotal}
+                moduleCount={moduleIds.size}
                 urgency={urgency}
                 total={total}
+                minAmount={activeEstimate?.estimate_min_amount}
+                maxAmount={activeEstimate?.estimate_max_amount}
                 priceAvailable={priceAvailable}
+                pending={estimating}
+                error={activeEstimateError}
               />
             </div>
           </div>
@@ -422,11 +502,7 @@ function PolicyInlineLink() {
 }
 
 function mapServiceType(typeId: string | null): string | null {
-  if (typeId === "site") return "website";
-  if (typeId === "promo") return "landing";
-  if (typeId === "ai") return "ai_solution";
-  if (typeId === "mobile") return "mobile_app";
-  return null;
+  return PROJECT_TYPES.find((item) => item.id === typeId)?.serviceTypeCode ?? null;
 }
 
 function buildConfiguratorNote({
@@ -435,12 +511,14 @@ function buildConfiguratorNote({
   launchDate,
   sourceId,
   total,
+  calculationRequestId,
 }: {
   typeId: string | null;
   moduleIds: Set<string>;
   launchDate: string;
   sourceId: string | null;
-  total: number;
+  total: number | null;
+  calculationRequestId: string | null;
 }): string {
   const typeLabel = PROJECT_TYPES.find((item) => item.id === typeId)?.label ?? "не выбрано";
   const modules = MODULES.filter((item) => moduleIds.has(item.id)).map((item) => item.label);
@@ -451,6 +529,9 @@ function buildConfiguratorNote({
     `Модули: ${modules.length > 0 ? modules.join(", ") : "без дополнительных модулей"}.`,
     `Желаемый запуск: ${launchDate || "не указан"}.`,
     `Исходные данные: ${source}.`,
-    `Предварительный бюджет: от ${formatPrice(total)}.`,
+    total !== null
+      ? `Предварительный бюджет: от ${formatPrice(total)}.`
+      : "Предварительный бюджет: расчёт временно недоступен, требуется ручная оценка.",
+    calculationRequestId ? `ID расчёта: ${calculationRequestId}.` : null,
   ].join("\n");
 }
