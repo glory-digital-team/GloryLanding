@@ -74,11 +74,14 @@
 // Figma 191:308: квадрат 20×20, border 2px #D1D5DB, radius 4, без заливки.
 .checkbox {
   flex-shrink: 0;
-  appearance: none;
+  appearance: none; // Next автопрефиксит -webkit-appearance по browserslist
   width: rem(20px);
   height: rem(20px);
   margin-top: rem(2px);
   background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: rem(14px) rem(14px);
   border: rem(2px) solid #d1d5db;
   border-radius: rem(4px);
   cursor: pointer;
@@ -86,9 +89,16 @@
     background-color 0.15s ease,
     border-color 0.15s ease;
 
+  // При активации — квадрат заливается красным и появляется белая галочка.
   &:checked {
     background-color: $color-primary;
     border-color: $color-primary;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+  }
+
+  &:focus-visible {
+    outline: rem(2px) solid $color-primary;
+    outline-offset: rem(2px);
   }
 }
 

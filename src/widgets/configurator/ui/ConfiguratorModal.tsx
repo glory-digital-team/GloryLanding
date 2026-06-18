@@ -162,6 +162,19 @@ export function ConfiguratorModal() {
         ) : (
           <div className={styles.layout}>
             <div className={styles.left}>
+              {/* Чек на мобиле: сворачиваемый, виден с первого шага —
+                  предварительная стоимость появляется сразу при выборе проекта
+                  (Figma 369:756/762). */}
+              <div className={styles.mobileReceipt}>
+                <Receipt
+                  basePrice={basePrice}
+                  modulesTotal={modulesTotal}
+                  urgency={urgency}
+                  total={total}
+                  collapsible
+                />
+              </div>
+
               {/* Прогресс: 4 сегмента (Figma 337:389) */}
               <div className={styles.progress} aria-hidden="true">
                 {Array.from({ length: TOTAL_STEPS }, (_, i) => (
@@ -176,19 +189,6 @@ export function ConfiguratorModal() {
               </p>
 
               <h3 className={styles.stepTitle}>{STEP_TITLES[step]}</h3>
-
-              {/* Чек на мобиле: сворачиваемый, со 2-го шага (Figma 337:5202) */}
-              <div className={styles.mobileReceipt}>
-                {step > 0 && (
-                  <Receipt
-                    basePrice={basePrice}
-                    modulesTotal={modulesTotal}
-                    urgency={urgency}
-                    total={total}
-                    collapsible
-                  />
-                )}
-              </div>
 
               {step === 0 && (
                 <div className={styles.optionGrid}>
