@@ -35,10 +35,6 @@ export function Receipt({
   const rows = (
     <div className={styles.receiptRows}>
       <div className={styles.receiptRow}>
-        <span>Источник расчёта:</span>
-        <b>Глори.Штат</b>
-      </div>
-      <div className={styles.receiptRow}>
         <span>Модули:</span>
         <b>{moduleCount > 0 ? moduleCount : "-"}</b>
       </div>
