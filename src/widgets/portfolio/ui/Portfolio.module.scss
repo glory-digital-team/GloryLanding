@@ -70,6 +70,7 @@
   overflow: hidden;
   border-radius: rem(36px);
   color: $color-text-invert;
+  text-decoration: none;
   transition:
     transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 0.4s ease;
@@ -78,6 +79,11 @@
   &:hover {
     transform: translateY(rem(-6px));
     box-shadow: $shadow-lg;
+  }
+
+  &:focus-visible {
+    outline: rem(3px) solid $color-primary;
+    outline-offset: rem(4px);
   }
 }
 

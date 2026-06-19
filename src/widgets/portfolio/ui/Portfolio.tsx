@@ -11,7 +11,13 @@ export function Portfolio() {
 
         <div className={styles.grid}>
           {/* ИИ Говори — 202:306, синяя */}
-          <article className={`${styles.card} ${styles.cardBlue}`}>
+          <a
+            className={`${styles.card} ${styles.cardBlue}`}
+            href="https://ии-говори.рф/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Открыть проект ИИ Говори"
+          >
             <span className={styles.imageGovori} aria-hidden="true">
               <img src="/portfolio/ii-govori.png" alt="ИИ Говори" />
             </span>
@@ -24,10 +30,16 @@ export function Portfolio() {
               <h3 className={styles.cardTitle}>ИИ Говори</h3>
               <p className={styles.cardSubtitle}>Диалоговый AI-тренажер</p>
             </div>
-          </article>
+          </a>
 
           {/* ESIS — 180:888, светло-голубая */}
-          <article className={`${styles.card} ${styles.cardLight}`}>
+          <a
+            className={`${styles.card} ${styles.cardLight}`}
+            href="https://esls.ru/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Открыть проект ESIS"
+          >
             <img className={styles.imageEsis} src="/portfolio/esis.png" alt="ESIS" />
             <div className={styles.tags}>
               <span className={styles.tag}>Дизайн</span>
@@ -38,7 +50,7 @@ export function Portfolio() {
               <h3 className={styles.cardTitle}>ESIS</h3>
               <p className={styles.cardSubtitle}>Электронные ценики</p>
             </div>
-          </article>
+          </a>
 
           {/* Tienda de Gaucho — 180:911, зелёная */}
           <article className={`${styles.card} ${styles.cardGreen}`}>
