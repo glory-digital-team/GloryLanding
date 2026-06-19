@@ -16,6 +16,7 @@ export function Footer() {
     legal,
     copyright,
   } = siteConfig;
+  const visibleSocials = socials.filter((social) => !social.hidden);
 
   return (
     <footer className={styles.footer}>
@@ -27,7 +28,7 @@ export function Footer() {
             <p className={styles.tagline}>{tagline}</p>
             {/* Цветные иконки соцсетей (Figma 270:595) */}
             <div className={styles.socials}>
-              {socials.map((s) => (
+              {visibleSocials.map((s) => (
                 <a
                   key={s.label}
                   href={s.href}

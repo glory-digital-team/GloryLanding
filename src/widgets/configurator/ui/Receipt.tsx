@@ -10,7 +10,6 @@ interface ReceiptProps {
   urgency: Urgency | null;
   total: number | null;
   minAmount?: number | null;
-  maxAmount?: number | null;
   priceAvailable: boolean;
   pending?: boolean;
   error?: string;
@@ -24,7 +23,6 @@ export function Receipt({
   urgency,
   total,
   minAmount,
-  maxAmount,
   priceAvailable,
   pending,
   error,
@@ -51,12 +49,8 @@ export function Receipt({
     </div>
   );
 
-  const estimateText =
-    minAmount && maxAmount
-      ? `от ${formatPrice(minAmount)} до ${formatPrice(maxAmount)}`
-      : total !== null
-        ? `от ${formatPrice(total)}`
-        : "Выберите услугу";
+  const startAmount = minAmount ?? total;
+  const estimateText = startAmount !== null ? `От ${formatPrice(startAmount)}` : "Выберите услугу";
 
   const finalPrice = (
     <div className={styles.receiptFinal}>

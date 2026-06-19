@@ -82,23 +82,27 @@ export function Faq() {
                 </button>
                 <div className={styles.answerWrap}>
                   <div className={styles.answer}>
-                    <p>{item.a}</p>
-                    {item.cta &&
-                      (item.cta.type === "link" ? (
-                        <a href={item.cta.href} className={styles.cta}>
-                          {item.cta.label}
-                          <Icon name="arrow-right" size={18} className={styles.ctaIcon} />
-                        </a>
-                      ) : (
-                        <button
-                          type="button"
-                          className={styles.cta}
-                          onClick={openConfigurator}
-                        >
-                          {item.cta.label}
-                          <Icon name="arrow-right" size={18} className={styles.ctaIcon} />
-                        </button>
-                      ))}
+                    <p>
+                      {item.a}
+                      {item.cta ? (
+                        <>
+                          {" "}
+                          {item.cta.type === "link" ? (
+                            <a href={item.cta.href} className={styles.cta}>
+                              {item.cta.label}
+                            </a>
+                          ) : (
+                            <button
+                              type="button"
+                              className={styles.cta}
+                              onClick={openConfigurator}
+                            >
+                              {item.cta.label}
+                            </button>
+                          )}
+                        </>
+                      ) : null}
+                    </p>
                   </div>
                 </div>
               </div>
