@@ -7,6 +7,13 @@ export interface NavItem {
   href: string;
 }
 
+export interface SocialItem {
+  label: string;
+  href: string;
+  src: string;
+  hidden: boolean;
+}
+
 export const siteConfig = {
   name: "Глори.Цифра",
   tagline: "Цифровые решения для вашего бизнеса",
@@ -37,10 +44,20 @@ export const siteConfig = {
   },
   // Цветные иконки соцсетей (Figma 270:595, выгружены в /public/socials)
   socials: [
-    { label: "ВКонтакте", href: "https://vk.com/", src: "/socials/vk.svg" },
-    { label: "Telegram", href: "https://t.me/", src: "/socials/telegram.svg" },
-    { label: "MAX", href: "https://max.ru/", src: "/socials/max.svg" },
-  ],
+    {
+      label: "ВКонтакте",
+      href: "https://vk.ru/glorydigit",
+      src: "/socials/vk.svg",
+      hidden: false,
+    },
+    {
+      label: "Telegram",
+      href: "https://t.me/+k7aQU8zvtp9jNTEy",
+      src: "/socials/telegram.svg",
+      hidden: false,
+    },
+    { label: "MAX", href: "https://max.ru/", src: "/socials/max.svg", hidden: true },
+  ] satisfies SocialItem[],
   requisites: [
     "ИП Фомкин Георгий Андреевич",
     "ИНН: 771471030731",

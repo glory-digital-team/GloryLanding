@@ -101,5 +101,8 @@ export function riskLevelFromSource(sourceId: string | null): string {
 }
 
 export function formatPrice(value: number): string {
-  return `${value.toLocaleString("ru-RU")} ₽`;
+  return `${value.toLocaleString("ru-RU", {
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+  })} ₽`;
 }

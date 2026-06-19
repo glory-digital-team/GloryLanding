@@ -116,6 +116,7 @@ export function ConfiguratorModal() {
   const activeEstimateError = estimateError?.key === estimateKey ? estimateError.message : "";
   const priceAvailable = selectedType !== null && activeEstimate !== null && !activeEstimateError;
   const total = activeEstimate?.total ?? null;
+  const estimateAmount = activeEstimate?.estimate_min_amount ?? total;
 
   useEffect(() => {
     if (!selectedType || !estimateKey) return;
@@ -206,7 +207,7 @@ export function ConfiguratorModal() {
           moduleIds,
           launchDate,
           sourceId,
-          total,
+          estimateAmount,
           calculationRequestId: activeEstimate?.calculation_request_id ?? null,
         }),
         forecast_amount: total,
@@ -281,7 +282,6 @@ export function ConfiguratorModal() {
                   urgency={urgency}
                   total={total}
                   minAmount={activeEstimate?.estimate_min_amount}
-                  maxAmount={activeEstimate?.estimate_max_amount}
                   priceAvailable={priceAvailable}
                   pending={estimating}
                   error={activeEstimateError}
@@ -478,7 +478,6 @@ export function ConfiguratorModal() {
                 urgency={urgency}
                 total={total}
                 minAmount={activeEstimate?.estimate_min_amount}
-                maxAmount={activeEstimate?.estimate_max_amount}
                 priceAvailable={priceAvailable}
                 pending={estimating}
                 error={activeEstimateError}
@@ -510,14 +509,14 @@ function buildConfiguratorNote({
   moduleIds,
   launchDate,
   sourceId,
-  total,
+  estimateAmount,
   calculationRequestId,
 }: {
   typeId: string | null;
   moduleIds: Set<string>;
   launchDate: string;
   sourceId: string | null;
-  total: number | null;
+  estimateAmount: number | null;
   calculationRequestId: string | null;
 }): string {
   const typeLabel = PROJECT_TYPES.find((item) => item.id === typeId)?.label ?? "не выбрано";
@@ -529,8 +528,8 @@ function buildConfiguratorNote({
     `Модули: ${modules.length > 0 ? modules.join(", ") : "без дополнительных модулей"}.`,
     `Желаемый запуск: ${launchDate || "не указан"}.`,
     `Исходные данные: ${source}.`,
-    total !== null
-      ? `Предварительный бюджет: от ${formatPrice(total)}.`
+    estimateAmount !== null
+      ? `Предварительный бюджет: От ${formatPrice(estimateAmount)}.`
       : "Предварительный бюджет: расчёт временно недоступен, требуется ручная оценка.",
     calculationRequestId ? `ID расчёта: ${calculationRequestId}.` : null,
   ].join("\n");
