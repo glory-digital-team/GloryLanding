@@ -5,12 +5,53 @@ import { cn, useOverlays } from "@/shared/lib";
 import {
   POLICY_EYEBROW,
   POLICY_REVISION,
-  POLICY_SECTIONS,
   POLICY_TITLE,
-} from "../model/policy";
+  PRIVACY_INTRO,
+  PRIVACY_SECTIONS,
+  type PolicyPart,
+} from "@/shared/legal/policy";
 import styles from "./LegalModal.module.scss";
 
+// Рендер одной части раздела (абзац / список / таблица) — единый формат
+// с страницей /privacy.
+function Part({ part }: { part: PolicyPart }) {
+  if (part.type === "p") return <p className={styles.paragraph}>{part.text}</p>;
+  if (part.type === "list") {
+    return (
+      <ul className={styles.list}>
+        {part.items.map((item) => (
+          <li key={item.slice(0, 48)}>{item}</li>
+        ))}
+      </ul>
+    );
+  }
+  return (
+    <div className={styles.tableWrap}>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            {part.headers.map((h) => (
+              <th key={h}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {part.rows.map((row) => (
+            <tr key={row[0]}>
+              {row.map((cell, i) => (
+                <td key={i}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 // Модалка юридических документов — правый drawer 672px (Figma «App» 369:1340).
+// Текст берётся из единого источника правды (@/shared/legal/policy), чтобы не
+// расходиться с официальной редакцией на /privacy — issue #15.
 export function LegalModal() {
   const { policyOpen, closePolicy } = useOverlays();
 
@@ -59,16 +100,22 @@ export function LegalModal() {
         </header>
 
         <div className={styles.body}>
-          {POLICY_SECTIONS.map((section) => (
-            <section key={section.title} className={styles.section}>
-              <h3 className={styles.sectionTitle}>{section.title}</h3>
-              {section.paragraphs.map((p) => (
-                <p key={p.slice(0, 32)} className={styles.paragraph}>
-                  {p}
-                </p>
+          <section className={styles.section}>
+            <h3 className={styles.sectionTitle}>1. Общие положения</h3>
+            {PRIVACY_INTRO.map((part, i) => (
+              <Part key={i} part={part} />
+            ))}
+          </section>
+
+          {PRIVACY_SECTIONS.map((block) => (
+            <section key={block.heading} className={styles.section}>
+              <h3 className={styles.sectionTitle}>{block.heading}</h3>
+              {block.parts.map((part, i) => (
+                <Part key={i} part={part} />
               ))}
             </section>
           ))}
+
           <p className={styles.revision}>{POLICY_REVISION}</p>
         </div>
 

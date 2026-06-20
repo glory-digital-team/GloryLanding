@@ -48,7 +48,7 @@ export function Portfolio() {
             </div>
             <div className={`${styles.text} ${styles.textBlur}`}>
               <h3 className={styles.cardTitle}>ESIS</h3>
-              <p className={styles.cardSubtitle}>Электронные ценики</p>
+              <p className={styles.cardSubtitle}>Электронные ценники</p>
             </div>
           </a>
 

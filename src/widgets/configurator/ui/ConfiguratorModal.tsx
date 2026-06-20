@@ -52,8 +52,6 @@ export function ConfiguratorModal() {
   const [launchDate, setLaunchDate] = useState("");
   const [sourceId, setSourceId] = useState<string | null>(null);
   const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
-  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
   const [pending, setPending] = useState(false);
@@ -70,8 +68,6 @@ export function ConfiguratorModal() {
     setLaunchDate("");
     setSourceId(null);
     setName("");
-    setCompany("");
-    setEmail("");
     setPhone("");
     setConsent(false);
     setPending(false);
@@ -177,11 +173,9 @@ export function ConfiguratorModal() {
     (step === 0 && typeId !== null) ||
     step === 1 ||
     step === 2 ||
-    (step === 3 &&
-      name.trim().length > 0 &&
-      company.trim().length > 0 &&
-      isCompleteRuPhone(phone) &&
-      consent);
+    // Имя необязательное, телефон обязательный (issue #14): компанию и e-mail
+    // больше не собираем, при необходимости менеджер допишет их в Штате.
+    (step === 3 && isCompleteRuPhone(phone) && consent);
 
   const next = () => {
     if (step < TOTAL_STEPS - 1) setStep(step + 1);
@@ -198,9 +192,9 @@ export function ConfiguratorModal() {
     try {
       await createPublicConfiguratorLead({
         requester_name: name.trim() || null,
-        requester_email: email.trim() || null,
+        requester_email: null,
         requester_phone: phone,
-        company_name: company.trim(),
+        company_name: null,
         service_type_code: mapServiceType(typeId),
         note: buildConfiguratorNote({
           typeId,
@@ -403,24 +397,6 @@ export function ConfiguratorModal() {
                     aria-label="Ваше имя"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    className={styles.input}
-                    placeholder="Компания"
-                    autoComplete="organization"
-                    aria-label="Компания"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                  />
-                  <input
-                    type="email"
-                    className={styles.input}
-                    placeholder="Email"
-                    autoComplete="email"
-                    aria-label="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
                   />
                   <label className={styles.fieldLabel} htmlFor="conf-phone">
                     Телефон
