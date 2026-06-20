@@ -119,6 +119,49 @@
   color: $color-text-faint; // #9CA3AF — как в макете
 }
 
+.list {
+  padding-top: rem(12px);
+  padding-left: rem(20px);
+  list-style: disc;
+
+  li {
+    margin-top: rem(6px);
+    font-size: rem(14px);
+    line-height: rem(20px);
+    color: $color-text-faint;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+.tableWrap {
+  padding-top: rem(12px);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: rem(13px);
+  line-height: rem(18px);
+
+  th,
+  td {
+    padding: rem(8px) rem(10px);
+    border: 1px solid $color-border;
+    text-align: left;
+    vertical-align: top;
+    color: $color-text-faint;
+  }
+
+  th {
+    font-weight: $fw-medium;
+    color: $color-bg-footer;
+  }
+}
+
 .revision {
   margin-top: rem(32px);
   padding-top: rem(17px);
