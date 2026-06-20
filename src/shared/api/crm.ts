@@ -14,7 +14,9 @@ export interface PublicConfiguratorLeadRequest {
   requester_name?: string | null;
   requester_email?: string | null;
   requester_phone?: string | null;
-  company_name: string;
+  // Компания больше не собирается в публичном конфигураторе (issue #14):
+  // менеджер дописывает её вручную в Штате при необходимости.
+  company_name?: string | null;
   service_type_code?: string | null;
   note?: string | null;
   forecast_amount?: number | null;
