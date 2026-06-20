@@ -652,6 +652,51 @@ $bento-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 }
 
+// На мобильной карусели карточка ужимается до 360×360, а десктопные
+// абсолютные координаты «UX/UI» (рассчитанные на 453px-карточку) не
+// масштабируются — текст обрезался слева, лейбл и курсор уезжали. Центрируем
+// весь блок целиком, чтобы на мобилке выглядело ровно.
+@include respond-down("lg") {
+  .uxFrame {
+    top: rem(104px);
+    right: auto;
+    left: 50%;
+    width: rem(288px);
+    height: rem(104px);
+    transform: translateX(-50%);
+  }
+
+  .uxBracket {
+    height: rem(104px);
+  }
+
+  .uxLines {
+    width: rem(276px);
+    height: rem(97px);
+  }
+
+  .uxTitle {
+    top: 50%;
+    left: 50%;
+    font-size: rem(100px);
+    transform: translate(-50%, -50%);
+  }
+
+  .uxName {
+    top: rem(220px);
+    right: 0;
+    left: 0;
+    width: fit-content;
+    margin-inline: auto;
+    justify-content: center;
+  }
+
+  .uxCursor {
+    top: rem(212px);
+    right: rem(34px);
+  }
+}
+
 // ── «AI Решения» (155:3096): AI 112/127.14 + Решения 40/60 ─
 .aiTitle {
   position: absolute;
