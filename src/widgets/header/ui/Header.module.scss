@@ -8,6 +8,12 @@
   z-index: 50;
   padding: rem(20px) $space-md 0; // моб. макет 273:5705: x 16, y 20
 
+  // Плавающая полоса занимает всю ширину и (из-за закрытого моб. меню в потоке)
+  // всю высоту до ~320px. Без этого её прозрачные зоны перехватывали тапы по
+  // контенту под ней (на телефоне «не нажимались» FAQ-вопросы под шапкой).
+  // Кликабельны только сама «таблетка» и открытое меню.
+  pointer-events: none;
+
   @include respond-to("md") {
     padding: rem(32px) $space-lg 0;
   }
@@ -22,6 +28,7 @@
   max-width: $container-max;
   margin-inline: auto;
   padding: rem(12px) rem(16px); // 48(кнопка)+24 = 72, как в макете (pad 12/16)
+  pointer-events: auto; // «таблетка» снова кликабельна (см. pointer-events на .header)
   background-color: #fefefe;
   border-radius: $radius-pill;
 
@@ -188,6 +195,7 @@
 
 .menuOpen .mobileMenu {
   visibility: visible;
+  pointer-events: auto; // открытое меню кликабельно (см. pointer-events на .header)
   opacity: 1;
   translate: 0 0;
 }
