@@ -53,7 +53,13 @@ export function Portfolio() {
           </a>
 
           {/* Tienda de Gaucho — 180:911, зелёная */}
-          <article className={`${styles.card} ${styles.cardGreen}`}>
+          <a
+            className={`${styles.card} ${styles.cardGreen}`}
+            href="https://grvzen.notion.site/Tienda-de-Gaucho-FoodTech-1154e6ded3044837b01485526b67fb44"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Открыть проект Tienda de Gaucho"
+          >
             <img
               className={styles.imageTienda}
               src="/portfolio/tienda-logo.svg"
@@ -68,7 +74,7 @@ export function Portfolio() {
               <h3 className={styles.cardTitle}>Tienda de Gaucho</h3>
               <p className={styles.cardSubtitle}>Доставка продуктов в Аргентине</p>
             </div>
-          </article>
+          </a>
 
           {/* Lunes — 180:902, тёмная с луной */}
           <article className={`${styles.card} ${styles.cardDark}`}>

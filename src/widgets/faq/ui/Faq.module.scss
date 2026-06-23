@@ -93,6 +93,12 @@
   line-height: calc(33 / 24);
   color: $color-text-strong;
   cursor: pointer;
+
+  // На телефоне тап по вопросу срабатывал плохо: браузер ждал double-tap-zoom
+  // (~300мс) и глушил часть нажатий. manipulation убирает задержку,
+  // tap-highlight-color гасит серую вспышку и даёт чистое нажатие.
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: padding-bottom 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
