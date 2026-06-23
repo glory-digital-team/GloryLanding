@@ -4,14 +4,18 @@ metadata:
   name: glory-landing
   namespace: glory-landing
   annotations:
+    # TLS выпускает cert-manager (cluster-issuer letsencrypt), как у glory-shtat.
+    # Раньше тут стоял traefik certresolver "le", которого в кластере нет, —
+    # Traefik не находил серт и отдавал самоподписанный DEFAULT CERT.
+    cert-manager.io/cluster-issuer: letsencrypt
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls.certresolver: le
 spec:
   ingressClassName: traefik
   tls:
     - hosts:
         - xn--c1akimk.digital
         - www.xn--c1akimk.digital
+      secretName: glory-landing-tls
   rules:
     # глори.digital
     - host: xn--c1akimk.digital
