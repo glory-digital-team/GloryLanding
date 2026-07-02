@@ -36,8 +36,8 @@ export const siteConfig = {
     { label: "Начать проект", href: "#lead-form" },
   ] satisfies NavItem[],
   contacts: {
-    phone: "8 (964) 638-04-80",
-    phoneHref: "tel:+79646380480",
+    phone: "8 (993) 898-04-80",
+    phoneHref: "tel:+79938980480",
     email: "info@глори.digital",
     // IDN-домен в mailto — через punycode, чтобы ссылка работала везде
     emailHref: "mailto:info@xn--c1akimk.digital",
