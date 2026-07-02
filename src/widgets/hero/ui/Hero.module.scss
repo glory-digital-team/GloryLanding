@@ -1,7 +1,7 @@
 @use "shared/styles/abstracts" as *;
 
 .hero {
-  overflow-x: clip; // кубы заходят в правое поле — не даём появиться скроллу
+  overflow-x: clip; // hero-иконки заходят в правое поле — не даём появиться скроллу
   background-color: $color-bg-soft; // #FAFAFA
 }
 
@@ -120,148 +120,130 @@
   }
 }
 
-// ── Иллюстрация: кубы (Figma 155:1482, frame 406×493) ──────
-// Фрейм First Screen в макете отзеркален по горизонтали: на канвасе кубы
-// СПРАВА (x 948…1354 = правый край контента + 74). Внутренние координаты
-// заданы в «неотзеркаленной» системе, поэтому весь блок зеркалим scaleX(−1).
+// ── Иллюстрация: 3D-иконки из приложения (issue #21) ─────────
+// Образец issue: вместо абстрактных красных кубов показываем реальные
+// направления студии — Design, AI и Develop — с той же правой hero-композицией.
 .illustration {
   position: relative;
   flex-shrink: 0;
   align-self: center;
-  width: rem(406px);
-  height: rem(493px);
-  transform: scaleX(-1);
+  width: rem(470px);
+  height: rem(480px);
 
-  // Моб. макет 284:247: блок кубов 250×303 = десктопный фрейм × 0.6157.
-  // Масштабируем трансформом, отрицательные поля сжимают layout-бокс
-  // до видимых 303px по вертикали: (493 − 303.5) / 2 = 94.75.
+  // Мобайл: иллюстрация остаётся над текстом, но сжимается до безопасной
+  // ширины и не создаёт горизонтальный скролл.
   @include respond-down("md") {
-    margin-block: rem(-94.75px);
-    transform: scale(0.6157) scaleX(-1);
+    width: rem(320px);
+    height: rem(327px);
   }
 
   @include respond-to("lg") {
     position: absolute;
     top: 50%;
-    right: rem(-74px);
+    right: rem(-48px);
     align-self: auto;
-    transform: translateY(-50%) scaleX(-1);
+    transform: translateY(-50%);
   }
 }
 
-// Бокс — это bbox повёрнутого куба из макета; сам куб центрируется
-// внутри и поворачивается, как в Figma.
-.cubeBox {
+.heroAsset {
   position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.cube {
-  flex: none;
+  display: block;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: drop-shadow(0 rem(18px) rem(24px) rgb(0 0 0 / 16%));
   will-change: translate, rotate;
 }
 
-// Большой тёмно-красный: bbox (153.57, 0) 252.43×252.49
-.cubeBox1 {
-  top: 0;
-  left: rem(153.57px);
-  width: rem(252.43px);
-  height: rem(252.49px);
+.heroAssetDesign {
+  top: rem(2px);
+  left: rem(44px);
+  width: rem(288px);
+  height: rem(288px);
+  background-image: url("/hero/design.png");
+  animation: drift-design 8s ease-in-out -1s infinite alternate;
+
+  @include respond-down("md") {
+    top: rem(1px);
+    left: rem(30px);
+    width: rem(196px);
+    height: rem(196px);
+  }
 }
 
-.cube1 {
-  width: rem(212.82px);
-  height: rem(212.89px);
-  border-radius: rem(26.6px);
-  background: linear-gradient(135deg, #c00 0%, #900 100%);
-  box-shadow: 0 rem(27.71px) rem(55.42px) rgb(0 0 0 / 25%);
-  transform: rotate(168deg) scaleY(-1);
-  animation: drift1 9s ease-in-out -1s infinite alternate;
+.heroAssetAi {
+  top: rem(286px);
+  left: rem(92px);
+  width: rem(222px);
+  height: rem(193px);
+  background-image: url("/hero/ai.png");
+  animation: drift-ai 7s ease-in-out -2.2s infinite alternate;
+
+  @include respond-down("md") {
+    top: rem(195px);
+    left: rem(63px);
+    width: rem(151px);
+    height: rem(132px);
+  }
 }
 
-// Средний красный: bbox (121.17, 317.1) 175.84×175.9
-.cubeBox2 {
-  top: rem(317.1px);
-  left: rem(121.17px);
-  width: rem(175.84px);
-  height: rem(175.9px);
+.heroAssetDevelop {
+  top: rem(176px);
+  right: rem(0px);
+  width: rem(198px);
+  height: rem(198px);
+  background-image: url("/hero/develop.png");
+  animation: drift-develop 6.5s ease-in-out -0.5s infinite alternate;
+
+  @include respond-down("md") {
+    top: rem(120px);
+    right: 0;
+    width: rem(135px);
+    height: rem(135px);
+  }
 }
 
-.cube2 {
-  width: rem(159.99px);
-  height: rem(160.05px);
-  border-radius: rem(24px);
-  background: linear-gradient(135deg, #f44 0%, #c00 100%);
-  box-shadow:
-    0 rem(20px) rem(25px) rgb(0 0 0 / 10%),
-    0 rem(8px) rem(10px) rgb(0 0 0 / 10%);
-  transform: rotate(-174deg) scaleY(-1);
-  animation: drift2 7s ease-in-out -3s infinite alternate;
-}
-
-// Малый светло-красный: bbox (0, 156.04) 181.01×181.08
-.cubeBox3 {
-  top: rem(156.04px);
-  left: 0;
-  width: rem(181.01px);
-  height: rem(181.08px);
-}
-
-.cube3 {
-  width: rem(128.02px);
-  height: rem(128.02px);
-  border-radius: rem(16px);
-  background: linear-gradient(135deg, #f66 0%, #f44 100%);
-  box-shadow:
-    0 rem(10px) rem(15px) rgb(0 0 0 / 10%),
-    0 rem(4px) rem(6px) rgb(0 0 0 / 10%);
-  transform: rotate(134.99deg) skew(-0.02deg) scaleY(-1);
-  animation: drift3 6s ease-in-out -2s infinite alternate;
-}
-
-// Разные траектории/амплитуды → хаотичное, «живое» движение.
-@keyframes drift1 {
+@keyframes drift-design {
   from {
     translate: 0 0;
     rotate: 0deg;
   }
 
   to {
-    translate: rem(14px) rem(-22px);
+    translate: rem(10px) rem(-14px);
+    rotate: 3deg;
+  }
+}
+
+@keyframes drift-ai {
+  from {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+
+  to {
+    translate: rem(-12px) rem(12px);
+    rotate: -4deg;
+  }
+}
+
+@keyframes drift-develop {
+  from {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+
+  to {
+    translate: rem(14px) rem(8px);
     rotate: 5deg;
   }
 }
 
-@keyframes drift2 {
-  from {
-    translate: 0 0;
-    rotate: 0deg;
-  }
-
-  to {
-    translate: rem(-18px) rem(16px);
-    rotate: -6deg;
-  }
-}
-
-@keyframes drift3 {
-  from {
-    translate: 0 0;
-    rotate: 0deg;
-  }
-
-  to {
-    translate: rem(20px) rem(12px);
-    rotate: 8deg;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .cube1,
-  .cube2,
-  .cube3 {
+  .heroAssetDesign,
+  .heroAssetAi,
+  .heroAssetDevelop {
     animation: none;
   }
 }
