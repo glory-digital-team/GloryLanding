@@ -39,13 +39,94 @@ export const PROJECT_TYPES: ProjectType[] = [
 export interface ProjectModule {
   id: string;
   label: string;
+  projectTypeIds: string[];
 }
 
 export const MODULES: ProjectModule[] = [
-  { id: "crm", label: "Автоматический обмен с CRM и 1С" },
-  { id: "payments", label: "Приём платежей на сайте" },
-  { id: "cabinet", label: "Личный кабинет для клиентов" },
-  { id: "search", label: "Умный поиск и рекомендации" },
+  // Создание сайтов
+  {
+    id: "crm",
+    label: "Автоматический обмен с CRM и 1С",
+    projectTypeIds: ["site"],
+  },
+  {
+    id: "payments",
+    label: "Приём платежей на сайте",
+    projectTypeIds: ["site"],
+  },
+  {
+    id: "cabinet",
+    label: "Личный кабинет для клиентов",
+    projectTypeIds: ["site"],
+  },
+  {
+    id: "search",
+    label: "Умный поиск и рекомендации",
+    projectTypeIds: ["site"],
+  },
+  // Промо-сайты и лендинги
+  {
+    id: "quiz",
+    label: "Интерактивный квиз или калькулятор",
+    projectTypeIds: ["promo"],
+  },
+  {
+    id: "promo_crm",
+    label: "Связь с вашей CRM",
+    projectTypeIds: ["promo"],
+  },
+  {
+    id: "ab_tests",
+    label: "A/B-тесты и аналитика",
+    projectTypeIds: ["promo"],
+  },
+  {
+    id: "target_ads",
+    label: "Настройка таргетированной рекламы",
+    projectTypeIds: ["promo"],
+  },
+  // AI-решения
+  {
+    id: "ai_chatbot",
+    label: "AI-чатбот для поддержки 24/7",
+    projectTypeIds: ["ai"],
+  },
+  {
+    id: "ai_docs",
+    label: "AI по вашим документам",
+    projectTypeIds: ["ai"],
+  },
+  {
+    id: "ai_analytics",
+    label: "Аналитика звонков и переписок",
+    projectTypeIds: ["ai"],
+  },
+  {
+    id: "ai_onprem",
+    label: "AI на ваших серверах",
+    projectTypeIds: ["ai"],
+  },
+  // Мобильная разработка
+  {
+    id: "native_dev",
+    label: "Нативная разработка (Swift / Kotlin)",
+    projectTypeIds: ["mobile"],
+  },
+  {
+    id: "realtime_data",
+    label: "Живые данные из ваших систем",
+    projectTypeIds: ["mobile"],
+  },
+  {
+    id: "retention_tools",
+    label: "Инструменты возврата клиентов",
+    projectTypeIds: ["mobile"],
+  },
+  {
+    id: "offline_mode",
+    label: "Офлайн-режим с синхронизацией",
+    projectTypeIds: ["mobile"],
+  },
 ];
 
 export interface SourceOption {

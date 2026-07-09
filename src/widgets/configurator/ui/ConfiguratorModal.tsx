@@ -15,6 +15,7 @@ import {
   formatPrice,
   riskLevelFromSource,
   urgencyFromDate,
+  type ProjectModule,
 } from "../model/config";
 import { Receipt } from "./Receipt";
 import styles from "./Configurator.module.scss";
@@ -78,6 +79,18 @@ export function ConfiguratorModal() {
     setError("");
   }, []);
 
+  // Сбрасываем выбранные модули при смене типа проекта
+  useEffect(() => {
+    setModuleIds((prev: Set<string>) => {
+      const validIds = new Set(
+        Array.from(prev).filter((id) =>
+          MODULES.find((m) => m.id === id)?.projectTypeIds.includes(typeId || ""),
+        ),
+      );
+      return validIds;
+    });
+  }, [typeId]);
+
   const close = useCallback(() => {
     closeConfigurator();
     // Сбрасываем после анимации закрытия, чтобы контент не мигал
@@ -97,6 +110,10 @@ export function ConfiguratorModal() {
 
   const selectedType = PROJECT_TYPES.find((t) => t.id === typeId) ?? null;
   const urgency = urgencyFromDate(launchDate);
+  const availableModules = useMemo(
+    () => MODULES.filter((m) => !typeId || m.projectTypeIds.includes(typeId)),
+    [typeId],
+  );
   const moduleCodes = useMemo(() => Array.from(moduleIds).sort(), [moduleIds]);
   const estimateKey = selectedType
     ? [
@@ -161,7 +178,7 @@ export function ConfiguratorModal() {
   if (!configuratorOpen) return null;
 
   const toggleModule = (id: string) => {
-    setModuleIds((prev) => {
+    setModuleIds((prev: Set<string>) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -317,7 +334,7 @@ export function ConfiguratorModal() {
 
               {step === 1 && (
                 <div className={styles.optionGrid}>
-                  {MODULES.map((m) => {
+                  {availableModules.map((m: ProjectModule) => {
                     const checked = moduleIds.has(m.id);
                     return (
                       <button
