@@ -109,7 +109,7 @@ export const MODULES: ProjectModule[] = [
   // Мобильная разработка
   {
     id: "native_dev",
-    label: "Нативная разработка (Swift / Kotlin)",
+    label: "Нативная разработка (Android/iOS)",
     projectTypeIds: ["mobile"],
   },
   {
