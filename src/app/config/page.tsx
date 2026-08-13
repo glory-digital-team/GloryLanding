@@ -6,6 +6,9 @@ import { ConfigAutoOpen } from "./ConfigAutoOpen";
 export const metadata: Metadata = {
   title: `Конфигуратор | ${siteConfig.name}`,
   description: "Откройте конфигуратор проекта и получите предварительный бюджет.",
+  alternates: {
+    canonical: "/config",
+  },
 };
 
 export default function ConfigPage() {

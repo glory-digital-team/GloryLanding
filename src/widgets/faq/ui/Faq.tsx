@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { cn, useOverlays } from "@/shared/lib";
 import { Icon } from "@/shared/ui/Icon";
+import { JsonLd } from "@/shared/components/JsonLd";
 import styles from "./Faq.module.scss";
 
 // Секция «Ответы на частые вопросы» (Figma «FAQ container» 191:326).
@@ -52,6 +53,18 @@ const ITEMS: QA[] = [
   },
 ];
 
+const faqSchema = {
+  "@type": "FAQPage",
+  mainEntity: ITEMS.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.a,
+    },
+  })),
+};
+
 export function Faq() {
   const { openConfigurator } = useOverlays();
   // По умолчанию раскрыт первый вопрос — сразу показываем ответ про цену и CTA.
@@ -59,6 +72,7 @@ export function Faq() {
 
   return (
     <section className={styles.faq} id="faq">
+      <JsonLd data={faqSchema} />
       <div className={styles.inner}>
         <header className={styles.header}>
           <h2 className={styles.title}>Ответы на частые вопросы</h2>
