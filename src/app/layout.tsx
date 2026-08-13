@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { AppProviders } from "./providers";
 import { Analytics } from "@/shared/analytics";
+import { JsonLd } from "@/shared/components/JsonLd";
 import { siteConfig } from "@/shared/config";
 import "./styles/index.scss";
 
@@ -13,10 +14,55 @@ const previewImage = {
   alt: siteConfig.name,
 };
 
+const organizationSchema = {
+  "@type": "Organization",
+  name: siteConfig.name,
+  description: siteConfig.description,
+  url: siteUrl.toString(),
+  telephone: siteConfig.contacts.phone,
+  email: siteConfig.contacts.email,
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "RU",
+  },
+  sameAs: [
+    "https://vk.ru/glorydigit",
+    "https://t.me/+k7aQU8zvtp9jNTEy",
+  ],
+};
+
+const webSiteSchema = {
+  "@type": "WebSite",
+  name: siteConfig.name,
+  description: siteConfig.description,
+  url: siteUrl.toString(),
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${siteUrl.toString()}/?q={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: siteConfig.name,
   description: siteConfig.description,
+  alternates: {
+    canonical: "/",
+  },
+  keywords: [
+    "разработка сайтов",
+    "цифровые решения",
+    "автоматизация бизнеса",
+    "AI-решения",
+    "лендинги",
+    "SEO оптимизация",
+    "web-разработка",
+    "digital-студия"
+  ],
+  robots: process.env.NODE_ENV === 'production' 
+    ? undefined 
+    : { index: false, follow: false },
   // Фавикон «Глори.Цифра» (issue #8): SVG для современных браузеров,
   // PNG-fallback 16/32 и apple-touch-icon 180 для iOS.
   icons: {
@@ -48,6 +94,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ru">
+      <head>
+        <JsonLd data={organizationSchema} />
+        <JsonLd data={webSiteSchema} />
+      </head>
       <body>
         <AppProviders>{children}</AppProviders>
         <Analytics />

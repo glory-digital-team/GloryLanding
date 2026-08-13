@@ -35,9 +35,9 @@ export function Footer() {
                   className={styles.social}
                   aria-label={s.label}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
-                  <img src={s.src} alt="" width={28} height={28} />
+                  <img src={s.src} alt={`${s.label} — социальная сеть`} width={28} height={28} />
                 </a>
               ))}
             </div>
