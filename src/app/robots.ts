@@ -10,22 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/ui-kit", "/crm/", "/config/"],
       },
-      {
-        userAgent: "GPTBot",
-        disallow: "/",
-      },
-      {
-        userAgent: "ChatGPT-User",
-        disallow: "/",
-      },
-      {
-        userAgent: "CCBot",
-        disallow: "/",
-      },
-      {
-        userAgent: "Anthropic-Chatbot",
-        disallow: "/",
-      },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,
   };
