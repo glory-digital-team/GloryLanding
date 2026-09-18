@@ -7,6 +7,7 @@ export type IconName =
   | "apps"
   | "check-circle"
   | "file"
+  | "file-text"
   | "globe"
   | "chevron-up"
   | "chevron-down"
@@ -14,6 +15,7 @@ export type IconName =
   | "chevron-right"
   | "arrow-right"
   | "shield-check"
+  | "clock"
   | "telegram"
   | "whatsapp";
 
@@ -54,6 +56,15 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="M14 3v5h5" />
     </>
   ),
+  "file-text": (
+    <>
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <path d="M14 3v5h5" />
+      <path d="M16 13H8" />
+      <path d="M16 17H8" />
+      <path d="M10 9H8" />
+    </>
+  ),
   globe: (
     <>
       <circle cx="12" cy="12" r="9" />
@@ -75,6 +86,12 @@ const paths: Record<IconName, React.ReactNode> = {
     <>
       <path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6z" />
       <path d="m9 12 2 2 4-4.5" />
+    </>
+  ),
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 6v6l4 2" />
     </>
   ),
   telegram: <path d="M21.5 4.3 2.9 11.5c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.8 5.4c.2.7 1.1.9 1.6.3l2.5-2.6 4.8 3.5c.6.4 1.5.1 1.7-.7l3.2-15c.2-.9-.7-1.7-1.5-1.4ZM8.9 14.3l8.6-5.6c.3-.2.6.2.4.4l-7 6.6c-.2.2-.4.5-.4.8l-.3 2.2-1.3-4.4Z" />,

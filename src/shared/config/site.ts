@@ -64,8 +64,8 @@ export const siteConfig = {
     "ОГРНИП: 325774600762382",
   ],
   legal: [
-    { label: "Политика конфиденциальности", href: "#", doc: "policy" },
-    { label: "Оферта", href: "#", doc: null },
+    { label: "Политика конфиденциальности", href: "/privacy", doc: "policy" },
+    { label: "Рамочная оферта", href: "/offer", doc: null },
     { label: "Согласие на обработку ПДн", href: "#", doc: null },
   ],
   copyright: "© 2026 Глори.Цифра",

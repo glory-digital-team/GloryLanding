@@ -1,0 +1,560 @@
+@use "shared/styles/abstracts" as *;
+
+// ── Page Layout ───────────────────────────────────────────────
+.page {
+  min-height: 100vh;
+  background-color: $color-bg;
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Hero Section ─────────────────────────────────────────────
+.hero {
+  background-color: $color-bg-soft;
+  padding: rem(48px) $space-md rem(40px);
+  border-bottom: rem(1px) solid $color-border;
+
+  @include respond-to("md") {
+    padding: rem(64px) $space-lg rem(48px);
+  }
+}
+
+.heroContent {
+  max-width: rem(880px);
+  margin-inline: auto;
+}
+
+.eyebrow {
+  margin: 0 0 rem(12px);
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  letter-spacing: rem(0.4px);
+  text-transform: uppercase;
+  color: $color-primary;
+}
+
+.heroTitle {
+  margin: 0 0 rem(16px);
+  font-size: rem(32px);
+  font-weight: $fw-bold;
+  line-height: 1.2;
+  letter-spacing: rem(-0.5px);
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(40px);
+    margin-bottom: rem(20px);
+  }
+}
+
+.heroSubtitle {
+  margin: 0 0 rem(24px);
+  font-size: rem(18px);
+  font-weight: $fw-regular;
+  line-height: 1.5;
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(20px);
+    margin-bottom: rem(32px);
+  }
+}
+
+.heroMeta {
+  margin-bottom: rem(24px);
+}
+
+.revision {
+  display: inline-block;
+  padding: rem(6px) rem(12px);
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  color: $color-text-muted;
+  background-color: $color-surface-2;
+  border-radius: $radius-sm;
+}
+
+.heroIntro {
+  margin: 0 0 rem(32px);
+  font-size: rem(16px);
+  line-height: 1.6;
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(18px);
+    margin-bottom: rem(40px);
+  }
+}
+
+.heroActions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+
+  @include respond-to("md") {
+    flex-direction: row;
+    gap: $space-md;
+  }
+}
+
+.heroButton {
+  width: 100%;
+
+  @include respond-to("md") {
+    width: auto;
+  }
+}
+
+// ── Content Layout ───────────────────────────────────────────
+.content {
+  display: flex;
+  flex-direction: column;
+  max-width: rem(1400px);
+  margin-inline: auto;
+  padding: rem(32px) $space-md rem(64px);
+
+  @include respond-to("lg") {
+    flex-direction: row;
+    gap: rem(48px);
+    padding: rem(48px) $space-lg rem(96px);
+  }
+}
+
+// ── Sidebar Navigation ───────────────────────────────────────
+.mobileNavToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: rem(14px) rem(16px);
+  margin-bottom: $space-md;
+  font-size: rem(16px);
+  font-weight: $fw-medium;
+  color: $color-text;
+  background-color: $color-surface-2;
+  border: rem(1px) solid $color-border;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #e5e7eb;
+  }
+
+  @include respond-to("lg") {
+    display: none;
+  }
+}
+
+.toggleIcon {
+  display: flex;
+  flex-direction: column;
+  gap: rem(4px);
+  width: rem(20px);
+  height: rem(16px);
+
+  span {
+    display: block;
+    width: 100%;
+    height: rem(2px);
+    background-color: $color-text;
+    border-radius: rem(2px);
+    transition: all 0.2s ease;
+  }
+
+  &.toggleIconOpen {
+    span:nth-child(1) {
+      transform: rotate(45deg) translate(rem(4px), rem(4px));
+    }
+
+    span:nth-child(2) {
+      opacity: 0;
+    }
+
+    span:nth-child(3) {
+      transform: rotate(-45deg) translate(rem(4px), rem(-4px));
+    }
+  }
+}
+
+.sidebar {
+  display: none;
+
+  @include respond-to("lg") {
+    display: block;
+    position: sticky;
+    top: rem(100px);
+    width: rem(280px);
+    max-height: calc(100vh - rem(120px));
+    overflow-y: auto;
+    padding-right: $space-md;
+  }
+
+  &.sidebarOpen {
+    display: block;
+    margin-bottom: $space-md;
+  }
+}
+
+.sidebarNav {
+  position: relative;
+}
+
+.sidebarList {
+  display: flex;
+  flex-direction: column;
+  gap: rem(4px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sidebarLink {
+  display: block;
+  width: 100%;
+  padding: rem(10px) rem(12px);
+  font-size: rem(14px);
+  font-weight: $fw-regular;
+  color: $color-text;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  transition: all 0.18s ease;
+
+  &:hover {
+    background-color: $color-surface-2;
+    color: $color-text-strong;
+  }
+
+  &.sidebarLinkActive {
+    font-weight: $fw-semibold;
+    color: $color-primary;
+    background-color: $color-primary-soft;
+  }
+}
+
+// ── Document Content ─────────────────────────────────────────
+.document {
+  flex: 1;
+  min-width: 0;
+}
+
+.article {
+  max-width: rem(800px);
+}
+
+.section {
+  margin-bottom: rem(48px);
+  scroll-margin-top: rem(120px);
+
+  @include respond-to("md") {
+    margin-bottom: rem(64px);
+  }
+}
+
+.heading {
+  margin: 0 0 rem(24px);
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  line-height: 1.3;
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(28px);
+    margin-bottom: rem(32px);
+  }
+}
+
+.sectionNumber {
+  color: $color-primary;
+}
+
+.subheading {
+  margin: rem(24px) 0 rem(16px);
+  font-size: rem(18px);
+  font-weight: $fw-semibold;
+  line-height: 1.4;
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(20px);
+  }
+}
+
+.paragraph {
+  margin: 0 0 rem(16px);
+  font-size: rem(16px);
+  line-height: 1.7;
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(17px);
+    margin-bottom: rem(18px);
+  }
+}
+
+.list {
+  margin: 0 0 rem(16px);
+  padding-left: rem(24px);
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+  font-size: rem(16px);
+  line-height: 1.6;
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(17px);
+    margin-bottom: rem(18px);
+  }
+
+  li {
+    list-style: disc;
+  }
+}
+
+.numberedList {
+  margin: 0 0 rem(16px);
+  padding-left: rem(24px);
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+  font-size: rem(16px);
+  line-height: 1.6;
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(17px);
+    margin-bottom: rem(18px);
+  }
+
+  li {
+    list-style: decimal;
+  }
+}
+
+// ── Callouts ─────────────────────────────────────────────────
+.callout {
+  margin: rem(24px) 0;
+  padding: rem(16px) rem(20px);
+  border-radius: $radius-md;
+  border-left-width: rem(4px);
+  border-left-style: solid;
+
+  @include respond-to("md") {
+    margin: rem(32px) 0;
+    padding: rem(20px) rem(24px);
+  }
+}
+
+.calloutLabel {
+  display: block;
+  margin-bottom: rem(8px);
+  font-size: rem(13px);
+  font-weight: $fw-semibold;
+  text-transform: uppercase;
+  letter-spacing: rem(0.3px);
+}
+
+.calloutText {
+  margin: 0;
+  font-size: rem(15px);
+  line-height: 1.6;
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(16px);
+  }
+}
+
+.calloutImportant {
+  border-left-color: $color-primary;
+  background-color: $color-primary-soft;
+
+  .calloutLabel {
+    color: $color-primary;
+  }
+}
+
+.calloutNote {
+  border-left-color: $color-text-muted;
+  background-color: $color-surface-2;
+
+  .calloutLabel {
+    color: $color-text-muted;
+  }
+}
+
+// ── Diagram ───────────────────────────────────────────────────
+.diagram {
+  margin: rem(32px) 0;
+  padding: rem(24px);
+  background-color: $color-surface-2;
+  border-radius: $radius-md;
+
+  @include respond-to("md") {
+    margin: rem(40px) 0;
+    padding: rem(32px);
+  }
+}
+
+.diagramTitle {
+  margin: 0 0 rem(20px);
+  font-size: rem(18px);
+  font-weight: $fw-semibold;
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(20px);
+  }
+}
+
+.diagramSteps {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
+}
+
+.diagramStep {
+  display: flex;
+  align-items: flex-start;
+  gap: rem(12px);
+}
+
+.diagramStepNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: rem(28px);
+  height: rem(28px);
+  padding: 0 rem(8px);
+  font-size: rem(14px);
+  font-weight: $fw-semibold;
+  color: $color-primary;
+  background-color: $color-primary-soft;
+  border-radius: $radius-sm;
+}
+
+.diagramStepText {
+  flex: 1;
+  font-size: rem(15px);
+  line-height: 1.5;
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(16px);
+  }
+}
+
+.diagramArrow {
+  margin-left: auto;
+  font-size: rem(18px);
+  color: $color-text-muted;
+}
+
+// ── Revision Block ────────────────────────────────────────────
+.revisionBlock {
+  margin-top: rem(64px);
+  padding-top: rem(32px);
+  border-top: rem(1px) solid $color-border;
+
+  @include respond-to("md") {
+    margin-top: rem(96px);
+    padding-top: rem(48px);
+  }
+}
+
+.revisionText {
+  margin: 0 0 rem(12px);
+  font-size: rem(14px);
+  color: $color-text-muted;
+}
+
+.copyright {
+  margin: 0;
+  font-size: rem(14px);
+  color: $color-text-muted;
+}
+
+// ── Print Styles ──────────────────────────────────────────────
+@media print {
+  .mobileNavToggle,
+  .sidebar,
+  .heroActions {
+    display: none !important;
+  }
+
+  .page {
+    background: white;
+  }
+
+  .hero {
+    background: white;
+    border: none;
+    padding: rem(20px) 0;
+  }
+
+  .heroContent {
+    max-width: 100%;
+  }
+
+  .heroTitle {
+    font-size: rem(28px);
+  }
+
+  .heroSubtitle {
+    font-size: rem(16px);
+  }
+
+  .content {
+    padding: rem(20px) 0;
+    max-width: 100%;
+  }
+
+  .document {
+    width: 100%;
+  }
+
+  .article {
+    max-width: 100%;
+  }
+
+  .section {
+    margin-bottom: rem(32px);
+    page-break-inside: avoid;
+  }
+
+  .heading {
+    font-size: rem(20px);
+    page-break-after: avoid;
+  }
+
+  .paragraph,
+  .list,
+  .numberedList {
+    font-size: rem(14px);
+    line-height: 1.5;
+  }
+
+  .callout {
+    background: white;
+    border: rem(1px) solid $color-border;
+    page-break-inside: avoid;
+  }
+
+  .diagram {
+    background: white;
+    border: rem(1px) solid $color-border;
+    page-break-inside: avoid;
+  }
+
+  .revisionBlock {
+    page-break-before: avoid;
+  }
+
+  @page {
+    margin: 2cm;
+  }
+}

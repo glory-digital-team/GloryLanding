@@ -1,0 +1,61 @@
+@use "shared/styles/abstracts" as *;
+
+.page {
+  min-height: 100vh;
+  background-color: $color-bg;
+}
+
+.content {
+  max-width: $container-max;
+  margin-inline: auto;
+  padding: 13rem $space-md 7.5rem;
+}
+
+.header {
+  margin-bottom: rem(48px);
+  text-align: center;
+
+  @include respond-to("md") {
+    margin-bottom: rem(64px);
+  }
+}
+
+.title {
+  margin: 0 0 rem(16px);
+  font-size: rem(32px);
+  font-weight: $fw-bold;
+  line-height: $lh-tight;
+  letter-spacing: rem(-0.5px);
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(40px);
+  }
+}
+
+.subtitle {
+  margin: 0 auto;
+  max-width: rem(640px);
+  font-size: rem(16px);
+  line-height: $lh-relaxed;
+  color: $color-text-muted;
+
+  @include respond-to("md") {
+    font-size: rem(18px);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-lg;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $space-xl;
+  }
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
