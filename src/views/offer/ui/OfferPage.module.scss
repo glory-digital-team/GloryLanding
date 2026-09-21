@@ -15,7 +15,7 @@
   border-bottom: rem(1px) solid $color-border;
 
   @include respond-to("md") {
-    padding: rem(64px) $space-lg rem(48px);
+    padding: rem(200px) $space-lg rem(75px);
   }
 }
 
