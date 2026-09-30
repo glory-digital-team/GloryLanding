@@ -17,6 +17,13 @@ export const DOCUMENTS: Document[] = [
     href: "/offer",
   },
   {
+    id: "subscription-offer",
+    icon: "file-text",
+    title: "Оферта на подписку",
+    description: "Условия подписки на техническую поддержку и сопровождение.",
+    href: "/subscription-offer",
+  },
+  {
     id: "privacy",
     icon: "shield-check",
     title: "Политика конфиденциальности",

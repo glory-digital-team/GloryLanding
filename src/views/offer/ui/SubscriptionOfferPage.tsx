@@ -5,17 +5,17 @@ import { Button } from "@/shared/ui/Button";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import {
-  OFFER_REVISION,
-  OFFER_TITLE,
-  OFFER_SUBTITLE,
-  OFFER_INTRO,
-  OFFER_NAVIGATION,
-  OFFER_SECTIONS,
-  type OfferPart,
-} from "../model/offer";
+  SUBSCRIPTION_OFFER_REVISION,
+  SUBSCRIPTION_OFFER_TITLE,
+  SUBSCRIPTION_OFFER_SUBTITLE,
+  SUBSCRIPTION_OFFER_INTRO,
+  SUBSCRIPTION_OFFER_NAVIGATION,
+  SUBSCRIPTION_OFFER_SECTIONS,
+  type SubscriptionOfferPart,
+} from "../model/subscription-offer";
 import styles from "./OfferPage.module.scss";
 
-function Part({ part }: { part: OfferPart }) {
+function Part({ part }: { part: SubscriptionOfferPart }) {
   if (part.type === "p") {
     return <p className={styles.paragraph}>{part.text}</p>;
   }
@@ -103,7 +103,7 @@ function Sidebar({
       >
         <nav className={styles.sidebarNav} aria-label="Навигация по документу">
           <ul className={styles.sidebarList}>
-            {OFFER_NAVIGATION.map((item) => (
+            {SUBSCRIPTION_OFFER_NAVIGATION.map((item) => (
               <li key={item.id}>
                 <button
                   type="button"
@@ -126,7 +126,7 @@ function Sidebar({
   );
 }
 
-export function OfferPage() {
+export function SubscriptionOfferPage() {
   const [activeSection, setActiveSection] = useState<string>("");
 
   // Handle smooth scroll to section
@@ -147,7 +147,7 @@ export function OfferPage() {
   // Track active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const sections = OFFER_SECTIONS.map((s) => s.id);
+      const sections = SUBSCRIPTION_OFFER_SECTIONS.map((s) => s.id);
       const scrollPosition = window.scrollY + 150;
 
       for (const id of sections) {
@@ -234,7 +234,7 @@ export function OfferPage() {
 
     const opt = {
       margin: [10, 10, 10, 10],
-      filename: `Глори_Цифра_${OFFER_TITLE.replace(/\s+/g, '_')}_ред${OFFER_REVISION.number}.pdf`,
+      filename: `Глори_Цифра_${SUBSCRIPTION_OFFER_TITLE.replace(/\s+/g, '_')}_ред${SUBSCRIPTION_OFFER_REVISION.number}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
         scale: 2,
@@ -283,13 +283,13 @@ export function OfferPage() {
             </Button>
           </div>
           <p className={styles.eyebrow}>Юридическая информация</p>
-          <h1 className={styles.heroTitle}>{OFFER_TITLE}</h1>
-          <p className={styles.heroSubtitle}>{OFFER_SUBTITLE}</p>
+          <h1 className={styles.heroTitle}>{SUBSCRIPTION_OFFER_TITLE}</h1>
+          <p className={styles.heroSubtitle}>{SUBSCRIPTION_OFFER_SUBTITLE}</p>
           <div className={styles.heroMeta}>
           </div>
-          <p className={styles.heroIntro}>{OFFER_INTRO}</p>
+          <p className={styles.heroIntro}>{SUBSCRIPTION_OFFER_INTRO}</p>
             <span className={styles.revision}>
-              Редакция №{OFFER_REVISION.number} от {OFFER_REVISION.date}
+              Редакция №{SUBSCRIPTION_OFFER_REVISION.number} от {SUBSCRIPTION_OFFER_REVISION.date}
             </span>
           <div className={styles.heroActions}>
             <Button
@@ -318,7 +318,7 @@ export function OfferPage() {
 
         <main className={styles.document}>
           <article className={styles.article}>
-            {OFFER_SECTIONS.map((section) => (
+            {SUBSCRIPTION_OFFER_SECTIONS.map((section) => (
               <section
                 key={section.id}
                 id={section.id}
@@ -336,8 +336,8 @@ export function OfferPage() {
 
             <div className={styles.revisionBlock}>
               <p className={styles.revisionText}>
-                Редакция №{OFFER_REVISION.number} от {OFFER_REVISION.date} · Опубликовано:{" "}
-                {OFFER_REVISION.published}
+                Редакция №{SUBSCRIPTION_OFFER_REVISION.number} от {SUBSCRIPTION_OFFER_REVISION.date} · Опубликовано:{" "}
+                {SUBSCRIPTION_OFFER_REVISION.published}
               </p>
             </div>
           </article>

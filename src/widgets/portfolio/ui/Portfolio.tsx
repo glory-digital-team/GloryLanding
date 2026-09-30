@@ -5,7 +5,7 @@ import styles from "./Portfolio.module.scss";
 // геометрия и слои 1:1 с макетом.
 export function Portfolio() {
   return (
-    <section className={styles.portfolio} id="portfolio">
+    <section className={styles.portfolio}>
       <div className={styles.inner}>
         <h2 className={styles.title}>Наши проекты</h2>
 

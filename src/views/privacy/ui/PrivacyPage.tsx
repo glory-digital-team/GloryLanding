@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/shared/ui/Button";
 import { Logo } from "@/shared/ui/Logo";
 import { siteConfig } from "@/shared/config";
 import {
@@ -51,9 +52,14 @@ export function PrivacyPage() {
         <Link href="/" className={styles.logoLink} aria-label={siteConfig.name}>
           <Logo size={36} wordSize={20} />
         </Link>
-        <Link href="/" className={styles.back}>
-          ← На главную
-        </Link>
+        <Button
+          variant="ghost"
+          size="sm"
+          href="/documents"
+          className={styles.backButton}
+        >
+          ← Назад к документам
+        </Button>
       </header>
 
       <main className={styles.content}>

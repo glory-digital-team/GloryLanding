@@ -21,18 +21,18 @@ export const siteConfig = {
     "Глори.Цифра — цифровые продукты для бизнеса: сайты, лендинги, автоматизация и AI-решения с прозрачной ценой.",
   nav: [
     { label: "Направления", href: "#services" },
-    { label: "Портфолио", href: "#portfolio" },
+    { label: "Портфолио", href: "/portfolio" },
     { label: "Частые вопросы", href: "#faq" },
   ] satisfies NavItem[],
   // Навигация в футере: десктопный макет (191:411) и мобильный (273:5614) различаются
   footerNav: [
     { label: "Направления", href: "#services" },
-    { label: "Портфолио", href: "#portfolio" },
+    { label: "Портфолио", href: "/portfolio" },
     { label: "Частые вопросы", href: "#faq" },
   ] satisfies NavItem[],
   footerNavMobile: [
     { label: "Направления", href: "#services" },
-    { label: "Кейсы", href: "#portfolio" },
+    { label: "Кейсы", href: "/portfolio" },
     { label: "Начать проект", href: "#lead-form" },
   ] satisfies NavItem[],
   contacts: {

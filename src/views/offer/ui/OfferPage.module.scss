@@ -19,6 +19,21 @@
   }
 }
 
+.backNav {
+  margin-bottom: rem(24px);
+}
+
+.backButton {
+  color: $color-text-muted;
+  font-size: rem(14px);
+  padding: rem(8px) rem(12px);
+
+  &:hover {
+    color: $color-text;
+    background-color: $color-surface-2;
+  }
+}
+
 .heroContent {
   max-width: rem(880px);
   margin-inline: auto;
@@ -480,9 +495,11 @@
 
 // ── Print Styles ──────────────────────────────────────────────
 @media print {
+  // Скрываем лишние элементы при печати
   .mobileNavToggle,
   .sidebar,
-  .heroActions {
+  .heroActions,
+  .backNav {
     display: none !important;
   }
 

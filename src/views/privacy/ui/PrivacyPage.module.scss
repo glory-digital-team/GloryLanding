@@ -25,14 +25,14 @@
   align-items: center;
 }
 
-.back {
-  font-size: rem(15px);
-  font-weight: $fw-medium;
+.backButton {
   color: $color-text-muted;
-  transition: color 0.18s ease;
+  font-size: rem(14px);
+  padding: rem(8px) rem(12px);
 
   &:hover {
-    color: $color-primary;
+    color: $color-text;
+    background-color: $color-surface-2;
   }
 }
 
@@ -134,4 +134,48 @@
   font-size: rem(14px);
   color: $color-text-muted;
   border-top: rem(1px) solid #e5e7eb;
+}
+
+// ── Print Styles ──────────────────────────────────────────────
+@media print {
+  .topbar {
+    display: none !important;
+  }
+
+  .page {
+    background: white;
+  }
+
+  .content {
+    padding: rem(20px) 0;
+    max-width: 100%;
+  }
+
+  .article {
+    max-width: 100%;
+  }
+
+  .section {
+    margin-bottom: rem(32px);
+    page-break-inside: avoid;
+  }
+
+  .heading {
+    font-size: rem(20px);
+    page-break-after: avoid;
+  }
+
+  .paragraph,
+  .list {
+    font-size: rem(14px);
+    line-height: 1.5;
+  }
+
+  .tableWrap {
+    page-break-inside: avoid;
+  }
+
+  @page {
+    margin: 2cm;
+  }
 }

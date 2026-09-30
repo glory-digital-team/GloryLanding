@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
   sassOptions: {
     loadPaths: [path.join(process.cwd(), "src")],
   },
+  // Разрешает доступ к dev-серверу с локального IP для исправления WebSocket ошибок
+  allowedDevOrigins: ["192.168.1.94", "10.101.34.23"],
   async rewrites() {
     return [
       {
