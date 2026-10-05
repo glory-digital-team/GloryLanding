@@ -1,4 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
+import { Button } from "@/shared/ui/Button";
+import { PROJECTS } from "@/views/portfolio/model/projects";
 import styles from "./Portfolio.module.scss";
 
 // Секция «Наши проекты» (Figma «Portfolio» 184:967) — 4 карточки 548×548,
@@ -10,95 +13,49 @@ export function Portfolio() {
         <h2 className={styles.title}>Наши проекты</h2>
 
         <div className={styles.grid}>
-          {/* ИИ Говори — 202:306, синяя */}
-          <a
-            className={`${styles.card} ${styles.cardBlue}`}
-            href="https://ии-говори.рф/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Открыть проект ИИ Говори"
-          >
-            <span className={styles.imageGovori} aria-hidden="true">
-              <img src="/portfolio/ii-govori.png" alt="ИИ Говори" />
-            </span>
-            <div className={styles.tags}>
-              <span className={styles.tag}>Дизайн</span>
-              <span className={styles.tag}>Разработка</span>
-              <span className={styles.tag}>AI-решения</span>
-            </div>
-            <div className={styles.text}>
-              <h3 className={styles.cardTitle}>ИИ Говори</h3>
-              <p className={styles.cardSubtitle}>Диалоговый AI-тренажер</p>
-            </div>
-          </a>
+          {PROJECTS.map((project) => (
+            <a
+              key={project.id}
+              className={`${styles.card} ${styles[project.cardClass]}`}
+              href={project.href}
+              target={project.href.startsWith("http") ? "_blank" : undefined}
+              rel={project.href.startsWith("http") ? "noreferrer" : undefined}
+              aria-label={`Открыть проект ${project.title}`}
+            >
+              {project.id === "ii-govori" ? (
+                <span className={styles.imageGovori} aria-hidden="true">
+                  <img src={project.image.src} alt={project.image.alt} />
+                </span>
+              ) : (
+                <img
+                  className={styles[project.image.className || ""]}
+                  src={project.image.src}
+                  alt={project.image.alt}
+                />
+              )}
 
-          {/* ESIS — 180:888, светло-голубая */}
-          <a
-            className={`${styles.card} ${styles.cardLight}`}
-            href="https://esls.ru/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Открыть проект ESIS"
-          >
-            <img className={styles.imageEsis} src="/portfolio/esis.png" alt="ESIS" />
-            <div className={styles.tags}>
-              <span className={styles.tag}>Дизайн</span>
-              <span className={styles.tag}>Разработка</span>
-              <span className={styles.tag}>AI-решения</span>
-            </div>
-            <div className={`${styles.text} ${styles.textBlur}`}>
-              <h3 className={styles.cardTitle}>ESIS</h3>
-              <p className={styles.cardSubtitle}>Электронные ценники</p>
-            </div>
-          </a>
+              <div className={styles.tags}>
+                {project.tags.map((tag) => (
+                  <span key={tag} className={styles.tag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
 
-          {/* Tienda de Gaucho — 180:911, зелёная */}
-          <a
-            className={`${styles.card} ${styles.cardGreen}`}
-            href="https://grvzen.notion.site/Tienda-de-Gaucho-FoodTech-1154e6ded3044837b01485526b67fb44"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Открыть проект Tienda de Gaucho"
-          >
-            <img
-              className={styles.imageTienda}
-              src="/portfolio/tienda-logo.svg"
-              alt="Tienda de Gaucho"
-            />
-            <div className={styles.tags}>
-              <span className={styles.tag}>Дизайн</span>
-              <span className={styles.tag}>Разработка</span>
-              <span className={styles.tag}>AI-решения</span>
-            </div>
-            <div className={`${styles.text} ${styles.textBlur}`}>
-              <h3 className={styles.cardTitle}>Tienda de Gaucho</h3>
-              <p className={styles.cardSubtitle}>Доставка продуктов в Аргентине</p>
-            </div>
-          </a>
+              <div className={`${styles.text} ${project.textBlur ? styles.textBlur : ""}`}>
+                <h3 className={styles.cardTitle}>{project.title}</h3>
+                <p className={styles.cardSubtitle}>{project.subtitle}</p>
+              </div>
+            </a>
+          ))}
+        </div>
 
-          {/* Lunes — 180:902, тёмная с луной */}
-          <article className={`${styles.card} ${styles.cardDark}`}>
-            <span className={styles.lunesTexture} aria-hidden="true" />
-            <img
-              className={styles.lunesScript}
-              src="/portfolio/lunes-script.png"
-              alt="Beauty by Moonlight"
-            />
-            <img
-              className={styles.lunesMoon}
-              src="/portfolio/lunes-moon.png"
-              alt=""
-              aria-hidden="true"
-            />
-            <div className={styles.tags}>
-              <span className={styles.tag}>Дизайн</span>
-              <span className={styles.tag}>SEO Оптимизация</span>
-            </div>
-            <div className={styles.text}>
-              <h3 className={styles.cardTitle}>Lunes</h3>
-              <p className={styles.cardSubtitle}>Салон красоты</p>
-            </div>
-          </article>
+        <div className={styles.buttonContainer}>
+          <Link href="/portfolio">
+            <Button variant="secondary" size="md">
+              Все проекты
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

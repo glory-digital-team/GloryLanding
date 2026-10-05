@@ -58,6 +58,45 @@
   }
 }
 
+// ── Фильтры по тегам ───────────────────────────────────────
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(12px);
+}
+
+.filter {
+  padding: rem(8px) rem(16px);
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  line-height: rem(20px);
+  color: $color-text-muted;
+  background-color: $color-surface-2;
+  border: rem(1px) solid $color-border;
+  border-radius: rem(100px);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    color: $color-text;
+    border-color: $color-border-strong;
+  }
+
+  &:focus-visible {
+    outline: rem(2px) solid $color-primary;
+    outline-offset: rem(2px);
+  }
+}
+
+.filterActive {
+  color: $color-primary;
+  background-color: $color-primary-soft;
+  border-color: $color-primary;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;

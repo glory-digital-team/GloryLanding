@@ -48,6 +48,16 @@
   }
 }
 
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: rem(32px);
+
+  @include respond-to("md") {
+    margin-top: rem(48px);
+  }
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -119,6 +129,15 @@
   --badge-color: #1f1f1f;
 
   background-color: #1f1f1f;
+}
+
+.cardClubParus {
+  --card-color: #dbeaf5;
+  --card-color-0: rgb(219 234 245 / 0%);
+  --badge-color: #222224;
+
+  background-color: #dbeaf5;
+  color: $color-text;
 }
 
 // ── Бейджи: белые таблетки, Button Text 16/500/26 ─────────
@@ -214,6 +233,18 @@
   transform: translateX(-50%);
 }
 
+// Клуб Парус: логотип по центру
+.imageClubParus {
+  position: absolute;
+  top: cqw(215);
+  left: 50%;
+  z-index: 0;
+  width: cqw(208.63);
+  height: cqw(102.89);
+  transform: translateX(-50%);
+  object-fit: contain;
+}
+
 // ── Lunes (180:902) ────────────────────────────────────────
 // Текстура поверх #1f1f1f (1048.85×534.83, opacity 50%)
 .lunesTexture {
@@ -278,7 +309,8 @@ $pf-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
 .imageGovori img,
 .imageEsis,
-.imageTienda {
+.imageTienda,
+.imageClubParus {
   transition:
     transform 0.7s $pf-ease,
     filter 0.7s $pf-ease;
@@ -298,6 +330,12 @@ $pf-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 // Tienda: логотип «выстреливает» с пружинным перелётом.
 .cardGreen:hover .imageTienda {
   transform: translateX(-50%) scale(1.12);
+  transition-timing-function: $pf-spring;
+}
+
+// Клуб Парус: логотип увеличивается
+.cardClubParus:hover .imageClubParus {
+  transform: translateX(-50%) scale(1.08);
   transition-timing-function: $pf-spring;
 }
 
@@ -338,6 +376,7 @@ $pf-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   .imageGovori img,
   .imageEsis,
   .imageTienda,
+  .imageClubParus,
   .cardDark::before {
     transition: none;
   }
@@ -355,6 +394,10 @@ $pf-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .cardGreen:hover .imageTienda {
+    transform: translateX(-50%);
+  }
+
+  .cardClubParus:hover .imageClubParus {
     transform: translateX(-50%);
   }
 
