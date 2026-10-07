@@ -41,6 +41,12 @@
 
 // ── Размеры ───────────────────────────────────────────────
 // 16px × lh1.625 = 26px строки + 2×10 паддинга + 2×1 бордера = 48px
+.sm {
+  padding: rem(6px) rem(12px);
+  font-size: rem(14px);
+  line-height: 1.5;
+}
+
 .md {
   padding: rem(10px) rem(20px);
 }
@@ -89,5 +95,15 @@
 
   &:hover {
     background-color: #000;
+  }
+}
+
+.ghost {
+  color: $color-text-muted;
+  background-color: transparent;
+
+  &:hover {
+    color: $color-text;
+    background-color: $color-surface-2;
   }
 }

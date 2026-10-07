@@ -3,8 +3,8 @@ import { cn } from "@/shared/lib";
 import { Icon, type IconName } from "@/shared/ui/Icon";
 import styles from "./Button.module.scss";
 
-export type ButtonVariant = "primary" | "secondary" | "dark";
-export type ButtonSize = "md" | "lg";
+export type ButtonVariant = "primary" | "secondary" | "dark" | "ghost";
+export type ButtonSize = "sm" | "md" | "lg";
 
 interface BaseProps {
   variant?: ButtonVariant;

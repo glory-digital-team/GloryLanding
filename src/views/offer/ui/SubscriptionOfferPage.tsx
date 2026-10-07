@@ -172,21 +172,17 @@ export function SubscriptionOfferPage() {
   }, []);
 
   // Вспомогательная функция для скрытия/восстановления элементов
-  const hideElementsTemporarily = (elements: Element[]) => {
+  const hideElementsTemporarily = (elements: HTMLElement[]) => {
     elements.forEach(el => {
-      if (el) {
-        el.dataset.originalDisplay = el.style.display || '';
-        el.style.display = 'none';
-      }
+      el.dataset.originalDisplay = el.style.display || '';
+      el.style.display = 'none';
     });
   };
 
-  const restoreElements = (elements: Element[]) => {
+  const restoreElements = (elements: HTMLElement[]) => {
     elements.forEach(el => {
-      if (el) {
-        el.style.display = el.dataset.originalDisplay || '';
-        delete el.dataset.originalDisplay;
-      }
+      el.style.display = el.dataset.originalDisplay || '';
+      delete el.dataset.originalDisplay;
     });
   };
 
@@ -195,11 +191,13 @@ export function SubscriptionOfferPage() {
     // Скрываем те же элементы, что и для PDF
     const header = document.querySelector('header');
     const footer = document.querySelector('footer');
-    const sidebar = document.querySelector(`.${styles.sidebar}`);
-    const heroActions = document.querySelector(`.${styles.heroActions}`);
-    const backNav = document.querySelector(`.${styles.backNav}`);
+    const sidebar = document.querySelector<HTMLElement>(`.${styles.sidebar}`);
+    const heroActions = document.querySelector<HTMLElement>(`.${styles.heroActions}`);
+    const backNav = document.querySelector<HTMLElement>(`.${styles.backNav}`);
 
-    const elementsToHide = [header, footer, sidebar, heroActions, backNav].filter(Boolean);
+    const elementsToHide = [header, footer, sidebar, heroActions, backNav].filter(
+      (element): element is HTMLElement => element !== null,
+    );
     hideElementsTemporarily(elementsToHide);
 
     // Печатаем
@@ -218,24 +216,26 @@ export function SubscriptionOfferPage() {
     // Скрываем те же элементы, что и для печати
     const header = document.querySelector('header');
     const footer = document.querySelector('footer');
-    const sidebar = document.querySelector(`.${styles.sidebar}`);
-    const heroActions = document.querySelector(`.${styles.heroActions}`);
-    const backNav = document.querySelector(`.${styles.backNav}`);
+    const sidebar = document.querySelector<HTMLElement>(`.${styles.sidebar}`);
+    const heroActions = document.querySelector<HTMLElement>(`.${styles.heroActions}`);
+    const backNav = document.querySelector<HTMLElement>(`.${styles.backNav}`);
 
-    const elementsToHide = [header, footer, sidebar, heroActions, backNav].filter(Boolean);
+    const elementsToHide = [header, footer, sidebar, heroActions, backNav].filter(
+      (element): element is HTMLElement => element !== null,
+    );
     hideElementsTemporarily(elementsToHide);
 
     // Рендерим из всей страницы, но без скрытых элементов
-    const pageElement = document.querySelector(`.${styles.page}`);
+    const pageElement = document.querySelector<HTMLElement>(`.${styles.page}`);
     if (!pageElement) {
       restoreElements(elementsToHide);
       return;
     }
 
     const opt = {
-      margin: [10, 10, 10, 10],
+      margin: [10, 10, 10, 10] as [number, number, number, number],
       filename: `Глори_Цифра_${SUBSCRIPTION_OFFER_TITLE.replace(/\s+/g, '_')}_ред${SUBSCRIPTION_OFFER_REVISION.number}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
+      image: { type: 'jpeg' as const, quality: 0.98 },
       html2canvas: {
         scale: 2,
         useCORS: true,
@@ -246,7 +246,7 @@ export function SubscriptionOfferPage() {
       jsPDF: {
         unit: 'mm',
         format: 'a4',
-        orientation: 'portrait',
+        orientation: 'portrait' as const,
       },
       pagebreak: {
         mode: ['avoid-all', 'css', 'legacy'],

@@ -79,17 +79,16 @@ export function ConfiguratorModal() {
     setError("");
   }, []);
 
-  // Сбрасываем выбранные модули при смене типа проекта
-  useEffect(() => {
-    setModuleIds((prev: Set<string>) => {
-      const validIds = new Set(
-        Array.from(prev).filter((id) =>
-          MODULES.find((m) => m.id === id)?.projectTypeIds.includes(typeId || ""),
+  const handleProjectTypeChange = (nextTypeId: string) => {
+    setTypeId(nextTypeId);
+    setModuleIds((previous) =>
+      new Set(
+        Array.from(previous).filter((id) =>
+          MODULES.find((module) => module.id === id)?.projectTypeIds.includes(nextTypeId),
         ),
-      );
-      return validIds;
-    });
-  }, [typeId]);
+      ),
+    );
+  };
 
   const close = useCallback(() => {
     closeConfigurator();
@@ -323,7 +322,7 @@ export function ConfiguratorModal() {
                       type="button"
                       className={cn(styles.option, typeId === t.id && styles.optionSelected)}
                       aria-pressed={typeId === t.id}
-                      onClick={() => setTypeId(t.id)}
+                      onClick={() => handleProjectTypeChange(t.id)}
                     >
                       <img src={t.icon} alt="" width={32} height={32} />
                       <span>{t.label}</span>

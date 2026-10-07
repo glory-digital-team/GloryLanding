@@ -776,7 +776,7 @@
   flex: 1;
 }
 
-.previewEvents .eventLines .line {
+:where(.previewEvents .eventLines) .line {
   height: rem(5px);
   background: $color-border;
   border-radius: 3px;
@@ -860,12 +860,12 @@
   border-radius: 3px;
   margin-bottom: rem(3px);
 
-  &:first-child {
+  &:where(:first-child) {
     width: 80%;
     background: $color-border-strong;
   }
 
-  &:last-child {
+  &:where(:last-child) {
     width: 60%;
     margin-bottom: 0;
   }
@@ -906,15 +906,15 @@
   border-radius: 3px;
   margin-bottom: rem(5px);
 
-  &:nth-child(2) {
+  &:where(:nth-child(2)) {
     width: 85%;
   }
 
-  &:nth-child(3) {
+  &:where(:nth-child(3)) {
     width: 70%;
   }
 
-  &:last-child {
+  &:where(:last-child) {
     margin-bottom: 0;
   }
 }
@@ -946,12 +946,12 @@
   border-radius: 3px;
   margin-bottom: rem(3px);
 
-  &:first-child {
+  &:where(:first-child) {
     width: 80%;
     background: $color-border-strong;
   }
 
-  &:last-child {
+  &:where(:last-child) {
     width: 50%;
     margin-bottom: 0;
   }
