@@ -196,25 +196,27 @@ const DEVICES: Record<"phone" | "tablet" | "laptop" | "desktop", DeviceSpec> = {
    Компонент: график производительности (случайные бары)
 ────────────────────────────────────────────────── */
 function PerformanceChart() {
-  const chartRef = useRef<HTMLDivElement | null>(null);
+  const barHeights = [
+    24, 38, 30, 52, 34, 46, 28, 58, 42, 32, 50, 26,
+    44, 36, 54, 30, 48, 34, 56, 40, 28, 52, 38, 60,
+  ];
 
-  useEffect(() => {
-    const chart = chartRef.current;
-    if (!chart) return;
-
-    const barCount = 24;
-    for (let i = 0; i < barCount; i++) {
-      const bar = document.createElement("div");
-      bar.className = styles.seoMetricChartBar;
-      const height = 20 + Math.random() * 50;
-      bar.style.height = `${height}px`;
-      bar.style.left = `${i * (100 / barCount)}%`;
-      if (i > barCount * 0.6) bar.classList.add(styles.active);
-      chart.appendChild(bar);
-    }
-  }, []);
-
-  return <div ref={chartRef} className={styles.seoMetricChart} aria-hidden="true" />;
+  return (
+    <div className={styles.seoMetricChart} aria-hidden="true">
+      {barHeights.map((height, index) => (
+        <span
+          className={`${styles.seoMetricChartBar} ${index >= 15 ? styles.active : ""}`}
+          key={index}
+          style={
+            {
+              "--bar-height": `${height}px`,
+              "--bar-delay": `${index * -0.11}s`,
+            } as React.CSSProperties
+          }
+        />
+      ))}
+    </div>
+  );
 }
 
 /* ──────────────────────────────────────────────────

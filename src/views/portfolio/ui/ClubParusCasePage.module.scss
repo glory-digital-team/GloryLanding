@@ -42,6 +42,13 @@
   padding-bottom: $space-3xl;
 }
 
+@include respond-down("md") {
+  .hero {
+    padding-top: rem(120px);
+    padding-bottom: $space-2xl;
+  }
+}
+
 .heroEyebrow {
   color: $color-primary;
   margin-bottom: $space-lg;
@@ -167,7 +174,7 @@
   width: rem(44px);
   height: rem(44px);
   border-radius: rem(10px);
-  background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
+  background: #84b9e8;
   border: 1px solid rgb(0 0 0 / 6%);
   display: flex;
   align-items: center;
@@ -175,7 +182,6 @@
   overflow: hidden;
   flex-shrink: 0;
   box-shadow: 0 1px 3px rgb(0 0 0 / 4%);
-  filter: invert(19%) sepia(38%) saturate(1197%) hue-rotate(178deg) brightness(93%) contrast(96%);
 
   img {
     width: 100%;
@@ -238,7 +244,7 @@
   }
 }
 
-@include respond-to("md") {
+@include respond-down("md") {
   .heroMetaPanel {
     display: grid;
     grid-template-columns: 1fr;
@@ -405,7 +411,7 @@
   }
 }
 
-@include respond-to("md") {
+@include respond-down("md") {
   .heroIframe {
     height: rem(400px);
   }
@@ -453,7 +459,7 @@
   line-height: 1.4;
 }
 
-@include respond-to("lg") {
+@include respond-down("lg") {
   .statsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -571,7 +577,7 @@
   color: $color-text-muted;
 }
 
-@include respond-to("md") {
+@include respond-down("md") {
   .contextScattered {
     grid-template-columns: repeat(2, 1fr);
 
@@ -652,6 +658,27 @@
   justify-content: center;
   color: $color-text-faint;
   font-size: rem(18px);
+}
+
+@include respond-down("md") {
+  .approachFlow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: rem(8px);
+    overflow: visible;
+  }
+
+  .approachFlowStep {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .approachFlowArrow {
+    align-self: center;
+    width: rem(20px);
+    height: rem(20px);
+    transform: rotate(90deg);
+  }
 }
 
 /* ── Features Grid ──────────────────────────────── */
@@ -976,7 +1003,7 @@
   }
 }
 
-@include respond-to("lg") {
+@include respond-down("lg") {
   .featuresGrid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1070,7 +1097,7 @@
   line-height: 1.6;
 }
 
-@include respond-to("md") {
+@include respond-down("md") {
   .vkSection {
     padding: $space-xl $space-md;
   }
@@ -1158,23 +1185,44 @@
 .seoMetricChart {
   flex: 1;
   height: rem(80px);
-  position: relative;
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: rem(4px);
 }
 
 .seoMetricChartBar {
-  position: absolute;
-  bottom: 0;
-  width: rem(8px);
+  flex: 1 1 0;
+  max-width: rem(8px);
+  height: var(--bar-height);
   background: $color-border;
-  border-radius: 4px 4px 0 0;
-  transition: height 0.5s ease;
+  border-radius: rem(4px) rem(4px) 0 0;
+  transform-origin: center bottom;
+  animation: performance-wave 1.8s ease-in-out var(--bar-delay) infinite alternate;
 
   &.active {
     background: $color-primary;
   }
 }
 
-@include respond-to("lg") {
+@keyframes performance-wave {
+  from {
+    transform: scaleY(0.58);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seoMetricChartBar {
+    animation: none;
+  }
+}
+
+@include respond-down("lg") {
   .seoGrid {
     grid-template-columns: 1fr;
   }
@@ -1182,6 +1230,23 @@
   .seoMetric {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@include respond-down("md") {
+  .seoMetric {
+    flex-direction: row;
+    gap: rem(12px);
+    padding: rem(16px);
+    text-align: left;
+  }
+
+  .seoMetricValue {
+    font-size: rem(20px);
+  }
+
+  .seoMetricChart {
+    height: rem(48px);
   }
 }
 
@@ -1219,7 +1284,7 @@
   line-height: 1.4;
 }
 
-@include respond-to("lg") {
+@include respond-down("lg") {
   .techGrid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1417,7 +1482,7 @@
   line-height: 1.3;
 }
 
-@include respond-to("md") {
+@include respond-down("md") {
   .devicesShowcase {
     justify-content: flex-start;
     padding: rem(20px);
@@ -1479,7 +1544,7 @@
   line-height: 1.4;
 }
 
-@include respond-to("lg") {
+@include respond-down("lg") {
   .resultsMetrics {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1560,7 +1625,7 @@
   font-size: rem(16px);
 }
 
-@include respond-to("md") {
+@include respond-down("md") {
   .continuationFlow {
     flex-wrap: wrap;
     gap: rem(8px);
@@ -1651,7 +1716,7 @@
   font-style: italic;
 }
 
-@include respond-to("md") {
+@include respond-down("md") {
   .partnershipCard {
     padding: $space-xl $space-md;
   }
