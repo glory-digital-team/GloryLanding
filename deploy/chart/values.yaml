@@ -12,6 +12,8 @@ replicas: 1
 ingress:
   className: traefik
   clusterIssuer: letsencrypt
+  # Например, редирект на HTTPS: traefik.ingress.kubernetes.io/router.middlewares: kube-system-redirect-https@kubernetescrd
+  annotations: {}
   tlsSecret: glory-landing-tls
   hosts:
     - xn--c1akimk.digital
