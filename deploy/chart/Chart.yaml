@@ -1,0 +1,7 @@
+apiVersion: v2
+name: glory-landing
+description: Лендинг Glory Digital — глори.digital
+type: application
+# Версию и appVersion при публикации подставляет CI: version — номер релиза, appVersion — тег образа.
+version: 0.0.0
+appVersion: latest

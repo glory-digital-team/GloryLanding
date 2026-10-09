@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+      - 'GLORY.md'
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: ghcr.io/glory-digital-team
+  IMAGE: ghcr.io/glory-digital-team/glorylanding
+
+jobs:
+  checks:
+    name: Проверки
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run lint:styles
+      - run: npx tsc --noEmit
+      - run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+      - uses: azure/setup-helm@v5
+        with:
+          version: v4.3.0
+      - run: helm lint deploy/chart
+
+  image:
+    name: Образ в GHCR
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: checks
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:sha-${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # Релиз — Helm-чарт, в котором appVersion равен тегу образа. Flux на сервере видит новую версию
+  # чарта в GHCR и обновляет сайт сам: у GitHub нет доступа к серверу.
+  release:
+    name: Релиз для автодеплоя
+    needs: image
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    concurrency:
+      group: release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: azure/setup-helm@v5
+        with:
+          version: v4.3.0
+      - name: Опубликовать чарт
+        env:
+          VERSION: 1.0.${{ github.run_number }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "$TOKEN" | helm registry login ghcr.io -u "${{ github.actor }}" --password-stdin
+          helm package deploy/chart --version "$VERSION" --app-version "sha-${GITHUB_SHA}" -d "$RUNNER_TEMP"
+          helm push "$RUNNER_TEMP/glory-landing-$VERSION.tgz" "oci://${REGISTRY}/charts"
+          {
+            echo "### Релиз $VERSION"
+            echo
+            echo "Коммит \`${GITHUB_SHA::7}\` опубликован. Flux выкатит его на глори.digital в течение пары минут."
+          } >> "$GITHUB_STEP_SUMMARY"

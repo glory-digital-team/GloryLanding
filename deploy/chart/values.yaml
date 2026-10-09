@@ -1,0 +1,25 @@
+image:
+  repository: ghcr.io/glory-digital-team/glorylanding
+  # Пусто — берётся appVersion чарта (тег образа, с которым CI опубликовал релиз).
+  tag: ''
+  pullPolicy: IfNotPresent
+
+# Секреты для скачивания образа из GHCR (например, [{ name: ghcr-pull }]).
+imagePullSecrets: []
+
+replicas: 1
+
+ingress:
+  className: traefik
+  clusterIssuer: letsencrypt
+  tlsSecret: glory-landing-tls
+  hosts:
+    - xn--c1akimk.digital
+    - www.xn--c1akimk.digital
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    memory: 320Mi
