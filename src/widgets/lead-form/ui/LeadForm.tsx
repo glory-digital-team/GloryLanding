@@ -84,7 +84,12 @@ export function LeadForm() {
               onChange={(e) => setConsent(e.target.checked)}
             />
             <span>
-              Согласен на обработку персональных данных.{" "}
+              {/* Заявка сразу открывает личный кабинет: согласие — и с офертой, и на обработку данных. */}
+              Принимаю условия{" "}
+              <a href="/offer" target="_blank" rel="noopener" className={styles.policy}>
+                оферты
+              </a>{" "}
+              и согласен на обработку персональных данных.{" "}
               <button type="button" className={styles.policy} onClick={openPolicy}>
                 Политика конфиденциальности
               </button>
