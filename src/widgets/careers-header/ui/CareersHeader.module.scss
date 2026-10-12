@@ -1,0 +1,122 @@
+@use "shared/styles/abstracts" as *;
+
+.header {
+  position: fixed;
+  top: rem(12px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding-inline: rem(12px);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: rem(16px);
+  max-width: rem(1168px);
+  margin-inline: auto;
+  padding: rem(8px) rem(8px) rem(8px) rem(16px);
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: $radius-pill;
+  pointer-events: auto;
+  transition:
+    background 0.3s,
+    border-color 0.3s,
+    box-shadow 0.3s;
+
+  .scrolled & {
+    border-color: rgb(229 231 235 / 80%);
+    background: rgb(255 255 255 / 78%);
+    backdrop-filter: blur(16px) saturate(1.4);
+    box-shadow: $shadow-md;
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: rem(10px);
+  color: inherit;
+  text-decoration: none;
+}
+
+.section {
+  display: none;
+  padding: rem(3px) rem(10px);
+  border-radius: $radius-pill;
+  font-size: rem(12px);
+  font-weight: $fw-semibold;
+  background: $color-primary;
+  color: #fff;
+
+  @include respond-to("sm") {
+    display: inline-block;
+  }
+}
+
+.nav {
+  display: none;
+  gap: rem(4px);
+  margin-left: auto;
+
+  @include respond-to("lg") {
+    display: flex;
+  }
+
+  a {
+    padding: rem(8px) rem(14px);
+    border-radius: $radius-pill;
+    font-size: rem(15px);
+    font-weight: $fw-medium;
+    color: $color-text;
+    text-decoration: none;
+    transition: background 0.2s;
+
+    &:hover {
+      background: $color-surface-2;
+    }
+  }
+}
+
+.cta {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: rem(10px) rem(16px);
+  border: 0;
+  border-radius: $radius-pill;
+  font: inherit;
+  font-size: rem(15px);
+  font-weight: $fw-semibold;
+  background: $color-primary;
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+
+  @include respond-to("lg") {
+    margin-left: 0;
+    padding: rem(12px) rem(20px);
+  }
+
+  &:hover {
+    background: $color-primary-hover;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: $color-primary;
+  transform-origin: 0 50%;
+}

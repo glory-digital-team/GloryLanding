@@ -1,0 +1,349 @@
+@use "shared/styles/abstracts" as *;
+
+.hero {
+  position: relative;
+  overflow: clip;
+  padding: rem(120px) 0 rem(40px);
+  background: $color-bg-soft;
+
+  @include respond-to("lg") {
+    min-height: 100vh;
+    padding-top: rem(150px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mask-image: radial-gradient(ellipse at 70% 40%, #000 30%, transparent 80%);
+}
+
+.glow {
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: rem(640px);
+  height: rem(640px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(204 0 0 / 14%), transparent 65%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  display: grid;
+  gap: rem(48px);
+  max-width: rem(1168px);
+  margin-inline: auto;
+  padding-inline: rem(16px);
+
+  @include respond-to("md") {
+    padding-inline: rem(24px);
+  }
+
+  @include respond-to("lg") {
+    grid-template-columns: 1.25fr 1fr;
+    align-items: center;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: rem(24px);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(10px);
+  padding: rem(8px) rem(14px);
+  border-radius: $radius-pill;
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  background: $color-bg-dark;
+  color: #fff;
+
+  i {
+    width: rem(8px);
+    height: rem(8px);
+    border-radius: 50%;
+    background: #3ddc84;
+    box-shadow: 0 0 0 0 rgb(61 220 132 / 60%);
+    animation: pulse 1.8s infinite;
+  }
+}
+
+@keyframes pulse {
+  70% {
+    box-shadow: 0 0 0 10px rgb(61 220 132 / 0%);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgb(61 220 132 / 0%);
+  }
+}
+
+.title {
+  font-size: rem(40px);
+  font-weight: $fw-bold;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(64px);
+  }
+
+  @include respond-to("xl") {
+    font-size: rem(76px);
+  }
+}
+
+.rotator {
+  display: block;
+  min-height: 2.2em; // фразы бывают в 2 строки — резервируем место, чтобы текст ниже не прыгал
+  overflow: hidden;
+  color: $color-primary;
+}
+
+.word {
+  display: inline-flex;
+  flex-wrap: wrap;
+  column-gap: 0.25em;
+}
+
+.wordPart {
+  display: inline-flex;
+  white-space: nowrap;
+
+  > span {
+    display: inline-block;
+  }
+}
+
+.description {
+  max-width: rem(560px);
+  font-size: rem(18px);
+  color: $color-text-muted;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(12px);
+}
+
+.scene {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: rem(380px);
+  perspective: 1000px;
+}
+
+.ticket {
+  position: relative;
+  width: min(100%, rem(360px));
+  padding: rem(24px);
+  border-radius: $radius-xl;
+  background: #fff;
+  box-shadow:
+    0 1px 0 rgb(0 0 0 / 4%),
+    0 30px 60px -20px rgb(34 34 36 / 25%),
+    0 0 0 1px $color-border;
+  transform-style: preserve-3d;
+}
+
+.ticketHead {
+  display: flex;
+  justify-content: space-between;
+  font-size: rem(13px);
+  color: $color-text-muted;
+
+  b {
+    font-family: "IBM Plex Mono", monospace;
+    color: $color-text;
+  }
+}
+
+.ticketRole {
+  margin-top: rem(10px);
+  font-size: rem(26px);
+  font-weight: $fw-bold;
+  letter-spacing: -0.02em;
+}
+
+.ticketStatus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: rem(20px);
+  overflow: hidden;
+  font-size: rem(14px);
+  color: $color-text-muted;
+
+  b {
+    display: inline-block;
+    padding: rem(4px) rem(12px);
+    border-radius: $radius-pill;
+    background: $color-primary-soft;
+    color: $color-primary;
+  }
+}
+
+.bar {
+  height: rem(8px);
+  margin-top: rem(14px);
+  border-radius: $radius-pill;
+  background: $color-surface-2;
+  overflow: hidden;
+
+  i {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #ff4d4d, $color-primary);
+  }
+}
+
+.steps {
+  display: flex;
+  gap: rem(6px);
+  margin-top: rem(10px);
+
+  span {
+    flex: 1;
+    height: rem(4px);
+    border-radius: 2px;
+    background: $color-border;
+    transition: background 0.4s;
+  }
+
+  .stepOn {
+    background: $color-text;
+  }
+}
+
+.perforation {
+  position: relative;
+  height: 0;
+  margin: rem(22px) rem(-24px) rem(16px);
+  border-top: 2px dashed $color-border;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: rem(-13px);
+    width: rem(24px);
+    height: rem(24px);
+    border-radius: 50%;
+    background: $color-bg-soft;
+  }
+
+  &::before {
+    left: rem(-12px);
+  }
+
+  &::after {
+    right: rem(-12px);
+  }
+}
+
+.ticketFoot {
+  font-size: rem(13px);
+  color: $color-text-muted;
+}
+
+.floater {
+  position: absolute;
+  padding: rem(8px) rem(14px);
+  border-radius: $radius-pill;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: rem(13px);
+  background: #fff;
+  box-shadow: $shadow-lg;
+
+  &[data-i="0"] {
+    top: 4%;
+    left: 6%;
+  }
+
+  &[data-i="1"] {
+    top: 12%;
+    right: 0;
+    background: $color-bg-dark;
+    color: #fff;
+  }
+
+  &[data-i="2"] {
+    bottom: 14%;
+    left: 0;
+    background: $color-primary;
+    color: #fff;
+  }
+
+  &[data-i="3"] {
+    bottom: 2%;
+    right: 12%;
+  }
+
+  &[data-i="4"] {
+    top: 48%;
+    right: -4%;
+    display: none;
+  }
+
+  @include respond-to("xl") {
+    &[data-i="4"] {
+      display: block;
+    }
+  }
+}
+
+.stats {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: rem(1px);
+  max-width: rem(1120px);
+  margin: rem(56px) rem(16px) 0;
+  overflow: hidden;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-border;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(4, 1fr);
+    margin-inline: auto;
+    width: calc(100% - 48px);
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: rem(2px);
+  padding: rem(18px) rem(20px);
+  background: rgb(255 255 255 / 85%);
+  backdrop-filter: blur(8px);
+
+  b {
+    font-size: rem(28px);
+    font-weight: $fw-bold;
+    letter-spacing: -0.02em;
+  }
+
+  span {
+    font-size: rem(14px);
+    color: $color-text-muted;
+  }
+}

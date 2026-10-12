@@ -1,0 +1,81 @@
+@use "shared/styles/abstracts" as *;
+
+.section {
+  position: relative;
+  overflow: hidden;
+  padding: rem(96px) 0;
+  background:
+    radial-gradient(circle at 50% 120%, rgb(204 0 0 / 55%), transparent 55%), $color-bg-dark;
+  color: #fff;
+
+  @include respond-to("lg") {
+    padding: rem(140px) 0;
+  }
+}
+
+.inner {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.heading {
+  font-size: rem(38px);
+  font-weight: $fw-bold;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+
+  @include respond-to("md") {
+    font-size: rem(68px);
+  }
+
+  span {
+    color: $color-text-faint;
+  }
+}
+
+.text {
+  max-width: rem(560px);
+  margin-top: rem(20px);
+  font-size: rem(18px);
+  color: $color-text-faint;
+}
+
+.magnet {
+  display: grid;
+  place-items: center;
+  width: rem(200px);
+  height: rem(200px);
+  margin-top: rem(48px);
+  border: 0;
+  border-radius: 50%;
+  font: inherit;
+  font-size: rem(18px);
+  font-weight: $fw-semibold;
+  background: $color-primary;
+  color: #fff;
+  box-shadow: 0 20px 60px rgb(204 0 0 / 45%);
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #e00000;
+  }
+
+  span {
+    max-width: rem(120px);
+  }
+}
+
+.mail {
+  margin-top: rem(40px);
+  font-size: rem(15px);
+  color: $color-text-faint;
+
+  a {
+    color: #fff;
+  }
+}

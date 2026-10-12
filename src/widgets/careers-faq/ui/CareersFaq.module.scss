@@ -1,0 +1,83 @@
+@use "shared/styles/abstracts" as *;
+
+.section {
+  padding: rem(80px) 0;
+
+  @include respond-to("lg") {
+    padding: rem(120px) 0;
+  }
+}
+
+.inner {
+  @include container;
+
+  display: grid;
+  gap: rem(32px);
+
+  @include respond-to("lg") {
+    grid-template-columns: 1fr 1.5fr;
+    gap: rem(64px);
+  }
+}
+
+.kicker {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: rem(13px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-primary;
+}
+
+.heading {
+  margin-top: rem(12px);
+  font-size: rem(34px);
+  font-weight: $fw-bold;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+
+  @include respond-to("md") {
+    font-size: rem(48px);
+  }
+}
+
+.item {
+  border-bottom: 1px solid $color-border;
+}
+
+.q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(16px);
+  width: 100%;
+  padding: rem(22px) 0;
+  border: 0;
+  font: inherit;
+  font-size: rem(19px);
+  font-weight: $fw-semibold;
+  text-align: left;
+  background: none;
+  color: $color-text;
+  cursor: pointer;
+}
+
+.plus {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: rem(36px);
+  height: rem(36px);
+  border-radius: 50%;
+  font-size: rem(22px);
+  font-weight: $fw-regular;
+  background: $color-surface-2;
+}
+
+.a {
+  overflow: hidden;
+
+  p {
+    padding-bottom: rem(22px);
+    color: $color-text-muted;
+  }
+}
