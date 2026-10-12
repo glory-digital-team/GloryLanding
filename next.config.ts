@@ -1,13 +1,10 @@
 import type { NextConfig } from "next";
 import path from "node:path";
 
-const defaultCrmGatewayUrl = "https://xn--80a9abv.xn--c1akimk.digital";
-const crmGatewayUrl = (
-  process.env.GLORI_CRM_GATEWAY_URL ||
-  process.env.NEXT_PUBLIC_GLORI_API_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  defaultCrmGatewayUrl
-).replace(/\/$/, "");
+// Кабинет клиента и заявки с сайта (`/cabinet/*`) отдаёт платформа «Глори.Штат». На проде путь
+// `/cabinet` основного домена ведёт ingress; адрес задаётся, только если лендинг живёт отдельно
+// (локально — `GLORY_CABINET_ORIGIN=http://localhost:5175`), и тогда Next проксирует путь сам.
+const cabinetOrigin = process.env.GLORY_CABINET_ORIGIN?.replace(/\/$/, "") ?? "";
 
 const nextConfig: NextConfig = {
   // Минимальный self-contained сервер для Docker-образа (.next/standalone).
@@ -20,15 +17,10 @@ const nextConfig: NextConfig = {
   // Разрешает доступ к dev-серверу с локального IP для исправления WebSocket ошибок
   allowedDevOrigins: ["192.168.1.94", "10.101.34.23"],
   async rewrites() {
+    if (cabinetOrigin === "") return [];
     return [
-      {
-        source: "/crm/:path*",
-        destination: `${crmGatewayUrl}/crm/:path*`,
-      },
-      {
-        source: "/config/:path*",
-        destination: `${crmGatewayUrl}/config/:path*`,
-      },
+      { source: "/cabinet", destination: `${cabinetOrigin}/cabinet` },
+      { source: "/cabinet/:path*", destination: `${cabinetOrigin}/cabinet/:path*` },
     ];
   },
   async headers() {
@@ -59,16 +51,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/crm/:path*",
-        headers: [
-          {
-            key: "X-Robots-Tag",
-            value: "noindex, nofollow",
-          },
-        ],
-      },
-      {
-        source: "/config/:path*",
+        source: "/cabinet/:path*",
         headers: [
           {
             key: "X-Robots-Tag",

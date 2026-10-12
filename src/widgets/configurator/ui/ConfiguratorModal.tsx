@@ -2,18 +2,19 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { CabinetCodeStep } from "@/features/cabinet-entry";
 import {
-  calculatePublicConfigurator,
-  type PublicConfiguratorCalculateResponse,
-} from "@/shared/api/config";
-import { createPublicConfiguratorLead } from "@/shared/api/crm";
-import { cn, formatRuPhone, isCompleteRuPhone, useOverlays } from "@/shared/lib";
+  estimateSite,
+  isEmail,
+  submitSiteRequest,
+  type CodeSent,
+  type SiteEstimate,
+} from "@/shared/api/cabinet";
+import { cn, formatRuPhone, useOverlays } from "@/shared/lib";
 import {
   MODULES,
   PROJECT_TYPES,
   SOURCE_OPTIONS,
-  formatPrice,
-  riskLevelFromSource,
   urgencyFromDate,
   type ProjectModule,
 } from "../model/config";
@@ -24,7 +25,7 @@ const TOTAL_STEPS = 4;
 
 type EstimateState = {
   key: string;
-  data: PublicConfiguratorCalculateResponse;
+  data: SiteEstimate;
 };
 
 type EstimateErrorState = {
@@ -53,13 +54,14 @@ export function ConfiguratorModal() {
   const [launchDate, setLaunchDate] = useState("");
   const [sourceId, setSourceId] = useState<string | null>(null);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
   const [pending, setPending] = useState(false);
   const [estimate, setEstimate] = useState<EstimateState | null>(null);
   const [estimating, setEstimating] = useState(false);
   const [estimateError, setEstimateError] = useState<EstimateErrorState | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<CodeSent | null>(null);
   const [error, setError] = useState("");
 
   const reset = useCallback(() => {
@@ -69,13 +71,14 @@ export function ConfiguratorModal() {
     setLaunchDate("");
     setSourceId(null);
     setName("");
+    setEmail("");
     setPhone("");
     setConsent(false);
     setPending(false);
     setEstimate(null);
     setEstimating(false);
     setEstimateError(null);
-    setSubmitted(false);
+    setSubmitted(null);
     setError("");
   }, []);
 
@@ -115,20 +118,13 @@ export function ConfiguratorModal() {
   );
   const moduleCodes = useMemo(() => Array.from(moduleIds).sort(), [moduleIds]);
   const estimateKey = selectedType
-    ? [
-        selectedType.serviceTypeCode,
-        selectedType.id,
-        moduleCodes.join(","),
-        urgency?.code ?? "standard",
-        riskLevelFromSource(sourceId),
-        launchDate || "",
-      ].join("|")
+    ? [selectedType.id, moduleCodes.join(","), sourceId ?? "", launchDate || ""].join("|")
     : "";
   const activeEstimate = estimate?.key === estimateKey ? estimate.data : null;
   const activeEstimateError = estimateError?.key === estimateKey ? estimateError.message : "";
   const priceAvailable = selectedType !== null && activeEstimate !== null && !activeEstimateError;
-  const total = activeEstimate?.total ?? null;
-  const estimateAmount = activeEstimate?.estimate_min_amount ?? total;
+  const total = activeEstimate?.min ?? null;
+  const maxAmount = activeEstimate?.max ?? null;
 
   useEffect(() => {
     if (!selectedType || !estimateKey) return;
@@ -139,16 +135,11 @@ export function ConfiguratorModal() {
     const timer = window.setTimeout(() => {
       setEstimating(true);
       setEstimateError(null);
-      calculatePublicConfigurator({
-        service_type_code: selectedType.serviceTypeCode,
-        module_codes: moduleCodes,
-        urgency_level_code: urgency?.code ?? "standard",
-        risk_level_code: riskLevelFromSource(sourceId),
-        has_tz: sourceId === "ready",
-        deadline: launchDate || null,
-        metadata: {
-          public_project_type_id: selectedType.id,
-        },
+      estimateSite({
+        typeId: selectedType.id,
+        moduleIds: moduleCodes,
+        launchOn: launchDate || null,
+        sourceId,
       })
         .then((nextEstimate) => {
           if (cancelled) return;
@@ -172,7 +163,7 @@ export function ConfiguratorModal() {
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [estimateKey, launchDate, moduleCodes, selectedType, sourceId, urgency?.code]);
+  }, [estimateKey, launchDate, moduleCodes, selectedType, sourceId]);
 
   if (!configuratorOpen) return null;
 
@@ -189,9 +180,9 @@ export function ConfiguratorModal() {
     (step === 0 && typeId !== null) ||
     step === 1 ||
     step === 2 ||
-    // Имя необязательное, телефон обязательный (issue #14): компанию и e-mail
-    // больше не собираем, при необходимости менеджер допишет их в Штате.
-    (step === 3 && isCompleteRuPhone(phone) && consent);
+    // Имя и почта обязательны: по почте человек сразу входит в личный кабинет и видит заявку.
+    // Телефон — по желанию.
+    (step === 3 && name.trim() !== "" && isEmail(email) && consent);
 
   const next = () => {
     if (step < TOTAL_STEPS - 1) setStep(step + 1);
@@ -206,23 +197,18 @@ export function ConfiguratorModal() {
     setError("");
     setPending(true);
     try {
-      await createPublicConfiguratorLead({
-        requester_name: name.trim() || null,
-        requester_email: null,
-        requester_phone: phone,
-        company_name: null,
-        service_type_code: mapServiceType(typeId),
-        note: buildConfiguratorNote({
-          typeId,
-          moduleIds,
-          launchDate,
-          sourceId,
-          estimateAmount,
-          calculationRequestId: activeEstimate?.calculation_request_id ?? null,
-        }),
-        forecast_amount: total,
+      const sent = await submitSiteRequest({
+        typeId,
+        moduleIds: moduleCodes,
+        launchOn: launchDate || null,
+        sourceId,
+        email: email.trim(),
+        name: name.trim(),
+        phone: phone.trim() || null,
+        comment: null,
+        consent,
       });
-      setSubmitted(true);
+      setSubmitted(sent);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Не удалось отправить заявку");
     } finally {
@@ -271,14 +257,21 @@ export function ConfiguratorModal() {
                 />
               </svg>
             </span>
-            <h3 className={styles.successTitle}>Заявка отправлена</h3>
+            <h3 className={styles.successTitle}>Заявка у нас</h3>
             <p className={styles.successText}>
-              Мы свяжемся с вами в ближайшее время, уточним детали и зафиксируем
-              точную смету проекта.
+              Менеджер свяжется с вами, уточнит детали и зафиксирует точную смету проекта.
             </p>
-            <button type="button" className={styles.nextBtn} onClick={close}>
-              Отлично
-            </button>
+            <CabinetCodeStep
+              sent={submitted}
+              classes={{
+                input: styles.input,
+                primary: styles.nextBtn,
+                secondary: styles.backBtn,
+                text: styles.successText,
+                error: styles.error,
+              }}
+              onLater={close}
+            />
           </div>
         ) : (
           <div className={styles.layout}>
@@ -291,7 +284,8 @@ export function ConfiguratorModal() {
                   moduleCount={moduleIds.size}
                   urgency={urgency}
                   total={total}
-                  minAmount={activeEstimate?.estimate_min_amount}
+                  maxAmount={maxAmount}
+                  manual={activeEstimate !== null && activeEstimate.total === null}
                   priceAvailable={priceAvailable}
                   pending={estimating}
                   error={activeEstimateError}
@@ -414,8 +408,20 @@ export function ConfiguratorModal() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
+                  <label className={styles.fieldLabel} htmlFor="conf-email">
+                    Почта — пришлём расчёт и вход в личный кабинет
+                  </label>
+                  <input
+                    id="conf-email"
+                    type="email"
+                    className={styles.input}
+                    placeholder="name@company.ru"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                   <label className={styles.fieldLabel} htmlFor="conf-phone">
-                    Телефон
+                    Телефон (необязательно)
                   </label>
                   <input
                     id="conf-phone"
@@ -469,7 +475,8 @@ export function ConfiguratorModal() {
                 moduleCount={moduleIds.size}
                 urgency={urgency}
                 total={total}
-                minAmount={activeEstimate?.estimate_min_amount}
+                maxAmount={maxAmount}
+                manual={activeEstimate !== null && activeEstimate.total === null}
                 priceAvailable={priceAvailable}
                 pending={estimating}
                 error={activeEstimateError}
@@ -490,39 +497,4 @@ function PolicyInlineLink() {
       Политика конфиденциальности
     </button>
   );
-}
-
-function mapServiceType(typeId: string | null): string | null {
-  return PROJECT_TYPES.find((item) => item.id === typeId)?.serviceTypeCode ?? null;
-}
-
-function buildConfiguratorNote({
-  typeId,
-  moduleIds,
-  launchDate,
-  sourceId,
-  estimateAmount,
-  calculationRequestId,
-}: {
-  typeId: string | null;
-  moduleIds: Set<string>;
-  launchDate: string;
-  sourceId: string | null;
-  estimateAmount: number | null;
-  calculationRequestId: string | null;
-}): string {
-  const typeLabel = PROJECT_TYPES.find((item) => item.id === typeId)?.label ?? "не выбрано";
-  const modules = MODULES.filter((item) => moduleIds.has(item.id)).map((item) => item.label);
-  const source = SOURCE_OPTIONS.find((item) => item.id === sourceId)?.label ?? "не указано";
-  return [
-    "Заявка из публичного конфигуратора.",
-    `Услуга: ${typeLabel}.`,
-    `Модули: ${modules.length > 0 ? modules.join(", ") : "без дополнительных модулей"}.`,
-    `Желаемый запуск: ${launchDate || "не указан"}.`,
-    `Исходные данные: ${source}.`,
-    estimateAmount !== null
-      ? `Предварительный бюджет: От ${formatPrice(estimateAmount)}.`
-      : "Предварительный бюджет: расчёт временно недоступен, требуется ручная оценка.",
-    calculationRequestId ? `ID расчёта: ${calculationRequestId}.` : null,
-  ].join("\n");
 }

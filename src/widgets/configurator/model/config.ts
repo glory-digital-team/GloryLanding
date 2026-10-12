@@ -1,12 +1,11 @@
 // Данные конфигуратора стоимости (Figma «CTA» 337:385/450/624/779).
-// Цены ориентировочные: базовые ставки из макета (сайт 100к, AI 200к в чеке),
-// модули и срочность — по логике чека («+50 000₽», скидка за отложенный запуск).
+// Цену считает платформа (`/cabinet/api/site/estimate`) по услугам каталога с такими же
+// кодами (id вида проекта и модулей — «Код на сайте» услуги в каталоге платформы).
 
 export interface ProjectType {
   id: string;
   label: string;
   icon: string;
-  serviceTypeCode: string;
 }
 
 export const PROJECT_TYPES: ProjectType[] = [
@@ -14,25 +13,21 @@ export const PROJECT_TYPES: ProjectType[] = [
     id: "site",
     label: "Создание сайтов",
     icon: "/configurator/site.svg",
-    serviceTypeCode: "web_development",
   },
   {
     id: "promo",
     label: "Лендинг / Промо",
     icon: "/configurator/promo.svg",
-    serviceTypeCode: "web_development",
   },
   {
     id: "ai",
     label: "AI-решения",
     icon: "/configurator/ai.svg",
-    serviceTypeCode: "business_automation",
   },
   {
     id: "mobile",
     label: "Мобильная разработка",
     icon: "/configurator/mobile.svg",
-    serviceTypeCode: "mobile_app",
   },
 ];
 
@@ -173,12 +168,6 @@ export function urgencyFromDate(dateValue: string): Urgency | null {
   if (days < 30) return URGENT;
   if (days < 90) return OPTIMAL;
   return DELAYED;
-}
-
-export function riskLevelFromSource(sourceId: string | null): string {
-  if (sourceId === "idea") return "idea_only";
-  if (sourceId === "concept") return "no_tz";
-  return "full_specs";
 }
 
 export function formatPrice(value: number): string {

@@ -8,8 +8,12 @@ import styles from "./Configurator.module.scss";
 interface ReceiptProps {
   moduleCount: number;
   urgency: Urgency | null;
+  /** Нижняя граница бюджета, ₽. */
   total: number | null;
-  minAmount?: number | null;
+  /** Верхняя граница, ₽: показывается вилкой «от – до». */
+  maxAmount?: number | null;
+  /** Услуги в платформе не настроены — менеджер посчитает вручную. */
+  manual?: boolean;
   priceAvailable: boolean;
   pending?: boolean;
   error?: string;
@@ -22,7 +26,8 @@ export function Receipt({
   moduleCount,
   urgency,
   total,
-  minAmount,
+  maxAmount,
+  manual,
   priceAvailable,
   pending,
   error,
@@ -49,8 +54,12 @@ export function Receipt({
     </div>
   );
 
-  const startAmount = minAmount ?? total;
-  const estimateText = startAmount !== null ? `От ${formatPrice(startAmount)}` : "Выберите услугу";
+  const estimateText =
+    total === null
+      ? "Выберите услугу"
+      : maxAmount != null && maxAmount > total
+        ? `${formatPrice(total)} – ${formatPrice(maxAmount)}`
+        : `От ${formatPrice(total)}`;
 
   const finalPrice = (
     <div className={styles.receiptFinal}>
@@ -60,9 +69,11 @@ export function Receipt({
           ? "Уточняем..."
           : error
             ? "Расчёт временно недоступен"
-            : priceAvailable
-              ? estimateText
-              : "Выберите услугу"}
+            : manual
+              ? "Посчитаем вручную"
+              : priceAvailable
+                ? estimateText
+                : "Выберите услугу"}
       </span>
     </div>
   );

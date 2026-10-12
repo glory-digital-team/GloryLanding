@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { createPublicContactLead } from "@/shared/api/crm";
-import { formatRuPhone, isCompleteRuPhone, useOverlays } from "@/shared/lib";
+import { CabinetCodeStep } from "@/features/cabinet-entry";
+import { isEmail, submitSiteRequest, type CodeSent } from "@/shared/api/cabinet";
+import { useOverlays } from "@/shared/lib";
 import { Button } from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
 import styles from "./LeadForm.module.scss";
@@ -11,17 +12,21 @@ import styles from "./LeadForm.module.scss";
 export function LeadForm() {
   const { openConfigurator, openPolicy } = useOverlays();
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [pending, setPending] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<CodeSent | null>(null);
   const [error, setError] = useState("");
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
-    if (!isCompleteRuPhone(phone)) {
-      setError("Проверьте номер телефона");
+    if (name.trim() === "") {
+      setError("Как к вам обращаться?");
+      return;
+    }
+    if (!isEmail(email)) {
+      setError("Проверьте почту");
       return;
     }
     if (!consent) {
@@ -30,16 +35,18 @@ export function LeadForm() {
     }
     setPending(true);
     try {
-      await createPublicContactLead({
-        source_code: "landing",
-        requester_name: name.trim() || null,
-        requester_phone: phone,
-        note: "Заявка с лендинга: форма «Обсудить точки роста»",
+      const sent = await submitSiteRequest({
+        typeId: null,
+        moduleIds: [],
+        launchOn: null,
+        sourceId: null,
+        email: email.trim(),
+        name: name.trim(),
+        phone: null,
+        comment: "Форма «Обсудить точки роста» на сайте",
+        consent,
       });
-      setSubmitted(true);
-      setName("");
-      setPhone("");
-      setConsent(false);
+      setSubmitted(sent);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Не удалось отправить заявку");
     } finally {
@@ -61,12 +68,12 @@ export function LeadForm() {
             onChange={(e) => setName(e.target.value)}
           />
           <Input
-            label="Телефон"
-            type="tel"
-            placeholder="+7 (___) ___-__-__"
-            autoComplete="tel"
-            value={phone}
-            onChange={(e) => setPhone(formatRuPhone(e.target.value))}
+            label="Почта"
+            type="email"
+            placeholder="name@company.ru"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <label className={styles.consent}>
@@ -85,7 +92,21 @@ export function LeadForm() {
           </label>
 
           {error ? <p className={styles.error}>{error}</p> : null}
-          {submitted ? <p className={styles.status}>Заявка отправлена. Мы скоро свяжемся.</p> : null}
+          {submitted ? (
+            <div className={styles.codeStep}>
+              <p className={styles.status}>Заявка у нас — менеджер скоро свяжется.</p>
+              <CabinetCodeStep
+                sent={submitted}
+                classes={{
+                  input: styles.codeInput,
+                  primary: styles.codePrimary,
+                  secondary: styles.codeSecondary,
+                  text: styles.codeText,
+                  error: styles.error,
+                }}
+              />
+            </div>
+          ) : null}
         </div>
 
         <div className={styles.actions}>
@@ -93,7 +114,7 @@ export function LeadForm() {
             type="submit"
             variant="primary"
             className={styles.fullBtn}
-            disabled={pending}
+            disabled={pending || submitted !== null}
           >
             {pending ? "Отправляем..." : "Начать проект"}
           </Button>
