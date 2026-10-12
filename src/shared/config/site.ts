@@ -19,23 +19,34 @@ export const siteConfig = {
   tagline: "Цифровые решения для вашего бизнеса",
   description:
     "Глори.Цифра — цифровые продукты для бизнеса: сайты, лендинги, автоматизация и AI-решения с прозрачной ценой.",
+  /** Канонический origin (punycode «глори.digital»): canonical, sitemap, schema, OG. */
+  url: "https://xn--c1akimk.digital",
+  /** Человекочитаемый домен для текстов. */
+  domain: "глори.digital",
+  // Главное меню (ТЗ §2.2): Услуги открывают mega-menu, остальное — обычные ссылки.
   nav: [
-    { label: "Направления", href: "/#services" },
-    { label: "Портфолио", href: "/portfolio" },
-    { label: "Карьера", href: "/careers" },
-    { label: "Частые вопросы", href: "/#faq" },
+    { label: "Услуги", href: "/services/" },
+    { label: "Кейсы", href: "/cases/" },
+    { label: "Как работаем", href: "/process/" },
+    { label: "О компании", href: "/about/" },
+    { label: "Карьера", href: "/careers/" },
   ] satisfies NavItem[],
-  // Навигация в футере: десктопный макет (191:411) и мобильный (273:5614) различаются
+  /** Главный CTA шапки — отдельная страница калькулятора. */
+  primaryCta: { label: "Рассчитать проект", href: "/raschet-stoimosti/" },
   footerNav: [
-    { label: "Направления", href: "/#services" },
-    { label: "Портфолио", href: "/portfolio" },
-    { label: "Карьера", href: "/careers" },
-    { label: "Частые вопросы", href: "/#faq" },
+    { label: "Услуги", href: "/services/" },
+    { label: "Кейсы", href: "/cases/" },
+    { label: "Как работаем", href: "/process/" },
+    { label: "О компании", href: "/about/" },
+    { label: "Карьера", href: "/careers/" },
+    { label: "Контакты", href: "/contacts/" },
+    { label: "Рассчитать проект", href: "/raschet-stoimosti/" },
   ] satisfies NavItem[],
   footerNavMobile: [
-    { label: "Направления", href: "/#services" },
-    { label: "Кейсы", href: "/portfolio" },
-    { label: "Начать проект", href: "/#lead-form" },
+    { label: "Услуги", href: "/services/" },
+    { label: "Кейсы", href: "/cases/" },
+    { label: "Рассчитать проект", href: "/raschet-stoimosti/" },
+    { label: "Контакты", href: "/contacts/" },
   ] satisfies NavItem[],
   // Личный кабинет клиента на том же домене (платформа Глори): вход по коду из письма.
   // `status` отвечает только «вошёл / не вошёл» — cookie кабинета лендингу не видна.
@@ -72,9 +83,11 @@ export const siteConfig = {
     "ОГРНИП: 325774600762382",
   ],
   legal: [
-    { label: "Политика конфиденциальности", href: "/privacy", doc: "policy" },
-    { label: "Рамочная оферта", href: "/offer", doc: null },
-    { label: "Согласие на обработку ПДн", href: "#", doc: null },
+    { label: "Политика конфиденциальности", href: "/privacy/", doc: "policy" },
+    { label: "Рамочная оферта", href: "/offer/", doc: null },
+    { label: "Документы", href: "/documents/", doc: null },
   ],
   copyright: "© 2026 Глори.Цифра",
+  /** География (ТЗ §6.2 / аудит §2.5): Москва + удалённо по России. */
+  areaServed: ["Москва", "Россия"],
 } as const;
