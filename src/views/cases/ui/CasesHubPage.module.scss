@@ -1,0 +1,278 @@
+@use "shared/styles/abstracts" as *;
+
+.inner {
+  @include container;
+}
+
+.kicker {
+  @include type-eyebrow;
+
+  font-size: rem(12px);
+  letter-spacing: 0.08em;
+  color: $color-primary;
+}
+
+.sectionTitle {
+  font-size: rem(26px);
+  font-weight: $fw-bold;
+  line-height: 1.25;
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(36px);
+  }
+}
+
+// ── Ключевой кейс ─────────────────────────────────────────
+.featured {
+  padding-block: rem(40px) rem(16px);
+
+  @include respond-to("lg") {
+    padding-block: rem(64px) rem(24px);
+  }
+}
+
+.featuredCard {
+  display: grid;
+  gap: rem(24px);
+  padding: rem(20px);
+  background: $color-bg-soft;
+  border-radius: rem(36px);
+
+  @include respond-to("lg") {
+    grid-template-columns: minmax(0, 1fr) rem(440px);
+    gap: rem(48px);
+    align-items: center;
+    padding: rem(48px);
+  }
+}
+
+.featuredText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: rem(16px);
+}
+
+.featuredSummary {
+  font-size: rem(17px);
+  line-height: 1.6;
+  color: $color-text-muted;
+}
+
+.featuredFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: rem(10px);
+  width: 100%;
+  margin: rem(4px) 0 rem(8px);
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: rem(2px);
+    padding: rem(14px);
+    background: #fff;
+    border-radius: rem(16px);
+  }
+
+  strong {
+    font-size: rem(20px);
+    font-weight: $fw-extrabold;
+    color: $color-primary;
+  }
+
+  span {
+    font-size: rem(13px);
+    line-height: 1.4;
+    color: $color-text-muted;
+  }
+}
+
+.featuredCover {
+  > a {
+    pointer-events: none;
+  }
+}
+
+// ── Все кейсы ─────────────────────────────────────────────
+.all {
+  padding-block: rem(40px);
+
+  @include respond-to("lg") {
+    padding-block: rem(64px);
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: rem(20px);
+  }
+}
+
+.gridWrap {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20px);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(8px);
+}
+
+.filter {
+  display: inline-flex;
+  gap: rem(8px);
+  align-items: center;
+  padding: rem(10px) rem(16px);
+  font: inherit;
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  color: $color-text;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-pill;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+
+  span {
+    font-size: rem(12px);
+    color: $color-text-faint;
+  }
+
+  &:hover {
+    border-color: $color-border-strong;
+  }
+}
+
+.filterOn {
+  color: #fff;
+  background: $color-bg-dark;
+  border-color: $color-bg-dark;
+
+  span {
+    color: #ff8a8a;
+  }
+}
+
+.grid {
+  display: grid;
+  gap: rem(16px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: rem(24px);
+  }
+}
+
+.gridItem {
+  animation: card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(rem(10px));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ── Методика ──────────────────────────────────────────────
+.method {
+  padding-block: rem(16px) rem(48px);
+}
+
+.methodCard {
+  display: grid;
+  gap: rem(24px);
+  padding: rem(28px) rem(22px);
+  color: #fff;
+  background: $color-bg-dark;
+  border-radius: rem(32px);
+
+  @include respond-to("lg") {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: rem(48px);
+    padding: rem(48px);
+  }
+
+  .sectionTitle {
+    color: #fff;
+  }
+}
+
+.methodText {
+  margin-top: rem(14px);
+  font-size: rem(16px);
+  line-height: 1.65;
+  color: rgb(255 255 255 / 75%);
+}
+
+.methodList {
+  display: grid;
+  gap: rem(8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: m;
+
+  li {
+    display: flex;
+    gap: rem(14px);
+    padding: rem(14px) rem(16px);
+    font-weight: $fw-medium;
+    background: rgb(255 255 255 / 6%);
+    border-radius: rem(14px);
+    counter-increment: m;
+
+    &::before {
+      content: counter(m, decimal-leading-zero);
+      font-size: rem(13px);
+      font-weight: $fw-bold;
+      color: #ff8a8a;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gridItem {
+    animation: none;
+  }
+}
+
+.featuredTitle {
+  font-size: rem(26px);
+  font-weight: $fw-bold;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+
+  @include respond-to("md") {
+    font-size: rem(38px);
+  }
+
+  a {
+    color: $color-text-strong;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+}

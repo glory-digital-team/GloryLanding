@@ -1,68 +1,75 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { AppProviders } from "./providers";
-import { Analytics } from "@/shared/analytics";
+import { Analytics, AnalyticsEvents } from "@/shared/analytics";
 import { JsonLd } from "@/shared/components/JsonLd";
 import { siteConfig } from "@/shared/config";
+import { ORGANIZATION_REF, buildMetadata } from "@/shared/lib/seo";
 import "./styles/index.scss";
 
-const siteUrl = new URL("https://xn--c1akimk.digital");
-const previewImage = {
-  url: "/og-image-v2.png",
-  width: 1200,
-  height: 630,
-  alt: siteConfig.name,
-};
-
+// Единый граф сущностей (ТЗ §3.5): Organization с @id, на который ссылаются Service,
+// Article и ContactPage на внутренних страницах. Без фиктивного SearchAction — поиска нет.
 const organizationSchema = {
   "@type": "Organization",
+  "@id": ORGANIZATION_REF["@id"],
   name: siteConfig.name,
+  alternateName: ["Глори Цифра", "Glory Digital", siteConfig.domain],
   description: siteConfig.description,
-  url: siteUrl.toString(),
-  telephone: siteConfig.contacts.phone,
-  email: siteConfig.contacts.email,
-  address: {
-    "@type": "PostalAddress",
-    addressCountry: "RU",
-  },
-  sameAs: [
-    "https://vk.ru/glorydigit",
-    "https://t.me/+k7aQU8zvtp9jNTEy",
+  url: `${siteConfig.url}/`,
+  logo: `${siteConfig.url}/icon-512.png`,
+  image: `${siteConfig.url}/og/home.png`,
+  telephone: "+7-993-898-04-80",
+  email: "info@xn--c1akimk.digital",
+  // Город офиса не указываем, пока адрес не подтверждён и не совпадает с Яндекс Бизнесом
+  address: { "@type": "PostalAddress", addressCountry: "RU" },
+  areaServed: [
+    { "@type": "City", name: "Москва" },
+    { "@type": "Country", name: "Россия" },
   ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "sales",
+    telephone: "+7-993-898-04-80",
+    email: "info@xn--c1akimk.digital",
+    availableLanguage: ["ru"],
+    areaServed: "RU",
+  },
+  knowsAbout: [
+    "Разработка сайтов",
+    "Веб-приложения",
+    "Автоматизация бизнес-процессов",
+    "CRM",
+    "Интеграции",
+    "AI-ассистенты",
+    "RAG",
+    "UX/UI-дизайн",
+    "SEO",
+  ],
+  sameAs: siteConfig.socials.filter((s) => !s.hidden).map((s) => s.href),
 };
 
 const webSiteSchema = {
   "@type": "WebSite",
+  "@id": `${siteConfig.url}/#website`,
   name: siteConfig.name,
-  description: siteConfig.description,
-  url: siteUrl.toString(),
-  potentialAction: {
-    "@type": "SearchAction",
-    target: `${siteUrl.toString()}/?q={search_term_string}`,
-    "query-input": "required name=search_term_string",
-  },
+  url: `${siteConfig.url}/`,
+  inLanguage: "ru",
+  publisher: ORGANIZATION_REF,
 };
 
+const base = buildMetadata({
+  path: "/",
+  title: "Сайты, автоматизация и AI для бизнеса | Глори.Цифра",
+  description:
+    "Разрабатываем сайты, цифровые продукты, системы автоматизации и AI-решения для бизнеса. Прозрачная оценка, понятные этапы, кейсы и поддержка после запуска.",
+});
+
 export const metadata: Metadata = {
-  metadataBase: siteUrl,
-  title: siteConfig.name,
-  description: siteConfig.description,
-  alternates: {
-    canonical: "/",
-  },
-  keywords: [
-    "разработка сайтов",
-    "цифровые решения",
-    "автоматизация бизнеса",
-    "AI-решения",
-    "лендинги",
-    "SEO оптимизация",
-    "web-разработка",
-    "digital-студия"
-  ],
-  robots: process.env.NODE_ENV === 'production' 
-    ? undefined 
-    : { index: false, follow: false },
+  ...base,
+  metadataBase: new URL(siteConfig.url),
+  applicationName: siteConfig.name,
+  // Вне продакшена (превью-стенды) — не индексировать
+  robots: process.env.NODE_ENV === "production" ? base.robots : { index: false, follow: false },
   // Фавикон «Глори.Цифра» (issue #8): SVG для современных браузеров,
   // PNG-fallback 16/32 и apple-touch-icon 180 для iOS.
   icons: {
@@ -74,21 +81,11 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   manifest: "/site.webmanifest",
-  openGraph: {
-    title: siteConfig.name,
-    description: siteConfig.description,
-    url: "/",
-    siteName: siteConfig.name,
-    images: [previewImage],
-    locale: "ru_RU",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: [previewImage.url],
-  },
+  formatDetection: { telephone: false },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#fafafa",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -101,9 +98,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <AppProviders>{children}</AppProviders>
         <Analytics />
-        {/* Yandex.Metrika + Top.Mail.Ru без JS — пиксели-фоллбэки (issue #9) */}
-        {/* Пиксели-фоллбэки счётчиков: в <noscript> нужен голый <img>,
-            next/image тут неприменим. */}
+        <AnalyticsEvents />
+        {/* Пиксели-фоллбэки счётчиков: в <noscript> нужен голый <img>, next/image тут неприменим. */}
         <noscript>
           <div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -116,7 +112,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <img
               src="https://top-fwz1.mail.ru/counter?id=3774073;js=na"
               style={{ position: "absolute", left: "-9999px" }}
-              alt="Top.Mail.Ru"
+              alt=""
             />
           </div>
         </noscript>

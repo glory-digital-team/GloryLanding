@@ -1,0 +1,122 @@
+@use "shared/styles/abstracts" as *;
+
+.channels {
+  display: grid;
+  gap: rem(10px);
+  margin: rem(8px) 0 0;
+  padding: 0;
+  list-style: none;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.channel {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6px);
+  height: 100%;
+  padding: rem(18px) rem(20px);
+  color: $color-text;
+  background: #fff;
+  border: 1px solid $color-border;
+  border-radius: rem(20px);
+  transition:
+    border-color 0.2s ease,
+    transform 0.25s ease;
+
+  &:hover {
+    border-color: $color-primary;
+    transform: translateY(-2px);
+  }
+}
+
+.channelLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(6px);
+  font-size: rem(12px);
+  font-weight: $fw-semibold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-text-faint;
+}
+
+.channelValue {
+  font-size: rem(18px);
+  font-weight: $fw-bold;
+}
+
+.after {
+  display: grid;
+  gap: rem(12px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: rem(16px);
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: rem(8px);
+    padding: rem(24px);
+    background: $color-bg-soft;
+    border-radius: rem(22px);
+  }
+
+  h3 {
+    font-size: rem(18px);
+    font-weight: $fw-bold;
+  }
+
+  p {
+    font-size: rem(15px);
+    line-height: 1.55;
+    color: $color-text-muted;
+  }
+}
+
+.geo {
+  font-size: rem(17px);
+  font-weight: $fw-medium;
+}
+
+.req {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: rem(10px) rem(14px);
+    font-size: rem(14px);
+    font-variant-numeric: tabular-nums;
+    background: #fff;
+    border-radius: rem(12px);
+  }
+}
+
+.docs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(16px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  a {
+    font-weight: $fw-semibold;
+    color: $color-primary;
+  }
+}

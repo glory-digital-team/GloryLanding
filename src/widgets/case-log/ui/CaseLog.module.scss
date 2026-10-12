@@ -1,0 +1,172 @@
+@use "shared/styles/abstracts" as *;
+
+.section {
+  background: $color-bg-dark;
+  color: #fff;
+}
+
+.inner {
+  @include container;
+
+  display: grid;
+  gap: rem(28px);
+  padding-block: rem(56px);
+
+  @include respond-to("lg") {
+    grid-template-columns: rem(340px) minmax(0, 1fr);
+    gap: rem(56px);
+    padding-block: rem(96px);
+  }
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: rem(12px);
+
+  @include respond-to("lg") {
+    position: sticky;
+    top: rem(130px);
+    align-self: start;
+  }
+}
+
+.eyebrow {
+  @include type-eyebrow;
+
+  letter-spacing: 0.08em;
+  color: #ff8a8a;
+}
+
+.title {
+  font-size: rem(28px);
+  font-weight: $fw-bold;
+  line-height: 1.2;
+
+  @include respond-to("md") {
+    font-size: rem(38px);
+  }
+}
+
+.lead {
+  font-size: rem(16px);
+  line-height: 1.6;
+  color: $color-text-faint;
+}
+
+.feed {
+  position: relative;
+  display: grid;
+  gap: rem(14px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: rem(8px);
+    bottom: rem(8px);
+    left: rem(7px);
+    width: 2px;
+    background: linear-gradient(180deg, $color-primary, rgb(204 0 0 / 0%));
+
+    @include respond-to("md") {
+      left: rem(111px);
+    }
+  }
+}
+
+.entry {
+  position: relative;
+  display: grid;
+  gap: rem(8px);
+  padding-left: rem(32px);
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: rem(6px);
+    left: 0;
+    width: rem(16px);
+    height: rem(16px);
+    background: $color-bg-dark;
+    border: 3px solid $color-primary;
+    border-radius: 50%;
+  }
+
+  @include respond-to("md") {
+    grid-template-columns: rem(88px) minmax(0, 1fr);
+    gap: rem(36px);
+    padding-left: 0;
+
+    &::before {
+      left: rem(104px);
+    }
+  }
+}
+
+.meta {
+  display: flex;
+  gap: rem(10px);
+  align-items: baseline;
+
+  @include respond-to("md") {
+    flex-direction: column;
+    gap: rem(2px);
+    align-items: flex-end;
+    padding-top: rem(2px);
+    text-align: right;
+  }
+}
+
+.idx {
+  font-size: rem(12px);
+  font-weight: $fw-semibold;
+  font-variant-numeric: tabular-nums;
+  color: $color-text-faint;
+}
+
+.status {
+  font-size: rem(14px);
+  font-weight: $fw-bold;
+  color: #ff8a8a;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6px);
+  padding: rem(18px) rem(20px);
+  background: rgb(255 255 255 / 5%);
+  border: 1px solid rgb(255 255 255 / 9%);
+  border-radius: rem(18px);
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+
+  &:hover {
+    background: rgb(255 255 255 / 8%);
+    border-color: rgb(204 0 0 / 50%);
+  }
+}
+
+.project {
+  font-size: rem(11px);
+  font-weight: $fw-semibold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $color-text-faint;
+}
+
+.entryTitle {
+  font-size: rem(18px);
+  font-weight: $fw-bold;
+  line-height: 1.35;
+}
+
+.entryText {
+  font-size: rem(15px);
+  line-height: 1.6;
+  color: rgb(255 255 255 / 75%);
+}

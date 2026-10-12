@@ -19,7 +19,8 @@ export function Analytics() {
         ym(${YM_ID}, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});`}
       </Script>
 
-      <Script id="top-mailru" strategy="afterInteractive">
+      {/* Top.Mail.Ru — после загрузки страницы: не конкурирует с первым экраном (аудит §2.4) */}
+      <Script id="top-mailru" strategy="lazyOnload">
         {`var _tmr = window._tmr || (window._tmr = []);
         _tmr.push({id: "${TMR_ID}", type: "pageView", start: (new Date()).getTime()});
         (function (d, w, id) {

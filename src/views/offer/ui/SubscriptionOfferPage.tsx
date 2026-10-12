@@ -276,7 +276,7 @@ export function SubscriptionOfferPage() {
             <Button
               variant="ghost"
               size="sm"
-              href="/documents"
+              href="/documents/"
               className={styles.backButton}
             >
               ← Назад к документам

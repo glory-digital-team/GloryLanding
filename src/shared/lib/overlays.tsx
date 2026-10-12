@@ -3,15 +3,10 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 
 /**
- * Глобальное состояние оверлеев сайта: конфигуратор стоимости
- * и модалка с юридическими документами. Контекст живёт в shared,
- * чтобы любые виджеты могли открывать оверлеи, не зависая друг от друга;
- * сами модалки рендерит провайдер приложения.
+ * Глобальное состояние оверлеев сайта — модалка с юридическими документами.
+ * Конфигуратор больше не модалка: он живёт на странице /raschet-stoimosti/ (ТЗ §7.24).
  */
 interface OverlaysContextValue {
-  configuratorOpen: boolean;
-  openConfigurator: () => void;
-  closeConfigurator: () => void;
   policyOpen: boolean;
   openPolicy: () => void;
   closePolicy: () => void;
@@ -20,26 +15,10 @@ interface OverlaysContextValue {
 const OverlaysContext = createContext<OverlaysContextValue | null>(null);
 
 export function OverlaysProvider({ children }: { children: ReactNode }) {
-  const [configuratorOpen, setConfiguratorOpen] = useState(false);
   const [policyOpen, setPolicyOpen] = useState(false);
-
-  const openConfigurator = useCallback(() => setConfiguratorOpen(true), []);
-  const closeConfigurator = useCallback(() => setConfiguratorOpen(false), []);
   const openPolicy = useCallback(() => setPolicyOpen(true), []);
   const closePolicy = useCallback(() => setPolicyOpen(false), []);
-
-  const value = useMemo(
-    () => ({
-      configuratorOpen,
-      openConfigurator,
-      closeConfigurator,
-      policyOpen,
-      openPolicy,
-      closePolicy,
-    }),
-    [configuratorOpen, policyOpen, openConfigurator, closeConfigurator, openPolicy, closePolicy],
-  );
-
+  const value = useMemo(() => ({ policyOpen, openPolicy, closePolicy }), [policyOpen, openPolicy, closePolicy]);
   return <OverlaysContext.Provider value={value}>{children}</OverlaysContext.Provider>;
 }
 

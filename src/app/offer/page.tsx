@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Рамочная оферта Глори.Цифра на оказание услуг в сфере разработки, дизайна, автоматизации и сопровождения цифровых решений.",
   alternates: {
-    canonical: "/offer",
+    canonical: "/offer/",
   },
 };
 

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Политика в отношении обработки персональных данных ИП Фомкина Г. А. (Глори.Цифра).",
   alternates: {
-    canonical: "/privacy",
+    canonical: "/privacy/",
   },
 };
 

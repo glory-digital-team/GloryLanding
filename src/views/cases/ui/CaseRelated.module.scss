@@ -1,0 +1,94 @@
+@use "shared/styles/abstracts" as *;
+
+.section {
+  background: $color-bg;
+}
+
+.inner {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+  gap: rem(48px);
+  padding-block: rem(56px);
+
+  @include respond-to("lg") {
+    padding-block: rem(80px);
+  }
+}
+
+.title {
+  font-size: rem(24px);
+  font-weight: $fw-bold;
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(32px);
+  }
+}
+
+.services {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  gap: rem(6px);
+  padding: rem(10px) rem(16px);
+  font-size: rem(15px);
+  font-weight: $fw-semibold;
+  color: $color-text;
+  background: $color-bg-soft;
+  border: 1px solid $color-border;
+  border-radius: $radius-pill;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    color: $color-primary;
+    background: $color-primary-soft;
+    border-color: transparent;
+  }
+}
+
+.similar {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20px);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: rem(12px);
+}
+
+.all {
+  font-weight: $fw-semibold;
+  color: $color-primary;
+}
+
+.grid {
+  display: grid;
+  gap: rem(16px);
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: rem(24px);
+  }
+}

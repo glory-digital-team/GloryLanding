@@ -1,119 +1,85 @@
 "use client";
 
 import { useState } from "react";
-import { cn, useOverlays } from "@/shared/lib";
+import { cn } from "@/shared/lib";
+import { faqSchema } from "@/shared/lib/seo";
 import { Icon } from "@/shared/ui/Icon";
 import { JsonLd } from "@/shared/components/JsonLd";
 import styles from "./Faq.module.scss";
 
 // Секция «Ответы на частые вопросы» (Figma «FAQ container» 191:326).
-// CTA-ссылка под ответом — выделенная акцентом строка, ловит доп. конверсию:
-// type "configurator" открывает конфигуратор, type "link" ведёт по якорю.
-type Cta =
-  | { type: "configurator"; label: string }
-  | { type: "link"; label: string; href: string };
-
-interface QA {
+// Переиспользуется на главной, страницах услуг, процесса и калькулятора.
+// FAQPage-разметка строится из тех же вопросов, что видны на странице (ТЗ §5:
+// разметка только для видимого контента).
+export interface FaqEntry {
   q: string;
   a: string;
-  cta?: Cta;
+  /** Ссылка-CTA под ответом — ловит доп. конверсию. */
+  cta?: { label: string; href: string };
 }
 
-const ITEMS: QA[] = [
-  {
-    q: "Сколько стоят ваши услуги и как формируется цена?",
-    a: "Стоимость зависит от задач, которые нужно решить. Мы не продаём «сайт за X рублей». Система рассчитывает цену на основе объёма работ, сложности и сроков — вы заранее видите структуру проекта и понимаете, за что платите.",
-    cta: { type: "configurator", label: "Перейти в конфигуратор" },
-  },
-  {
-    q: "Будут ли доплаты после заключения договора?",
-    a: "Нет, если объём работ остаётся в рамках согласованного проекта. Мы оцениваем изменения отдельно, показываем их влияние на бюджет и сроки, после чего решение остаётся за вами. Никаких внезапных счетов.",
-  },
-  {
-    q: "А если результат не устроит или не совпадёт с ожиданиями?",
-    a: "Мы работаем итерациями: каждый этап вы подтверждаете до перехода к следующему. Если на этапе приёмки что-то не соответствует согласованному ТЗ — мы дорабатываем до желаемого результата.",
-  },
-  {
-    q: "Что происходит после сдачи проекта?",
-    a: "IT-продукт требует развития, а не просто «гарантийного обслуживания». Мы предлагаем перейти на подписку: это не просто техподдержка, а непрерывное развитие вашего сервиса. Обновления, консультации, минорные доработки и приоритетная помощь — всё прозрачно, в рамках пакета часов.",
-  },
-  {
-    q: "Можно ли увидеть примеры работ с цифрами?",
-    a: "Мы предпочитаем показывать, а не рассказывать. В разделе «Портфолио» мы публикуем кейсы с результатами: какие задачи решали и какой эффект получил клиент.",
-    cta: { type: "link", label: "Посмотреть портфолио", href: "/portfolio" },
-  },
-  {
-    q: "Вы работаете с малым бизнесом?",
-    a: "Наши решения подходят как для стартапов и малого бизнеса, так и для растущих компаний. Главное — наличие задачи, которую можно решить с помощью IT. На старте мы помогаем определить, какие инструменты принесут наибольший эффект.",
-  },
-  {
-    q: "Что нужно от меня на старте?",
-    a: "Достаточно запустить конфигуратор на сайте или оставить заявку. При необходимости мы проведём бесплатный экспресс-аудит процессов. После этого вы получите структурированное КП с расчётом стоимости, сроков и ожидаемого эффекта.",
-    cta: { type: "configurator", label: "Перейти в конфигуратор" },
-  },
-];
+interface FaqProps {
+  items: FaqEntry[];
+  title?: string;
+  subtitle?: string;
+  id?: string;
+  /** Разметку FAQPage можно выключить, если на странице уже есть другой FAQ. */
+  schema?: boolean;
+}
 
-const faqSchema = {
-  "@type": "FAQPage",
-  mainEntity: ITEMS.map((item) => ({
-    "@type": "Question",
-    name: item.q,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: item.a,
-    },
-  })),
-};
-
-export function Faq() {
-  const { openConfigurator } = useOverlays();
-  // По умолчанию раскрыт первый вопрос — сразу показываем ответ про цену и CTA.
+export function Faq({
+  items,
+  title = "Ответы на частые вопросы",
+  subtitle,
+  id = "faq",
+  schema = true,
+}: FaqProps) {
+  // По умолчанию раскрыт первый вопрос — сразу показываем ответ и CTA.
   const [open, setOpen] = useState(0);
+  if (items.length === 0) return null;
 
   return (
-    <section className={styles.faq} id="faq">
-      <JsonLd data={faqSchema} />
+    <section className={styles.faq} id={id} aria-labelledby={`${id}-title`}>
+      {schema ? <JsonLd data={faqSchema(items)} /> : null}
       <div className={styles.inner}>
         <header className={styles.header}>
-          <h2 className={styles.title}>Ответы на частые вопросы</h2>
+          <h2 className={styles.title} id={`${id}-title`}>
+            {title}
+          </h2>
+          {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
         </header>
 
         <div className={styles.list}>
-          {ITEMS.map((item, i) => {
+          {items.map((item, i) => {
             const isOpen = open === i;
+            const answerId = `${id}-a-${i}`;
             return (
               <div key={item.q} className={cn(styles.item, isOpen && styles.itemOpen)}>
-                <button
-                  type="button"
-                  className={styles.question}
-                  aria-expanded={isOpen}
-                  onClick={() => setOpen(isOpen ? -1 : i)}
-                >
-                  <span>{item.q}</span>
-                  <span className={styles.icon}>
-                    <Icon name="chevron-down" size={24} />
-                  </span>
-                </button>
-                <div className={styles.answerWrap}>
+                <h3 className={styles.qHeading}>
+                  <button
+                    type="button"
+                    className={styles.question}
+                    aria-expanded={isOpen}
+                    aria-controls={answerId}
+                    onClick={() => setOpen(isOpen ? -1 : i)}
+                  >
+                    <span>{item.q}</span>
+                    <span className={styles.icon}>
+                      <Icon name="chevron-down" size={24} />
+                    </span>
+                  </button>
+                </h3>
+                {/* Ответ всегда в DOM (SSR): закрытый скрыт визуально, но доступен поиску. */}
+                <div className={styles.answerWrap} id={answerId}>
                   <div className={styles.answer}>
                     <p>
                       {item.a}
                       {item.cta ? (
                         <>
                           {" "}
-                          {item.cta.type === "link" ? (
-                            <a href={item.cta.href} className={styles.cta}>
-                              {item.cta.label}
-                            </a>
-                          ) : (
-                            <button
-                              type="button"
-                              className={styles.cta}
-                              onClick={openConfigurator}
-                            >
-                              {item.cta.label}
-                            </button>
-                          )}
+                          <a href={item.cta.href} className={styles.cta} data-cta="faq">
+                            {item.cta.label}
+                          </a>
                         </>
                       ) : null}
                     </p>

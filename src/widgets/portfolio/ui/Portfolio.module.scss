@@ -1,404 +1,289 @@
 @use "shared/styles/abstracts" as *;
-@use "sass:math";
 
-// Позиции изображений в карточке заданы в координатах макета (карточка 548px).
-// Чтобы композиция не «ломалась» на промежуточных ширинах, переводим их в
-// контейнерные единицы: 1cqw = 1% ширины карточки. Карточка объявлена
-// container-type: inline-size, поэтому всё масштабируется пропорционально
-// при любой ширине (issue #3).
-@function cqw($px) {
-  @return math.div($px, 548) * 100cqw;
-}
+// «Что уже сделали»: реестр проектов + живое превью карточки (главная).
+$ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-// Figma «Portfolio» 184:967 — все размеры/позиции 1:1 с макетом (1440).
 .portfolio {
   background-color: $color-bg;
 }
 
 .inner {
-  // Контентная ширина макета — ровно 1120px (content-box + боковые поля).
-  box-sizing: content-box;
-  max-width: $container-max;
-  margin-inline: auto;
-  padding-inline: $space-md;
-  padding-block: rem(48px) rem(32px); // моб. макет 273:5314: pt 48 / pb 32
+  @include container;
+
   display: flex;
   flex-direction: column;
-  gap: rem(24px); // моб. макет: title → cards 24
+  gap: rem(24px);
+  padding-block: rem(48px) rem(32px);
 
   @include respond-to("lg") {
-    padding-inline: rem(24px);
-    padding-block: rem(80px); // отступы секции 80 сверху/снизу
-    gap: rem(48px); // Title (60) → Cards: 188 − 80 − 60 = 48
+    gap: rem(40px);
+    padding-block: rem(80px);
+  }
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+
+  @include respond-to("lg") {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: rem(48px);
   }
 }
 
 .title {
-  // Моб. макет 273:5315 (Heading 3): 24 / 600 / lh 33
   font-size: rem(24px);
   font-weight: $fw-semibold;
   line-height: calc(33 / 24);
   color: $color-text;
 
   @include respond-to("md") {
-    // Hero Headings/Hero Title: 40 / 700 / lh 60
     font-size: rem(40px);
     font-weight: $fw-bold;
     line-height: 1.5;
   }
 }
 
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  margin-top: rem(32px);
+.lead {
+  max-width: rem(460px);
+  color: $color-text-muted;
 
-  @include respond-to("md") {
-    margin-top: rem(48px);
+  @include type-body-base;
+}
+
+// ── Реестр + превью (десктоп) ─────────────────────────────
+.board {
+  display: none;
+
+  @include respond-to("lg") {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) rem(440px);
+    gap: rem(48px);
+    align-items: start;
   }
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: rem(10px); // моб. макет 273:5316: карточки через 10
-
-  @include respond-to("md") {
-    grid-template-columns: repeat(2, 1fr);
-    gap: rem(19px) rem(24px); // Figma 184:966: row 19 / column 24
-  }
+.index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid $color-border;
 }
 
-// ── Карточка 548×548, r36 ─────────────────────────────────
-.card {
+.row {
   position: relative;
-  container-type: inline-size; // база для cqw — позиции изображений масштабируются с карточкой
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: rem(36px);
-  color: $color-text-invert;
-  text-decoration: none;
-  transition:
-    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.4s ease;
-  will-change: transform;
+  display: grid;
+  grid-template-columns: rem(44px) minmax(0, 1fr) auto rem(28px);
+  gap: rem(16px);
+  align-items: center;
+  padding: rem(22px) rem(8px);
+  color: $color-text;
+  border-bottom: 1px solid $color-border;
+  isolation: isolate;
+  transition: color 0.25s ease;
 
-  &:hover {
-    transform: translateY(rem(-6px));
-    box-shadow: $shadow-lg;
+  // Заливка «бегущей строки» — раскрывается слева направо у активного проекта
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, $color-primary-soft, rgb(251 233 233 / 0%));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s $ease;
   }
 
   &:focus-visible {
-    outline: rem(3px) solid $color-primary;
-    outline-offset: rem(4px);
+    outline: rem(2px) solid $color-primary;
+    outline-offset: rem(-2px);
   }
 }
 
-// Фоны карточек + цвета текста/бейджей (точные значения нод Figma)
-.cardBlue {
-  --card-color: #0e3daf;
-  --card-color-0: rgb(14 61 175 / 0%);
-  --badge-color: #2650b7;
-
-  background-color: #0e3daf;
+.num {
+  font-size: rem(14px);
+  font-weight: $fw-semibold;
+  font-variant-numeric: tabular-nums;
+  color: $color-text-faint;
+  transition: color 0.25s ease;
 }
 
-.cardLight {
-  --card-color: #e8f4fc;
-  --card-color-0: rgb(232 244 252 / 0%);
-  --badge-color: #222224;
-
-  background-color: #e8f4fc;
-  color: $color-text; // #222224
-}
-
-.cardGreen {
-  --card-color: #68ae53;
-  --card-color-0: rgb(104 174 83 / 0%);
-  --badge-color: #222224;
-
-  background-color: #68ae53;
-}
-
-.cardDark {
-  --card-color: #1f1f1f;
-  --card-color-0: rgb(31 31 31 / 0%);
-  --badge-color: #1f1f1f;
-
-  background-color: #1f1f1f;
-}
-
-.cardClubParus {
-  --card-color: #dbeaf5;
-  --card-color-0: rgb(219 234 245 / 0%);
-  --badge-color: #222224;
-
-  background-color: #dbeaf5;
-  color: $color-text;
-}
-
-// ── Бейджи: белые таблетки, Button Text 16/500/26 ─────────
-.tags {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: rem(12px);
-  padding: rem(36px) rem(36px) 0;
-}
-
-.tag {
-  padding: rem(8px) rem(14px);
-  font-size: rem(16px);
-  font-weight: $fw-medium;
-  line-height: rem(26px);
-  white-space: nowrap;
-  color: var(--badge-color, #222224);
-  background-color: #fff;
-  border-radius: rem(100px);
-}
-
-// ── Текстовый блок снизу: градиент цветом карточки ────────
-.text {
-  position: relative;
-  z-index: 2;
+.rowMain {
   display: flex;
   flex-direction: column;
-  gap: rem(8px);
-  width: 100%;
-  padding: 0 rem(36px) rem(36px);
-  background: linear-gradient(to bottom, var(--card-color-0), var(--card-color));
+  gap: rem(2px);
+  min-width: 0;
 }
 
-// У ESIS и Tienda текстовый блок дополнительно размывает фон (2px)
-.textBlur {
-  backdrop-filter: blur(2px);
-}
-
-.cardTitle {
-  font-size: rem(36px); // Heading 1: 36 / 700 / lh 45 / ls −0.9
+.rowName {
+  font-size: rem(26px);
   font-weight: $fw-bold;
-  line-height: rem(45px);
-  letter-spacing: rem(-0.9px);
+  line-height: 1.2;
+  letter-spacing: rem(-0.5px);
+  transition: transform 0.4s $ease;
 }
 
-.cardSubtitle {
-  @include type-body-large; // 18 / 400 / lh 27
+.rowSub {
+  font-size: rem(15px);
+  color: $color-text-muted;
 }
 
-// ── Изображения проектов (точные позиции из макета) ───────
-// ИИ Говори: телефон 336.61×445.8, rotate(−14°), bbox (241, 142) 434.47×514
-.imageGovori {
-  position: absolute;
-  top: cqw(142);
-  left: cqw(241);
-  z-index: 0;
+.rowMeta {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: cqw(434.47);
-  height: cqw(514);
-
-  img {
-    flex: none;
-    width: cqw(336.61);
-    height: cqw(445.8);
-    object-fit: cover;
-    transform: rotate(-14deg);
-  }
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: rem(6px);
+  max-width: rem(260px);
 }
 
-// ESIS: скрин 546×328.22 в (115, 239)
-.imageEsis {
-  position: absolute;
-  top: cqw(239);
-  left: cqw(115);
-  z-index: 0;
-  width: cqw(546);
-  height: cqw(328.22);
-  object-fit: cover;
+.chip {
+  padding: rem(4px) rem(10px);
+  font-size: rem(12px);
+  font-weight: $fw-medium;
+  white-space: nowrap;
+  color: $color-text;
+  background: $color-bg-soft;
+  border: 1px solid $color-border;
+  border-radius: $radius-pill;
 }
 
-// Tienda: логотип 208.63×102.89, центр по X (+0.31), top 215
-.imageTienda {
-  position: absolute;
-  top: cqw(215);
-  left: calc(50% + #{cqw(0.31)});
-  z-index: 0;
-  width: cqw(208.63);
-  height: cqw(102.89);
-  transform: translateX(-50%);
-}
-
-// Клуб Парус: логотип по центру
-.imageClubParus {
-  position: absolute;
-  top: cqw(215);
-  left: 50%;
-  z-index: 0;
-  width: cqw(208.63);
-  height: cqw(102.89);
-  transform: translateX(-50%);
-  object-fit: contain;
-}
-
-// ── Lunes (180:902) ────────────────────────────────────────
-// Текстура поверх #1f1f1f (1048.85×534.83, opacity 50%)
-.lunesTexture {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-image: url("/portfolio/lunes-texture.png");
-  background-position: top left;
-  background-size: cqw(1048.85) cqw(534.83);
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-// Рукописный «Beauty by Moonlight» (Antro Vectra, рендер из Figma):
-// центр бокса 372.22×123.38 в (45.72, 50% − 68.59)
-.lunesScript {
-  position: absolute;
-  top: calc(50% - #{cqw(68.59)}); // центр бокса 372×123 на 68.59 выше середины
-  left: cqw(231.82);
-  z-index: 1;
-  width: cqw(405);
-  height: cqw(122);
-  max-width: none;
-  transform: translate(-50%, -50%);
-}
-
-// Луна (группа 184:953) — точный рендер видимой области из Figma,
-// уже с запечённой текстурой/бленд-режимами; лежит в правом нижнем углу.
-.lunesMoon {
-  position: absolute;
-  top: cqw(205.26);
-  left: cqw(242.53);
-  z-index: 1;
-  width: cqw(305.47);
-  height: cqw(342.74);
-  max-width: none;
-  pointer-events: none;
-}
-
-// ── Мобильный макет 273:5316 ──────────────────────────────
-// Позиции изображений теперь в cqw и масштабируются автоматически —
-// здесь правим только типографику бейджей и отступы текстовых блоков.
-@include respond-down("md") {
-  .tags {
-    padding: rem(24px) rem(24px) 0; // бейджи на (24, 24)
-  }
-
-  // Бейдж-таблетка 34px: 12/18 + pad 8/14
-  .tag {
-    font-size: rem(12px);
-    line-height: rem(18px);
-  }
-
-  .text {
-    padding: 0 rem(24px) rem(24px);
-  }
-}
-
-// ── Индивидуальные hover-анимации карточек ─────────────────
-$pf-ease: cubic-bezier(0.22, 1, 0.36, 1);
-$pf-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-
-.imageGovori img,
-.imageEsis,
-.imageTienda,
-.imageClubParus {
+.arrow {
+  font-size: rem(20px);
+  color: $color-text-faint;
+  opacity: 0.6;
   transition:
-    transform 0.7s $pf-ease,
-    filter 0.7s $pf-ease;
-  will-change: transform;
+    transform 0.35s $ease,
+    color 0.25s ease,
+    opacity 0.25s ease;
 }
 
-// ИИ Говори: телефон выпрямляется и приподнимается — «берут в руку».
-.cardBlue:hover .imageGovori img {
-  transform: rotate(-8deg) translateY(rem(-14px)) scale(1.04);
+.preview {
+  position: sticky;
+  top: rem(120px);
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
 }
 
-// ESIS: скриншот подъезжает вверх — показывает больше интерфейса.
-.cardLight:hover .imageEsis {
-  transform: translateY(rem(-16px)) scale(1.025);
+.previewCard {
+  animation: preview-in 0.5s $ease both;
 }
 
-// Tienda: логотип «выстреливает» с пружинным перелётом.
-.cardGreen:hover .imageTienda {
-  transform: translateX(-50%) scale(1.12);
-  transition-timing-function: $pf-spring;
+.previewSummary {
+  min-height: rem(66px);
+  font-size: rem(15px);
+  line-height: 1.5;
+  color: $color-text-muted;
 }
 
-// Клуб Парус: логотип увеличивается
-.cardClubParus:hover .imageClubParus {
-  transform: translateX(-50%) scale(1.08);
-  transition-timing-function: $pf-spring;
+@keyframes preview-in {
+  from {
+    opacity: 0;
+    transform: translateY(rem(12px)) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-// Lunes: луна и леттеринг — запечённые прямоугольные рендеры с фоном,
-// их нельзя двигать или подсвечивать (видны швы). Вместо этого по всей
-// карточке равномерно проходит диагональный «лунный блик».
-.cardDark::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: -60%;
-  z-index: 2;
-  width: 45%;
-  background: linear-gradient(
-    105deg,
-    transparent,
-    rgb(255 255 255 / 5%) 35%,
-    rgb(255 255 255 / 10%) 50%,
-    rgb(255 255 255 / 5%) 65%,
-    transparent
-  );
-  transform: skewX(-14deg);
-  pointer-events: none;
-  transition: transform 1.15s $pf-ease;
+// ── Мобильная лента ───────────────────────────────────────
+.rail {
+  display: grid;
+  grid-auto-columns: 82%;
+  grid-auto-flow: column;
+  gap: rem(12px);
+  margin-inline: calc(-1 * #{$space-md});
+  padding-inline: $space-md;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: $space-md;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include respond-to("md") {
+    grid-auto-columns: 46%;
+  }
+
+  @include respond-to("lg") {
+    display: none;
+  }
 }
 
-.cardDark:hover::before {
-  transform: translateX(360%) skewX(-14deg);
+.railItem {
+  scroll-snap-align: start;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(16px);
+}
+
+.all {
+  display: inline-flex;
+  align-items: center;
+  height: rem(48px);
+  padding: 0 rem(24px);
+  font-weight: $fw-semibold;
+  color: $color-text;
+  border: 1px solid $color-border-strong;
+  border-radius: $radius-pill;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    color: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+.calc {
+  font-weight: $fw-semibold;
+  color: $color-primary;
+
+  &:hover {
+    color: $color-primary-hover;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card:hover {
-    transform: none;
-    box-shadow: none;
-  }
-
-  .imageGovori img,
-  .imageEsis,
-  .imageTienda,
-  .imageClubParus,
-  .cardDark::before {
+  .row::before,
+  .rowName,
+  .arrow,
+  .previewCard {
     transition: none;
+    animation: none;
+  }
+}
+
+.rowActive {
+  &::before {
+    transform: scaleX(1);
   }
 
-  .cardDark:hover::before {
-    transform: skewX(-14deg);
+  .num,
+  .arrow {
+    color: $color-primary;
   }
 
-  .cardBlue:hover .imageGovori img {
-    transform: rotate(-14deg);
+  .arrow {
+    transform: translateX(rem(4px));
+    opacity: 1;
   }
 
-  .cardLight:hover .imageEsis {
-    transform: none;
+  .rowName {
+    transform: translateX(rem(6px));
   }
-
-  .cardGreen:hover .imageTienda {
-    transform: translateX(-50%);
-  }
-
-  .cardClubParus:hover .imageClubParus {
-    transform: translateX(-50%);
-  }
-
 }

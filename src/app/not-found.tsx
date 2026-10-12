@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Button } from "@/shared/ui/Button";
 import styles from "./error-pages.module.scss";
@@ -21,6 +22,12 @@ export default function NotFound() {
         <Button href="/" variant="primary" size="lg">
           На главную
         </Button>
+        <nav className={styles.links} aria-label="Популярные разделы">
+          <Link href="/services/">Услуги</Link>
+          <Link href="/cases/">Кейсы</Link>
+          <Link href="/raschet-stoimosti/">Рассчитать проект</Link>
+          <Link href="/contacts/">Контакты</Link>
+        </nav>
       </div>
     </main>
   );

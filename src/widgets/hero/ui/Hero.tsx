@@ -19,27 +19,29 @@ export function Hero() {
           <Badge>Digital-студия для бизнеса</Badge>
 
           <div className={styles.text}>
+            {/* H1 под главный коммерческий intent (ТЗ §7.1); прежний слоган — подзаголовок */}
             <h1 className={styles.title}>
-              Превращаем бизнес-задачи <br className={styles.titleBreak} />
+              Сайты, автоматизация <br className={styles.titleBreak} />
               <span className={styles.accent}>
-                в работающие <br className={styles.titleBreakMobile} />
-                IT-решения
+                и AI-решения <br className={styles.titleBreakMobile} />
+                для бизнеса
               </span>
             </h1>
 
             <p className={styles.description}>
-              Сайты, автоматизация процессов и AI-решения для бизнеса. Проведем
-              бесплатный аудит, чтобы найти точки роста. Каждый этап в личном кабинете,
-              как статус заказа.
+              <strong className={styles.slogan}>Превращаем бизнес-задачи в работающие IT-решения.</strong>{" "}
+              Сначала разбираем процесс, пользователей и данные, затем предлагаем достаточный формат —
+              от посадочной страницы до внутренней системы или AI-пилота. Каждый этап — в личном
+              кабинете, как статус заказа.
             </p>
           </div>
 
           <div className={styles.actions}>
-            <Button variant="primary" href="#lead-form">
-              Начать проект
+            <Button variant="primary" href="/raschet-stoimosti/" data-cta="hero_calc">
+              Рассчитать проект
             </Button>
-            <Button variant="secondary" calm href="#services">
-              Подробнее
+            <Button variant="secondary" calm href="#lead-form" data-cta="hero_lead">
+              Обсудить задачу
             </Button>
           </div>
         </div>

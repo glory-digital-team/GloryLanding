@@ -1,0 +1,253 @@
+@use "shared/styles/abstracts" as *;
+
+$ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+.ticket {
+  margin: 0;
+}
+
+.caption {
+  margin-bottom: rem(10px);
+  font-size: rem(13px);
+  font-weight: $fw-medium;
+  color: $color-text-faint;
+  text-align: center;
+}
+
+.card {
+  position: relative;
+  padding: rem(24px);
+  background: #fff;
+  border-radius: rem(28px);
+  box-shadow:
+    0 rem(30px) rem(60px) rgb(34 34 36 / 10%),
+    0 0 0 1px rgb(34 34 36 / 4%);
+  rotate: -1.5deg;
+  transition: rotate 0.6s $ease;
+
+  &:hover {
+    rotate: 0deg;
+  }
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(12px);
+}
+
+.kind {
+  font-size: rem(12px);
+  font-weight: $fw-semibold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $color-text-faint;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(8px);
+  padding: rem(6px) rem(12px);
+  font-size: rem(13px);
+  font-weight: $fw-semibold;
+  color: $color-primary;
+  background: $color-primary-soft;
+  border-radius: $radius-pill;
+}
+
+.dot {
+  width: rem(8px);
+  height: rem(8px);
+  background: $color-primary;
+  border-radius: 50%;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(204 0 0 / 45%);
+  }
+
+  50% {
+    box-shadow: 0 0 0 rem(6px) rgb(204 0 0 / 0%);
+  }
+}
+
+.name {
+  margin-top: rem(14px);
+  font-size: rem(22px);
+  font-weight: $fw-bold;
+  line-height: 1.25;
+  color: $color-text-strong;
+}
+
+.track {
+  display: grid;
+  gap: rem(2px);
+  margin: rem(18px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: rem(12px);
+  padding: rem(5px) 0;
+  font-size: rem(14px);
+  color: $color-text-faint;
+  animation: step-in 0.5s $ease both;
+  animation-delay: calc(var(--i) * 70ms + 150ms);
+
+  // Соединительная линия между точками
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: calc(50% + #{rem(8px)});
+    left: rem(6px);
+    width: 2px;
+    height: calc(100% - #{rem(12px)});
+    background: $color-border;
+  }
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateX(rem(-6px));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.mark {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: rem(14px);
+  height: rem(14px);
+  background: #fff;
+  border: 2px solid $color-border-strong;
+  border-radius: 50%;
+}
+
+.done {
+  color: $color-text;
+
+  .mark {
+    background: $color-primary;
+    border-color: $color-primary;
+  }
+
+  &::after {
+    background: $color-primary !important;
+  }
+}
+
+.current {
+  font-weight: $fw-semibold;
+  color: $color-text-strong;
+
+  .mark {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 rem(4px) $color-primary-soft;
+  }
+}
+
+.outcomes {
+  margin-top: rem(18px);
+  padding: rem(14px) rem(16px);
+  background: $color-bg-soft;
+  border-radius: rem(16px);
+
+  ul {
+    display: grid;
+    gap: rem(6px);
+    margin: rem(8px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    position: relative;
+    padding-left: rem(18px);
+    font-size: rem(13px);
+    line-height: 1.45;
+    color: $color-text;
+
+    &::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      font-weight: $fw-bold;
+      color: $color-primary;
+    }
+  }
+}
+
+.outcomesTitle {
+  font-size: rem(12px);
+  font-weight: $fw-semibold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-text-muted;
+}
+
+// Перфорация «отрывного талона»
+.perf {
+  position: relative;
+  height: rem(24px);
+  margin: rem(8px) rem(-24px) 0;
+}
+
+.perfCut {
+  position: absolute;
+  top: 50%;
+  right: rem(18px);
+  left: rem(18px);
+  border-top: 2px dashed $color-border;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: rem(-13px);
+    width: rem(24px);
+    height: rem(24px);
+    background: $color-bg-soft;
+    border-radius: 50%;
+  }
+
+  &::before {
+    left: rem(-30px);
+  }
+
+  &::after {
+    right: rem(-30px);
+  }
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: rem(12px);
+  font-size: rem(12px);
+  font-weight: $fw-semibold;
+  color: $color-text-muted;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .step,
+  .dot {
+    animation: none;
+    transition: none;
+  }
+}

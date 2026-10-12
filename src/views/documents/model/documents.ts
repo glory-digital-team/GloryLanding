@@ -14,20 +14,20 @@ export const DOCUMENTS: Document[] = [
     icon: "file-text",
     title: "Рамочная оферта",
     description: "Общие условия оказания услуг Глори.Цифра.",
-    href: "/offer",
+    href: "/offer/",
   },
   {
     id: "subscription-offer",
     icon: "file-text",
     title: "Оферта на подписку",
     description: "Условия подписки на техническую поддержку и сопровождение.",
-    href: "/subscription-offer",
+    href: "/subscription-offer/",
   },
   {
     id: "privacy",
     icon: "shield-check",
     title: "Политика конфиденциальности",
     description: "Как мы защищаем ваши данные и что с ними делаем.",
-    href: "/privacy",
+    href: "/privacy/",
   },
 ];

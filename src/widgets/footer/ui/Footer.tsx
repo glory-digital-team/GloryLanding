@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { Logo } from "@/shared/ui/Logo";
 import { siteConfig } from "@/shared/config";
-import { PolicyLink } from "@/widgets/legal-modal";
+import { SERVICE_GROUPS, servicesInGroup } from "@/entities/service";
 import styles from "./Footer.module.scss";
 
 // Футер лендинга «Глори.Цифра» (Figma: 191:468, моб. 273:5594).
@@ -21,6 +21,26 @@ export function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
+        {/* Карта услуг: сквозная перелинковка на все посадочные (ТЗ §2.2, §3.4) */}
+        <nav className={styles.services} aria-label="Услуги">
+          {SERVICE_GROUPS.map((group) => (
+            <div key={group.id} className={styles.serviceCol}>
+              <a href={group.href} className={styles.serviceGroup}>
+                {group.label}
+              </a>
+              <ul className={styles.serviceList}>
+                {servicesInGroup(group.id).map((s) => (
+                  <li key={s.path}>
+                    <a href={s.path} className={styles.serviceLink}>
+                      {s.navLabel}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+
         <div className={styles.top}>
           {/* Колонка бренда */}
           <div className={styles.brand}>
@@ -46,7 +66,7 @@ export function Footer() {
           <div className={styles.cols}>
             {/* Навигация: на десктопе и мобиле — разные наборы пунктов (191:411 / 273:5614) */}
             <nav className={styles.col} aria-label="Навигация в футере">
-              <h3 className={styles.colTitle}>Навигация</h3>
+              <p className={styles.colTitle}>Навигация</p>
               <ul className={`${styles.list} ${styles.desktopOnly}`}>
                 {footerNav.map((item) => (
                   <li key={item.label}>
@@ -69,7 +89,7 @@ export function Footer() {
 
             {/* Контакты */}
             <div className={styles.col}>
-              <h3 className={styles.colTitle}>Контакты</h3>
+              <p className={styles.colTitle}>Контакты</p>
               <ul className={styles.list}>
                 <li>
                   <a href={contacts.phoneHref} className={styles.link}>
@@ -89,7 +109,7 @@ export function Footer() {
 
             {/* Реквизиты */}
             <div className={styles.col}>
-              <h3 className={styles.colTitle}>Реквизиты</h3>
+              <p className={styles.colTitle}>Реквизиты</p>
               <ul className={`${styles.list} ${styles.listTight}`}>
                 {requisites.map((r) => (
                   <li key={r} className={styles.requisite}>
@@ -104,17 +124,12 @@ export function Footer() {
         <div className={styles.bottom}>
           <span className={styles.copyright}>{copyright}</span>
           <div className={styles.legal}>
-            {legal.map((l) =>
-              l.doc === "policy" ? (
-                <PolicyLink key={l.label} className={styles.legalLink}>
-                  {l.label}
-                </PolicyLink>
-              ) : (
-                <a key={l.label} href={l.href} className={styles.legalLink}>
-                  {l.label}
-                </a>
-              ),
-            )}
+            {/* Документы — обычные ссылки на страницы (раньше политика открывалась только модалкой) */}
+            {legal.map((l) => (
+              <a key={l.label} href={l.href} className={styles.legalLink}>
+                {l.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>

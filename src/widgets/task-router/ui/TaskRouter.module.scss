@@ -1,0 +1,262 @@
+@use "shared/styles/abstracts" as *;
+
+$ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+.section {
+  background: $color-bg;
+}
+
+.inner {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+  gap: rem(24px);
+  padding-block: rem(48px);
+
+  @include respond-to("lg") {
+    gap: rem(40px);
+    padding-block: rem(80px);
+  }
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+  max-width: rem(720px);
+}
+
+.eyebrow {
+  @include type-eyebrow;
+
+  color: $color-primary;
+  letter-spacing: 0.06em;
+}
+
+.title {
+  font-size: rem(26px);
+  font-weight: $fw-bold;
+  line-height: 1.25;
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(40px);
+  }
+}
+
+.lead {
+  color: $color-text-muted;
+
+  @include type-body-base;
+}
+
+.board {
+  display: grid;
+  gap: rem(16px);
+  padding: rem(8px);
+  background: $color-bg-soft;
+  border-radius: rem(32px);
+
+  @include respond-to("lg") {
+    grid-template-columns: rem(340px) minmax(0, 1fr);
+    gap: rem(8px);
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: rem(6px);
+  padding: rem(8px);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include respond-to("lg") {
+    flex-direction: column;
+    overflow: visible;
+  }
+}
+
+.tab {
+  display: flex;
+  flex-shrink: 0;
+  gap: rem(12px);
+  align-items: center;
+  padding: rem(12px) rem(16px);
+  font: inherit;
+  font-size: rem(15px);
+  font-weight: $fw-medium;
+  text-align: left;
+  white-space: nowrap;
+  color: $color-text;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: rem(16px);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    background: rgb(0 0 0 / 4%);
+  }
+
+  &:focus-visible {
+    outline: rem(2px) solid $color-primary;
+  }
+
+  @include respond-to("lg") {
+    padding: rem(16px) rem(18px);
+    font-size: rem(17px);
+    white-space: normal;
+  }
+}
+
+.tabIdx {
+  font-size: rem(12px);
+  font-weight: $fw-bold;
+  font-variant-numeric: tabular-nums;
+  color: $color-text-faint;
+}
+
+.panels {
+  display: grid;
+}
+
+.panel {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+  padding: rem(24px) rem(20px);
+  visibility: hidden;
+  background: #fff;
+  border-radius: rem(26px);
+  opacity: 0;
+  transform: translateY(rem(8px));
+  transition:
+    opacity 0.3s ease,
+    transform 0.4s $ease,
+    visibility 0.3s;
+
+  @include respond-to("lg") {
+    padding: rem(32px);
+  }
+}
+
+.panelActive {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+}
+
+.whenLabel {
+  font-size: rem(12px);
+  font-weight: $fw-semibold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $color-text-faint;
+}
+
+.when {
+  margin-bottom: rem(14px);
+  font-size: rem(20px);
+  font-weight: $fw-semibold;
+  line-height: 1.4;
+  color: $color-text-strong;
+
+  @include respond-to("lg") {
+    font-size: rem(24px);
+  }
+}
+
+.services {
+  display: grid;
+  gap: rem(8px);
+  margin: 0 0 rem(8px);
+  padding: 0;
+  list-style: none;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.serviceName {
+  font-size: rem(16px);
+  font-weight: $fw-bold;
+}
+
+.serviceShort {
+  font-size: rem(13px);
+  line-height: 1.45;
+  color: $color-text-muted;
+}
+
+.serviceArrow {
+  position: absolute;
+  top: rem(16px);
+  right: rem(16px);
+  color: $color-text-faint;
+  transition:
+    transform 0.3s $ease,
+    color 0.2s ease;
+}
+
+.calc {
+  align-self: flex-start;
+  font-weight: $fw-semibold;
+  color: $color-primary;
+
+  &:hover {
+    color: $color-primary-hover;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+}
+
+.tabActive {
+  color: #fff;
+  background: $color-bg-dark;
+
+  &:hover {
+    background: $color-bg-dark;
+  }
+
+  .tabIdx {
+    color: #ff6b6b;
+  }
+}
+
+.service {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: rem(4px);
+  height: 100%;
+  padding: rem(16px) rem(40px) rem(16px) rem(16px);
+  color: $color-text;
+  border: 1px solid $color-border;
+  border-radius: rem(16px);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    background: $color-primary-soft;
+    border-color: transparent;
+
+    .serviceArrow {
+      color: $color-primary;
+      transform: translateX(rem(3px));
+    }
+  }
+}

@@ -621,3 +621,65 @@
   flex: 0 0 auto;
   min-width: rem(200px);
 }
+
+// ── Встроенный режим (страница /raschet-stoimosti/) ───────
+// Карточка стоит в потоке страницы: без оверлея, анимации появления и fullscreen на мобиле.
+.inline {
+  width: 100%;
+  max-height: none;
+  margin-inline: auto;
+  overflow: visible;
+  scroll-margin-top: rem(120px);
+  animation: none;
+
+  @include respond-down("md") {
+    height: auto;
+    padding: rem(32px) rem(16px);
+    border-radius: rem(28px);
+  }
+}
+
+.lead {
+  max-width: rem(620px);
+  margin: rem(-32px) auto 0;
+  font-size: rem(16px);
+  line-height: 1.55;
+  text-align: center;
+  color: $color-text-muted;
+
+  @include respond-down("md") {
+    margin-top: rem(-20px);
+    font-size: rem(14px);
+  }
+}
+
+.textarea {
+  height: auto;
+  min-height: rem(88px);
+  padding-block: rem(12px);
+  font: inherit;
+  resize: vertical;
+}
+
+.cases {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
+  padding-top: rem(32px);
+  border-top: 1px dashed $color-border-strong;
+}
+
+.casesTitle {
+  font-size: rem(18px);
+  font-weight: $fw-semibold;
+  color: $color-text;
+}
+
+.casesGrid {
+  display: grid;
+  gap: rem(16px);
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

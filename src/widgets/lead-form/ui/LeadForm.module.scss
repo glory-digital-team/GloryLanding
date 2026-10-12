@@ -168,3 +168,62 @@
   flex-direction: column;
   gap: rem(12px);
 }
+
+.text {
+  max-width: rem(640px);
+  margin: rem(12px) auto 0;
+  text-align: center;
+  color: $color-text-muted;
+
+  @include type-body-base;
+}
+
+.row {
+  display: grid;
+  gap: rem(18px);
+
+  @include respond-to("md") {
+    grid-template-columns: 1fr 1fr;
+    gap: rem(20px);
+  }
+}
+
+.taskField {
+  display: flex;
+  flex-direction: column;
+  gap: rem(8px);
+}
+
+.taskLabel {
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  line-height: rem(20px);
+  color: $color-text-strong;
+}
+
+.textarea {
+  width: 100%;
+  min-height: rem(96px);
+  padding: rem(14px) rem(17px);
+  font: inherit;
+  font-size: rem(16px);
+  color: $color-text;
+  resize: vertical;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: rem(10px);
+  transition: border-color 0.18s ease;
+
+  &::placeholder {
+    color: $color-text-faint;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+  }
+}
+
+.error:empty {
+  display: none;
+}
