@@ -1,0 +1,109 @@
+@use "shared/styles/abstracts" as *;
+
+.top {
+  background: $color-bg-soft;
+}
+
+.inner {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
+  padding-top: rem(112px);
+  padding-bottom: rem(48px);
+
+  @include respond-to("md") {
+    padding-top: rem(152px);
+    padding-bottom: rem(80px);
+  }
+
+  > form {
+    margin-top: rem(24px);
+  }
+}
+
+.title {
+  font-size: rem(30px);
+  font-weight: $fw-bold;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(48px);
+  }
+}
+
+.lead {
+  max-width: rem(760px);
+  font-size: rem(17px);
+  line-height: 1.6;
+  color: $color-text-muted;
+}
+
+.how {
+  display: grid;
+  gap: rem(12px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: how;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: rem(16px);
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10px);
+    padding: rem(24px);
+    background: $color-bg-soft;
+    border-radius: rem(24px);
+    counter-increment: how;
+
+    &::before {
+      content: "Шаг " counter(how);
+      font-size: rem(12px);
+      font-weight: $fw-semibold;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: $color-primary;
+    }
+  }
+
+  h3 {
+    font-size: rem(19px);
+    font-weight: $fw-bold;
+    color: $color-text-strong;
+  }
+
+  p {
+    font-size: rem(15px);
+    line-height: 1.55;
+    color: $color-text-muted;
+  }
+}
+
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: rem(8px);
+  padding: rem(20px) rem(24px);
+  border-left: 3px solid $color-primary;
+  background: $color-bg-soft;
+  border-radius: 0 rem(16px) rem(16px) 0;
+
+  h3 {
+    font-size: rem(18px);
+    font-weight: $fw-bold;
+  }
+
+  p {
+    font-size: rem(15px);
+    line-height: 1.6;
+    color: $color-text;
+  }
+}

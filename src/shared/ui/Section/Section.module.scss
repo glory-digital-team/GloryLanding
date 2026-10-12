@@ -1,0 +1,78 @@
+@use "shared/styles/abstracts" as *;
+
+.section {
+  scroll-margin-top: rem(100px);
+}
+
+.white {
+  background: $color-bg;
+}
+
+.soft {
+  background: $color-bg-soft;
+}
+
+.inner {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+  gap: rem(24px);
+  padding-block: rem(48px);
+
+  @include respond-to("lg") {
+    gap: rem(36px);
+    padding-block: rem(80px);
+  }
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+  max-width: rem(760px);
+}
+
+.eyebrow {
+  @include type-eyebrow;
+
+  font-size: rem(12px);
+  letter-spacing: 0.08em;
+  color: $color-primary;
+}
+
+.title {
+  font-size: rem(26px);
+  font-weight: $fw-bold;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: $color-text-strong;
+  text-wrap: balance;
+
+  @include respond-to("md") {
+    font-size: rem(36px);
+  }
+}
+
+.lead {
+  font-size: rem(17px);
+  line-height: 1.65;
+  color: $color-text-muted;
+}
+
+.dark {
+  color: #fff;
+  background: $color-bg-dark;
+
+  .title {
+    color: #fff;
+  }
+
+  .lead {
+    color: rgb(255 255 255 / 72%);
+  }
+
+  .eyebrow {
+    color: #ff8a8a;
+  }
+}

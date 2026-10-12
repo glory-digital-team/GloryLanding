@@ -1,0 +1,386 @@
+@use "shared/styles/abstracts" as *;
+
+.inner {
+  @include container;
+}
+
+.cover {
+  max-width: rem(420px);
+  margin-inline: auto;
+  rotate: 2deg;
+  transition: rotate 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:hover {
+    rotate: 0deg;
+  }
+
+  > a {
+    pointer-events: none;
+  }
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(12px) rem(32px);
+  margin: rem(8px) 0 0;
+  padding-top: rem(20px);
+  border-top: 1px solid $color-border;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: rem(2px);
+  }
+
+  dt {
+    font-size: rem(12px);
+    font-weight: $fw-semibold;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: $color-text-faint;
+  }
+
+  dd {
+    margin: 0;
+    font-size: rem(15px);
+    font-weight: $fw-semibold;
+    color: $color-text;
+
+    a {
+      color: $color-primary;
+    }
+  }
+}
+
+// ── Цифры ─────────────────────────────────────────────────
+.facts {
+  padding-block: rem(32px);
+  background: $color-bg;
+
+  @include respond-to("lg") {
+    padding-block: rem(56px) rem(24px);
+  }
+}
+
+.factsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: rem(12px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: rem(16px);
+  }
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6px);
+  padding: rem(20px);
+  background: $color-bg-soft;
+  border-radius: rem(22px);
+}
+
+.factValue {
+  font-size: rem(26px);
+  font-weight: $fw-extrabold;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: $color-primary;
+
+  @include respond-to("md") {
+    font-size: rem(34px);
+  }
+}
+
+.factLabel {
+  font-size: rem(14px);
+  line-height: 1.45;
+  color: $color-text-muted;
+}
+
+// ── История ───────────────────────────────────────────────
+.story {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+  gap: rem(40px);
+  padding-block: rem(40px) rem(56px);
+
+  @include respond-to("lg") {
+    gap: rem(64px);
+    padding-block: rem(64px) rem(88px);
+  }
+}
+
+.row {
+  display: grid;
+  gap: rem(14px);
+  padding-top: rem(28px);
+  border-top: 1px solid $color-border;
+
+  @include respond-to("md") {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: rem(40px);
+  }
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20px);
+}
+
+.rowTitle {
+  font-size: rem(24px);
+  font-weight: $fw-bold;
+  line-height: 1.25;
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(30px);
+  }
+}
+
+.rowBody {
+  display: flex;
+  flex-direction: column;
+  gap: rem(12px);
+
+  p {
+    font-size: rem(17px);
+    line-height: 1.65;
+    color: $color-text;
+  }
+}
+
+.checks {
+  display: grid;
+  gap: rem(10px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    position: relative;
+    padding: rem(14px) rem(16px) rem(14px) rem(46px);
+    font-size: rem(16px);
+    line-height: 1.55;
+    background: $color-bg-soft;
+    border-radius: rem(16px);
+
+    &::before {
+      content: "✓";
+      position: absolute;
+      top: rem(13px);
+      left: rem(16px);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: rem(20px);
+      height: rem(20px);
+      font-size: rem(12px);
+      font-weight: $fw-bold;
+      color: #fff;
+      background: $color-primary;
+      border-radius: 50%;
+    }
+  }
+}
+
+.approach {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20px);
+  padding: rem(28px) rem(22px);
+  background: $color-bg-soft;
+  border-radius: rem(32px);
+
+  @include respond-to("md") {
+    padding: rem(48px);
+  }
+}
+
+.quote {
+  font-size: rem(26px);
+  font-weight: $fw-bold;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(38px);
+  }
+
+  &::before {
+    content: "«";
+    color: $color-primary;
+  }
+
+  &::after {
+    content: "»";
+    color: $color-primary;
+  }
+}
+
+.features {
+  display: grid;
+  gap: rem(12px);
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: rem(16px);
+  }
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  gap: rem(8px);
+  padding: rem(22px);
+  border: 1px solid $color-border;
+  border-radius: rem(22px);
+
+  h3 {
+    font-size: rem(18px);
+    font-weight: $fw-bold;
+    color: $color-text-strong;
+  }
+
+  p {
+    font-size: rem(15px);
+    line-height: 1.55;
+    color: $color-text-muted;
+  }
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20px);
+}
+
+.resultsList {
+  display: grid;
+  gap: rem(12px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: res;
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10px);
+    padding: rem(24px);
+    font-size: rem(16px);
+    line-height: 1.55;
+    color: #fff;
+    background: $color-bg-dark;
+    border-radius: rem(24px);
+    counter-increment: res;
+
+    &::before {
+      content: counter(res, decimal-leading-zero);
+      font-size: rem(13px);
+      font-weight: $fw-bold;
+      color: #ff8a8a;
+    }
+  }
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: rem(8px) rem(14px);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: rem(13px);
+    color: $color-text;
+    background: $color-bg-soft;
+    border: 1px solid $color-border;
+    border-radius: rem(10px);
+  }
+}
+
+// ── Кейс без опубликованных подробностей ──────────────────
+.pending {
+  padding-block: rem(40px);
+  background: $color-bg;
+}
+
+.pendingCard {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
+  max-width: rem(760px);
+  padding: rem(28px) rem(22px);
+  border: 1px dashed $color-border-strong;
+  border-radius: rem(28px);
+
+  @include respond-to("md") {
+    padding: rem(40px);
+  }
+
+  p {
+    font-size: rem(16px);
+    line-height: 1.65;
+    color: $color-text-muted;
+  }
+}
+
+.pendingActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(12px);
+}
+
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: rem(8px);
+    padding: rem(8px) rem(14px);
+    font-size: rem(14px);
+    font-weight: $fw-semibold;
+    background: #fff;
+    border-radius: $radius-pill;
+
+    &:not(:last-child)::after {
+      content: "→";
+      margin-left: rem(4px);
+      color: $color-primary;
+    }
+
+    &:last-child {
+      color: #fff;
+      background: $color-primary;
+    }
+  }
+}

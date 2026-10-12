@@ -1,2 +1,2 @@
-export { ConfiguratorModal } from "./ui/ConfiguratorModal";
-export { ConfiguratorTrigger } from "./ui/ConfiguratorTrigger";
+export { Configurator } from "./ui/Configurator";
+export { PROJECT_TYPES } from "./model/config";

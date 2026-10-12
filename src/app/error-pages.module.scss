@@ -53,3 +53,16 @@
   justify-content: center;
   margin-top: $space-sm;
 }
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: rem(8px) rem(20px);
+  margin-top: rem(20px);
+
+  a {
+    font-weight: $fw-semibold;
+    color: $color-primary;
+  }
+}

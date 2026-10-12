@@ -1,4 +1,4 @@
-import { ConfiguratorTrigger } from "@/widgets/configurator";
+import { Button } from "@/shared/ui/Button";
 import { CtaGraphic } from "./CtaGraphic";
 import styles from "./Cta.module.scss";
 
@@ -9,17 +9,17 @@ export function Cta() {
       <div className={styles.card}>
         <div className={styles.content}>
           <div className={styles.heading}>
-            <h2 className={styles.title}>Быстрая оценка проекта</h2>
+            <h2 className={styles.title}>Получите ориентир по сроку и бюджету</h2>
             <p className={styles.subtitle}>
-              Настройте параметры в конфигураторе <br className={styles.brMobile} />—
-              увидите ориентировочный бюджет <br className={styles.brMobile} />и сроки.
-              Обсудим детали и зафиксируем точные условия на следующем шаге.
+              Выберите тип проекта и функции <br className={styles.brMobile} />—
+              калькулятор покажет ориентировочный бюджет <br className={styles.brMobile} />ещё до
+              разговора. Контакты — только после результата.
             </p>
           </div>
-          {/* Открывает модальный конфигуратор (Figma: «всплывающий Конфигуратор» из CTA-блока) */}
-          <ConfiguratorTrigger variant="secondary" className={styles.button}>
-            Подробнее
-          </ConfiguratorTrigger>
+          {/* Ведёт на отдельную страницу калькулятора (раньше — модалка) */}
+          <Button variant="secondary" className={styles.button} href="/raschet-stoimosti/" data-cta="cta_block_calc">
+            Рассчитать стоимость
+          </Button>
         </div>
 
         <CtaGraphic className={styles.graphic} />

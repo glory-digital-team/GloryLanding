@@ -1,0 +1,308 @@
+@use "shared/styles/abstracts" as *;
+
+$ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+.section {
+  background: $color-bg;
+}
+
+.inner {
+  @include container;
+
+  display: flex;
+  flex-direction: column;
+  gap: rem(28px);
+  padding-block: rem(48px);
+
+  @include respond-to("lg") {
+    gap: rem(44px);
+    padding-block: rem(80px);
+  }
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+  max-width: rem(760px);
+}
+
+.title {
+  font-size: rem(26px);
+  font-weight: $fw-bold;
+  line-height: 1.25;
+  color: $color-text;
+
+  @include respond-to("md") {
+    font-size: rem(40px);
+  }
+}
+
+.lead {
+  color: $color-text-muted;
+
+  @include type-body-base;
+}
+
+.track {
+  position: relative;
+  display: grid;
+  gap: rem(4px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: rem(40px) minmax(0, 1fr);
+  gap: rem(16px);
+  padding-bottom: rem(20px);
+
+  // Вертикальная «рельса»
+  &:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: rem(40px);
+    bottom: 0;
+    left: rem(19px);
+    width: 2px;
+    background: $color-border;
+  }
+
+  &.reached:not(:last-child)::before {
+    background: $color-primary;
+  }
+}
+
+.node {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(40px);
+  height: rem(40px);
+  font-size: rem(14px);
+  font-weight: $fw-bold;
+  color: $color-text-muted;
+  background: #fff;
+  border: 2px solid $color-border-strong;
+  border-radius: 50%;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.reached .node {
+  color: #fff;
+  background: $color-primary;
+  border-color: $color-primary;
+}
+
+.current .node {
+  box-shadow: 0 0 0 rem(6px) $color-primary-soft;
+}
+
+.stepBody {
+  display: flex;
+  flex-direction: column;
+  gap: rem(4px);
+  padding-top: rem(8px);
+}
+
+.status {
+  font-size: rem(12px);
+  font-weight: $fw-semibold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $color-primary;
+}
+
+.stepTitle {
+  font-size: rem(18px);
+  font-weight: $fw-bold;
+  line-height: 1.35;
+  color: $color-text-strong;
+}
+
+.stepText {
+  margin-top: rem(4px);
+  font-size: rem(16px);
+  line-height: 1.65;
+  color: $color-text;
+}
+
+// ── compact: горизонтальная лента на десктопе ─────────────
+.compact {
+  .track {
+    @include respond-to("lg") {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: rem(12px);
+
+      // Общая линия + заполнение по прогрессу
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        top: rem(19px);
+        left: rem(20px);
+        right: rem(20px);
+        height: 2px;
+        background: $color-border;
+      }
+
+      &::after {
+        background: $color-primary;
+        transform: scaleX(var(--progress));
+        transform-origin: left;
+        transition: transform 1.2s $ease;
+      }
+    }
+  }
+
+  .step {
+    @include respond-to("lg") {
+      grid-template-columns: 1fr;
+      gap: rem(14px);
+      padding-bottom: 0;
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  .stepTitle {
+    @include respond-to("lg") {
+      font-size: rem(15px);
+      font-weight: $fw-medium;
+      line-height: 1.45;
+    }
+  }
+}
+
+// ── full: страница процесса с карточкой статуса ───────────
+.full {
+  .body {
+    display: grid;
+    gap: rem(24px);
+
+    @include respond-to("lg") {
+      grid-template-columns: rem(300px) minmax(0, 1fr);
+      gap: rem(56px);
+      align-items: start;
+    }
+  }
+
+  .step {
+    padding-bottom: rem(40px);
+  }
+
+  .stepTitle {
+    font-size: rem(22px);
+
+    @include respond-to("md") {
+      font-size: rem(26px);
+    }
+  }
+}
+
+.statusCard {
+  position: sticky;
+  top: rem(100px);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+  padding: rem(20px);
+  color: #fff;
+  background: $color-bg-dark;
+  border-radius: rem(24px);
+  box-shadow: $shadow-lg;
+
+  @include respond-down("lg") {
+    top: rem(84px);
+    padding: rem(14px) rem(16px);
+  }
+}
+
+.statusKind {
+  font-size: rem(12px);
+  font-weight: $fw-semibold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $color-text-faint;
+}
+
+.statusValue {
+  display: flex;
+  align-items: center;
+  gap: rem(10px);
+  font-size: rem(22px);
+  font-weight: $fw-bold;
+  animation: status-in 0.4s $ease both;
+}
+
+@keyframes status-in {
+  from {
+    opacity: 0;
+    transform: translateY(rem(6px));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.statusDot {
+  width: rem(10px);
+  height: rem(10px);
+  background: #ff4d4d;
+  border-radius: 50%;
+  box-shadow: 0 0 0 rem(4px) rgb(255 77 77 / 25%);
+}
+
+.statusBar {
+  height: rem(6px);
+  overflow: hidden;
+  background: rgb(255 255 255 / 12%);
+  border-radius: $radius-pill;
+
+  span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, #ff4d4d, $color-primary);
+    transform-origin: left;
+    transition: transform 0.6s $ease;
+  }
+}
+
+.statusMeta {
+  font-size: rem(13px);
+  color: $color-text-faint;
+}
+
+.link {
+  align-self: flex-start;
+  font-weight: $fw-semibold;
+  color: $color-primary;
+
+  &:hover {
+    color: $color-primary-hover;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node,
+  .statusValue,
+  .statusBar span,
+  .compact .track::after {
+    animation: none;
+    transition: none;
+  }
+}

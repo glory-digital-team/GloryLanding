@@ -1,0 +1,106 @@
+@use "shared/styles/abstracts" as *;
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background-color: $color-bg-soft;
+}
+
+// Мягкое красное свечение в углу — фирменный акцент без тяжёлых картинок
+.glow {
+  position: absolute;
+  top: rem(-240px);
+  right: rem(-200px);
+  width: rem(640px);
+  height: rem(640px);
+  background: radial-gradient(circle, rgb(204 0 0 / 10%) 0%, rgb(204 0 0 / 0%) 65%);
+  pointer-events: none;
+}
+
+.inner {
+  @include container;
+
+  position: relative;
+  display: grid;
+  gap: rem(32px);
+  padding-top: rem(112px);
+  padding-bottom: rem(48px);
+
+  @include respond-to("md") {
+    padding-top: rem(152px);
+    padding-bottom: rem(72px);
+  }
+}
+
+.withAside .inner {
+  @include respond-to("lg") {
+    grid-template-columns: minmax(0, 1fr) rem(420px);
+    gap: rem(56px);
+    align-items: center;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
+  min-width: 0;
+}
+
+.crumbs {
+  margin-bottom: rem(8px);
+}
+
+.eyebrow {
+  @include type-eyebrow;
+
+  color: $color-primary;
+  letter-spacing: 0.06em;
+}
+
+.title {
+  font-size: rem(32px);
+  font-weight: $fw-bold;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: $color-text-strong;
+  text-wrap: balance;
+
+  @include respond-to("md") {
+    font-size: rem(48px);
+  }
+
+  @include respond-to("lg") {
+    font-size: rem(54px);
+  }
+}
+
+.lead {
+  max-width: rem(720px);
+  font-size: rem(17px);
+  line-height: 1.6;
+  color: $color-text-muted;
+
+  @include respond-to("md") {
+    font-size: rem(18px);
+  }
+
+  p + p {
+    margin-top: rem(12px);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(12px);
+  margin-top: rem(8px);
+}
+
+.footer {
+  margin-top: rem(8px);
+}
+
+.aside {
+  min-width: 0;
+}

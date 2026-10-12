@@ -1,0 +1,50 @@
+@use "shared/styles/abstracts" as *;
+
+.crumbs {
+  font-size: rem(14px);
+  line-height: rem(20px);
+  color: $color-text-muted;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(4px) rem(8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(8px);
+
+  & + &::before {
+    content: "/";
+    color: $color-text-faint;
+  }
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.18s ease;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+.current {
+  color: $color-text;
+  font-weight: $fw-medium;
+}
+
+.dark {
+  color: $color-text-faint;
+
+  .current {
+    color: $color-text-invert;
+  }
+}

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Оферта Глори.Цифра на оказание услуг по технической поддержке и сопровождению цифровых решений.",
   alternates: {
-    canonical: "/subscription-offer",
+    canonical: "/subscription-offer/",
   },
 };
 

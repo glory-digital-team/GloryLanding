@@ -246,3 +246,58 @@
     opacity: 0.7;
   }
 }
+
+// ── Карта услуг ───────────────────────────────────────────
+.services {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: rem(28px) rem(16px);
+  padding-bottom: rem(32px);
+  margin-bottom: rem(32px);
+  border-bottom: 1px solid $color-border-dark;
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: rem(32px);
+    padding-bottom: rem(48px);
+    margin-bottom: rem(48px);
+  }
+}
+
+.serviceCol {
+  display: flex;
+  flex-direction: column;
+  gap: rem(12px);
+}
+
+.serviceGroup {
+  font-size: rem(15px);
+  font-weight: $fw-semibold;
+  line-height: 1.35;
+  color: $color-text-invert;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #ff6b6b;
+  }
+}
+
+.serviceList {
+  display: flex;
+  flex-direction: column;
+  gap: rem(8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.serviceLink {
+  font-size: rem(14px);
+  line-height: 1.4;
+  color: $color-text-faint;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $color-text-invert;
+  }
+}
