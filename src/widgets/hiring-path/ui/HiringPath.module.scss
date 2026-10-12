@@ -4,6 +4,7 @@
   padding: rem(80px) 0;
   background: $color-bg-dark;
   color: #fff;
+  overflow-x: clip; // шаги въезжают сбоку (анимация) — не даём им создать горизонтальный скролл
 
   @include respond-to("lg") {
     padding: rem(140px) 0;
@@ -142,7 +143,7 @@
 .step {
   position: relative;
   display: grid;
-  grid-template-columns: rem(44px) 1fr;
+  grid-template-columns: rem(44px) minmax(0, 1fr); // minmax: длинные строки не распирают колонку на мобильном
   gap: rem(20px);
   padding: rem(4px) 0 rem(24px);
 

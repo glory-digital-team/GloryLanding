@@ -1093,8 +1093,9 @@ h3.aiTitle {
 
   a {
     font-weight: $fw-semibold;
-    color: $color-primary;
+    color: #fff; // на тёмной полосе красный текст не проходит по контрасту
     text-decoration: underline;
+    text-decoration-color: $color-primary;
     text-underline-offset: 0.2em;
   }
 }

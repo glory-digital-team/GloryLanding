@@ -23,7 +23,7 @@ export function Hero() {
             <h1 className={styles.title}>
               Сайты, автоматизация <br className={styles.titleBreak} />
               <span className={styles.accent}>
-                и AI-решения <br className={styles.titleBreakMobile} />
+                и{"\u00A0"}AI-решения <br className={styles.titleBreakMobile} />
                 для бизнеса
               </span>
             </h1>

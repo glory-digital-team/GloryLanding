@@ -356,6 +356,8 @@ $pf-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .moreArrow {
+  flex-shrink: 0;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: rem(6px);
@@ -387,5 +389,23 @@ $pf-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   .cardTitle {
     font-size: rem(28px);
     line-height: rem(36px);
+  }
+}
+
+// Мобильный: карточка ~300px — макетные 36px заголовка не помещаются вместе с мета-строкой.
+@include respond-down("md") {
+  .card {
+    aspect-ratio: 4 / 5;
+  }
+
+  .text {
+    padding: 0 rem(20px) rem(20px);
+  }
+
+  .cardTitle,
+  .compact .cardTitle {
+    font-size: rem(26px);
+    line-height: rem(32px);
+    letter-spacing: rem(-0.5px);
   }
 }

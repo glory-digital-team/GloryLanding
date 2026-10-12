@@ -11,8 +11,8 @@ export function Cta() {
           <div className={styles.heading}>
             <h2 className={styles.title}>Получите ориентир по сроку и бюджету</h2>
             <p className={styles.subtitle}>
-              Выберите тип проекта и функции <br className={styles.brMobile} />—
-              калькулятор покажет ориентировочный бюджет <br className={styles.brMobile} />ещё до
+              Выберите тип проекта и функции —
+              калькулятор покажет ориентировочный бюджет ещё до
               разговора. Контакты — только после результата.
             </p>
           </div>

@@ -23,7 +23,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/portfolio", destination: "/cases/", permanent: true },
       { source: "/portfolio/club-parus", destination: "/cases/club-parus/", permanent: true },
-      { source: "/portfolio/:slug", destination: "/cases/:slug/", permanent: true },
+      // Только «слаги» без точки — файлы /portfolio/*.png (картинки кейсов) не трогаем
+      { source: "/portfolio/:slug([a-z0-9-]+)", destination: "/cases/:slug/", permanent: true },
       { source: "/config", destination: "/raschet-stoimosti/", permanent: true },
       { source: "/calculator", destination: "/raschet-stoimosti/", permanent: true },
       { source: "/uslugi", destination: "/services/", permanent: true },
