@@ -15,7 +15,7 @@
   gap: $space-md;
   max-width: rem(880px);
   margin-inline: auto;
-  padding: rem(20px) $space-md;
+  padding: rem(20px) rem(12px);
   background-color: rgb(255 255 255 / 85%);
   backdrop-filter: blur(12px);
 }
@@ -26,9 +26,10 @@
 }
 
 .backButton {
+  flex-shrink: 0;
   color: $color-text-muted;
   font-size: rem(14px);
-  padding: rem(8px) rem(12px);
+  padding: rem(8px);
 
   &:hover {
     color: $color-text;

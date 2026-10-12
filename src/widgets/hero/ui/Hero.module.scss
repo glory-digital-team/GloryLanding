@@ -111,12 +111,13 @@
 // Figma 155:1491: контейнер кнопок 336px, две кнопки равной ширины (flex 1) с gap 16
 .actions {
   display: flex;
+  flex-wrap: wrap; // на узких экранах кнопки встают друг под другом, а не вылезают за край
   gap: $space-md; // gap 16
   width: 100%;
-  max-width: rem(336px);
+  max-width: rem(400px);
 
   & > * {
-    flex: 1 1 0;
+    flex: 1 1 auto;
   }
 }
 

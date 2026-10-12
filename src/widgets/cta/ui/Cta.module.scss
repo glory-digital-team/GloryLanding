@@ -58,7 +58,8 @@
 
 // Кнопка «Подробнее» фиксированной ширины 160px (моб. 271:1536, десктоп 155:1560)
 .button {
-  width: rem(160px);
+  min-width: rem(160px); // текст «Рассчитать стоимость» шире макетных 160px
+  padding-inline: rem(24px);
 }
 
 .title {
@@ -71,8 +72,10 @@
   @include respond-to("md") {
     font-size: rem(40px); // 40 / 700 / lh 60
     font-weight: $fw-bold;
-    line-height: 1.5;
-    white-space: nowrap; // заголовок в одну строку (нода 619×60)
+    line-height: 1.25;
+
+    // Заголовок длиннее макетного — переносим в 2 строки, не залезая под графику
+    text-wrap: balance;
   }
 }
 
@@ -91,12 +94,6 @@
   }
 }
 
-// Принудительные переносы подзаголовка — только на мобильном
-.brMobile {
-  @include respond-to("md") {
-    display: none;
-  }
-}
 
 // ── Декоративная графика справа (Figma Group 24 155:1561) ──
 // Обёртки .ctaLayer позиционированы left/top как группы макета и несут
@@ -174,8 +171,10 @@
   clip-path: path(
     "M17.15 130.69C-4.91 118.36 -5.24 83.09 13.57 73.19L147.09 9.56C169.18 -3.19 204.99 -3.19 227.08 9.56L359.61 72.54C380.06 82.76 379.11 117.95 357.02 130.69L227.08 205.67C204.99 218.41 169.18 218.41 147.09 205.67L17.15 130.69Z"
   );
-  background: rgb(255 255 255 / 50%);
-  backdrop-filter: blur(26.39px);
+
+  // backdrop-filter внутри трансформированной графики Chromium/Safari рендерят
+  // прямоугольником (видны «рубленые» края) — имитируем матовое стекло градиентом.
+  background: linear-gradient(160deg, rgb(255 255 255 / 92%), rgb(255 236 239 / 78%));
 }
 
 // Group 9 — белая матовая грань: фон 50% + background blur 26.39
@@ -185,9 +184,8 @@
 }
 
 .graphic :global(.ctaGlassSquare) {
-  background: rgb(255 255 255 / 50%);
+  background: linear-gradient(160deg, rgb(255 255 255 / 94%), rgb(255 228 232 / 80%));
   border-radius: rem(46.18px);
-  backdrop-filter: blur(26.39px);
 }
 
 .graphic :global(.ctaGlassEdge) {
