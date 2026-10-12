@@ -51,7 +51,7 @@ export function Header() {
         </nav>
 
         <div className={styles.actions}>
-          <CabinetLink signedIn={signedIn} className={styles.cabinet} />
+          <CabinetLink signedIn={signedIn} iconOnly className={styles.cabinet} />
           <Button variant="primary" size="md" href="#lead-form" className={styles.cta}>
             Начать проект
           </Button>

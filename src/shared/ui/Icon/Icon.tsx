@@ -17,7 +17,9 @@ export type IconName =
   | "shield-check"
   | "clock"
   | "telegram"
-  | "whatsapp";
+  | "whatsapp"
+  | "log-in"
+  | "user";
 
 export const ICON_NAMES: IconName[] = [
   "apps",
@@ -92,6 +94,22 @@ const paths: Record<IconName, React.ReactNode> = {
     <>
       <circle cx="12" cy="12" r="9" />
       <path d="M12 6v6l4 2" />
+    </>
+  ),
+  // Вход: дверь и стрелка внутрь — «Войти в кабинет».
+  "log-in": (
+    <>
+      <path d="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3" />
+      <path d="M10 17l5-5-5-5" />
+      <path d="M15 12H3" />
+    </>
+  ),
+  // Профиль: человек в круге — «Личный кабинет», когда уже вошли.
+  user: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="10" r="3" />
+      <path d="M6.2 18.4a6.5 6.5 0 0 1 11.6 0" />
     </>
   ),
   telegram: <path d="M21.5 4.3 2.9 11.5c-.9.4-.9 1.6.1 1.9l4.6 1.4 1.8 5.4c.2.7 1.1.9 1.6.3l2.5-2.6 4.8 3.5c.6.4 1.5.1 1.7-.7l3.2-15c.2-.9-.7-1.7-1.5-1.4ZM8.9 14.3l8.6-5.6c.3-.2.6.2.4.4l-7 6.6c-.2.2-.4.5-.4.8l-.3 2.2-1.3-4.4Z" />,
