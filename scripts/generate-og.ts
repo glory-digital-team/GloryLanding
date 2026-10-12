@@ -5,7 +5,7 @@
  */
 import { mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { chromium } from "playwright";
+import { chromium } from "playwright-core";
 import { SERVICES, SERVICE_GROUPS } from "../src/entities/service";
 import { CASES } from "../src/entities/case/model/cases";
 import { PAGES } from "../src/shared/content/pages.data";
