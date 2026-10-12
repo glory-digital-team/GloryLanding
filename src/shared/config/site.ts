@@ -38,7 +38,7 @@ export const siteConfig = {
   // Личный кабинет клиента на том же домене (платформа Глори): вход по коду из письма.
   // `status` отвечает только «вошёл / не вошёл» — cookie кабинета лендингу не видна.
   cabinet: {
-    href: "/cabinet",
+    href: "/cabinet/",
     status: "/cabinet/api/status",
   },
   contacts: {
