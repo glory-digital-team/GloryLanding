@@ -124,7 +124,6 @@ export function ConfiguratorModal() {
   const activeEstimateError = estimateError?.key === estimateKey ? estimateError.message : "";
   const priceAvailable = selectedType !== null && activeEstimate !== null && !activeEstimateError;
   const total = activeEstimate?.min ?? null;
-  const maxAmount = activeEstimate?.max ?? null;
 
   useEffect(() => {
     if (!selectedType || !estimateKey) return;
@@ -261,17 +260,7 @@ export function ConfiguratorModal() {
             <p className={styles.successText}>
               Менеджер свяжется с вами, уточнит детали и зафиксирует точную смету проекта.
             </p>
-            <CabinetCodeStep
-              sent={submitted}
-              classes={{
-                input: styles.input,
-                primary: styles.nextBtn,
-                secondary: styles.backBtn,
-                text: styles.successText,
-                error: styles.error,
-              }}
-              onLater={close}
-            />
+            <CabinetCodeStep sent={submitted} onLater={close} />
           </div>
         ) : (
           <div className={styles.layout}>
@@ -284,7 +273,6 @@ export function ConfiguratorModal() {
                   moduleCount={moduleIds.size}
                   urgency={urgency}
                   total={total}
-                  maxAmount={maxAmount}
                   manual={activeEstimate !== null && activeEstimate.total === null}
                   priceAvailable={priceAvailable}
                   pending={estimating}
@@ -480,7 +468,6 @@ export function ConfiguratorModal() {
                 moduleCount={moduleIds.size}
                 urgency={urgency}
                 total={total}
-                maxAmount={maxAmount}
                 manual={activeEstimate !== null && activeEstimate.total === null}
                 priceAvailable={priceAvailable}
                 pending={estimating}

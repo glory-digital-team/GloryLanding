@@ -1,0 +1,127 @@
+@use "shared/styles/abstracts" as *;
+
+// Шаг «код из письма → личный кабинет»: узкая колонка по центру, крупное поле кода,
+// одна красная кнопка во всю ширину, второстепенные действия — тихими ссылками.
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: rem(12px);
+  width: 100%;
+  max-width: rem(360px);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.lead {
+  margin: 0 0 rem(4px);
+  font-size: rem(15px);
+  line-height: rem(24px);
+  color: $color-text-muted;
+}
+
+.email {
+  font-weight: $fw-semibold;
+  color: $color-text-strong;
+}
+
+.code {
+  width: 100%;
+  height: rem(56px);
+  padding: 0 rem(16px);
+  border: 1px solid $color-border;
+  border-radius: rem(12px);
+  background: #fff;
+  font-family: inherit;
+  font-size: rem(24px);
+  font-weight: $fw-semibold;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.35em;
+  text-align: center;
+  color: $color-text-strong;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+
+  &::placeholder {
+    font-size: rem(16px);
+    font-weight: 400;
+    letter-spacing: normal;
+    color: $color-text-faint;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.12);
+  }
+}
+
+.submit {
+  height: rem(48px);
+  border: 0;
+  border-radius: $radius-pill;
+  background: $color-primary;
+  font-family: inherit;
+  font-size: rem(16px);
+  font-weight: $fw-medium;
+  color: $color-text-invert;
+  cursor: pointer;
+  transition: background-color 200ms ease-out;
+
+  &:hover {
+    background: $color-primary-hover;
+  }
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: rem(4px) rem(20px);
+  margin-top: rem(4px);
+}
+
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: rem(14px);
+  line-height: rem(20px);
+  color: $color-text-muted;
+  cursor: pointer;
+  transition: color 200ms ease-out;
+
+  &:hover {
+    color: $color-text-strong;
+  }
+}
+
+.submit:disabled,
+.link:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.wait {
+  font-size: rem(14px);
+  line-height: rem(20px);
+  font-variant-numeric: tabular-nums;
+  color: $color-text-faint;
+}
+
+.error,
+.notice {
+  margin: 0;
+  font-size: rem(14px);
+  line-height: rem(20px);
+}
+
+.error {
+  color: #b42318;
+}
+
+.notice {
+  color: #1f7a4d;
+}

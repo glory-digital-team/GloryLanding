@@ -10,8 +10,6 @@ interface ReceiptProps {
   urgency: Urgency | null;
   /** Нижняя граница бюджета, ₽. */
   total: number | null;
-  /** Верхняя граница, ₽: показывается вилкой «от – до». */
-  maxAmount?: number | null;
   /** Услуги в платформе не настроены — менеджер посчитает вручную. */
   manual?: boolean;
   priceAvailable: boolean;
@@ -26,7 +24,6 @@ export function Receipt({
   moduleCount,
   urgency,
   total,
-  maxAmount,
   manual,
   priceAvailable,
   pending,
@@ -54,12 +51,8 @@ export function Receipt({
     </div>
   );
 
-  const estimateText =
-    total === null
-      ? "Выберите услугу"
-      : maxAmount != null && maxAmount > total
-        ? `${formatPrice(total)} – ${formatPrice(maxAmount)}`
-        : `От ${formatPrice(total)}`;
+  // Посетителю — только нижняя граница: «От 55 000 ₽». Верхнюю видит менеджер в заявке.
+  const estimateText = total === null ? "Выберите услугу" : `От ${formatPrice(total)}`;
 
   const finalPrice = (
     <div className={styles.receiptFinal}>
@@ -70,7 +63,7 @@ export function Receipt({
           : error
             ? "Расчёт временно недоступен"
             : manual
-              ? "Посчитаем вручную"
+              ? "По запросу"
               : priceAvailable
                 ? estimateText
                 : "Выберите услугу"}

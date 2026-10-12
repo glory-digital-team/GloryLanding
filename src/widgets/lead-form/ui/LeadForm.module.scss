@@ -162,78 +162,9 @@
   }
 }
 
-// Шаг «код из письма → личный кабинет» после заявки: поле и кнопки в стиле формы.
+// Шаг «код из письма → личный кабинет» после заявки.
 .codeStep {
   display: flex;
   flex-direction: column;
   gap: rem(12px);
-
-  [role="group"] {
-    display: flex;
-    flex-direction: column;
-    gap: rem(12px);
-  }
-}
-
-.codeText {
-  margin: 0;
-  font-size: rem(14px);
-  line-height: rem(20px);
-  color: $color-text;
-}
-
-.codeInput {
-  width: 100%;
-  height: rem(50px);
-  padding: 0 rem(17px);
-  font-size: rem(16px);
-  letter-spacing: 0.2em;
-  color: $color-text;
-  background-color: #fff;
-  border: 1px solid #d1d5db;
-  border-radius: rem(10px);
-
-  &:focus {
-    outline: none;
-    border-color: $color-primary;
-    box-shadow: 0 0 0 3px rgba($color-primary, 0.12);
-  }
-}
-
-.codePrimary,
-.codeSecondary {
-  @include type-button;
-
-  width: 100%;
-  padding: rem(10px) rem(20px);
-  border: 1px solid transparent;
-  border-radius: $radius-pill;
-  cursor: pointer;
-  transition:
-    background-color 200ms ease-out,
-    color 200ms ease-out;
-}
-
-.codePrimary {
-  color: $color-text-invert;
-  background-color: $color-primary;
-
-  &:hover {
-    background-color: $color-primary-hover;
-  }
-}
-
-.codeSecondary {
-  color: $color-primary;
-  background-color: rgb(204 0 0 / 6%);
-
-  &:hover {
-    background-color: rgb(204 0 0 / 12%);
-  }
-}
-
-.codePrimary:disabled,
-.codeSecondary:disabled {
-  opacity: 0.5;
-  pointer-events: none;
 }

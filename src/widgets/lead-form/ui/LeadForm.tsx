@@ -100,16 +100,7 @@ export function LeadForm() {
           {submitted ? (
             <div className={styles.codeStep}>
               <p className={styles.status}>Заявка у нас — менеджер скоро свяжется.</p>
-              <CabinetCodeStep
-                sent={submitted}
-                classes={{
-                  input: styles.codeInput,
-                  primary: styles.codePrimary,
-                  secondary: styles.codeSecondary,
-                  text: styles.codeText,
-                  error: styles.error,
-                }}
-              />
+              <CabinetCodeStep sent={submitted} />
             </div>
           ) : null}
         </div>
