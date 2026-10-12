@@ -1,0 +1,311 @@
+@use "shared/styles/abstracts" as *;
+
+// Состояния hover намеренно идут каскадом после базовых правил.
+/* stylelint-disable no-descending-specificity */
+
+.section {
+  padding: rem(80px) 0;
+  background: $color-bg;
+
+  @include respond-to("lg") {
+    padding: rem(120px) 0;
+  }
+}
+
+.inner {
+  @include container;
+}
+
+.kicker {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: rem(13px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-primary;
+}
+
+.heading {
+  margin-top: rem(12px);
+  font-size: rem(34px);
+  font-weight: $fw-bold;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+
+  @include respond-to("md") {
+    font-size: rem(52px);
+  }
+}
+
+.sentence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: rem(10px) rem(14px);
+  margin-top: rem(36px);
+  font-size: rem(22px);
+  font-weight: $fw-semibold;
+  letter-spacing: -0.01em;
+
+  @include respond-to("md") {
+    font-size: rem(30px);
+  }
+}
+
+.pills {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: rem(4px);
+  padding: rem(4px);
+  border-radius: $radius-pill;
+  background: $color-surface-2;
+}
+
+.pill {
+  position: relative;
+  padding: rem(8px) rem(14px);
+  border: 0;
+  border-radius: $radius-pill;
+  font: inherit;
+  font-size: rem(16px);
+  font-weight: $fw-medium;
+  background: transparent;
+  color: $color-text-muted;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  @include respond-to("md") {
+    font-size: rem(18px);
+    padding: rem(10px) rem(18px);
+  }
+
+  &:hover {
+    color: $color-text;
+  }
+}
+
+.pillOn {
+  color: #fff;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.pillBg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: $color-primary;
+  box-shadow: 0 6px 18px rgb(204 0 0 / 30%);
+}
+
+.pillLabel {
+  position: relative;
+}
+
+.count {
+  display: flex;
+  align-items: baseline;
+  gap: rem(8px);
+  margin-top: rem(36px);
+  overflow: hidden;
+  font-size: rem(16px);
+  color: $color-text-muted;
+
+  b {
+    display: inline-block;
+    min-width: 1ch;
+    font-size: rem(28px);
+    color: $color-text;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin-top: rem(12px);
+  border-top: 1px solid $color-border;
+  list-style: none;
+}
+
+.card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: rem(8px) rem(16px);
+  width: 100%;
+  padding: rem(24px) rem(8px);
+  overflow: hidden;
+  border: 0;
+  border-bottom: 1px solid $color-border;
+  font: inherit;
+  text-align: left;
+  background: transparent;
+  color: $color-text;
+  cursor: pointer;
+
+  @include respond-to("lg") {
+    grid-template-columns: rem(56px) 1.6fr 1.1fr rem(150px) rem(48px);
+    gap: rem(24px);
+    padding: rem(30px) rem(16px);
+  }
+
+  > span:not(.fill) {
+    position: relative;
+    z-index: 1;
+    transition: color 0.35s;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: #fff;
+
+    .fill {
+      transform: scaleY(1);
+    }
+
+    .pitch,
+    .num,
+    .tags span {
+      color: rgb(255 255 255 / 75%);
+    }
+
+    .tags span {
+      border-color: rgb(255 255 255 / 25%);
+    }
+
+    .arrow {
+      background: #fff;
+      color: $color-primary;
+      transform: rotate(45deg);
+    }
+  }
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  background: $color-bg-dark;
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.num {
+  align-self: start;
+  padding-top: rem(6px);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: rem(13px);
+  color: $color-text-faint;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6px);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: rem(10px);
+  font-size: rem(22px);
+  font-weight: $fw-bold;
+  letter-spacing: -0.02em;
+
+  @include respond-to("md") {
+    font-size: rem(28px);
+  }
+
+  em {
+    padding: rem(3px) rem(10px);
+    border-radius: $radius-pill;
+    font-size: rem(12px);
+    font-style: normal;
+    font-weight: $fw-semibold;
+    letter-spacing: 0;
+    background: $color-primary;
+    color: #fff;
+  }
+}
+
+.pitch {
+  font-size: rem(15px);
+  color: $color-text-muted;
+  transition: color 0.35s;
+}
+
+.tags {
+  grid-column: 2 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(6px);
+
+  @include respond-to("lg") {
+    grid-column: auto;
+  }
+
+  span {
+    padding: rem(4px) rem(10px);
+    border: 1px solid $color-border-strong;
+    border-radius: $radius-pill;
+    font-size: rem(13px);
+    color: $color-text-muted;
+    transition:
+      color 0.35s,
+      border-color 0.35s;
+  }
+}
+
+.salary {
+  grid-column: 2;
+  font-weight: $fw-semibold;
+
+  @include respond-to("lg") {
+    grid-column: auto;
+    text-align: right;
+  }
+}
+
+.arrow {
+  grid-row: 1;
+  grid-column: 3;
+  display: grid;
+  place-items: center;
+  width: rem(44px);
+  height: rem(44px);
+  border-radius: 50%;
+  background: $color-surface-2;
+  transition:
+    background 0.35s,
+    color 0.35s,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
+
+  @include respond-to("lg") {
+    grid-row: auto;
+    grid-column: auto;
+  }
+}
+
+.empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(16px);
+  margin-top: rem(16px);
+  padding: rem(24px);
+  border: 2px dashed $color-border-strong;
+  border-radius: $radius-lg;
+
+  button {
+    border: 0;
+    font: inherit;
+    font-weight: $fw-semibold;
+    background: none;
+    color: $color-primary;
+    cursor: pointer;
+  }
+}

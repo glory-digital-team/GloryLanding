@@ -1,0 +1,36 @@
+@use "shared/styles/abstracts" as *;
+
+.section {
+  overflow: hidden;
+  padding: rem(28px) 0;
+  background: $color-primary;
+  color: #fff;
+}
+
+.row {
+  overflow: hidden;
+  white-space: nowrap;
+
+  & + & {
+    margin-top: rem(6px);
+    opacity: 0.55;
+  }
+}
+
+.track {
+  display: inline-flex;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(28px);
+  padding-right: rem(28px);
+  font-size: rem(36px);
+  font-weight: $fw-bold;
+  letter-spacing: -0.02em;
+
+  @include respond-to("md") {
+    font-size: rem(56px);
+  }
+}

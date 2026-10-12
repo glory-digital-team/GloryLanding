@@ -20,20 +20,22 @@ export const siteConfig = {
   description:
     "Глори.Цифра — цифровые продукты для бизнеса: сайты, лендинги, автоматизация и AI-решения с прозрачной ценой.",
   nav: [
-    { label: "Направления", href: "#services" },
+    { label: "Направления", href: "/#services" },
     { label: "Портфолио", href: "/portfolio" },
-    { label: "Частые вопросы", href: "#faq" },
+    { label: "Карьера", href: "/careers" },
+    { label: "Частые вопросы", href: "/#faq" },
   ] satisfies NavItem[],
   // Навигация в футере: десктопный макет (191:411) и мобильный (273:5614) различаются
   footerNav: [
-    { label: "Направления", href: "#services" },
+    { label: "Направления", href: "/#services" },
     { label: "Портфолио", href: "/portfolio" },
-    { label: "Частые вопросы", href: "#faq" },
+    { label: "Карьера", href: "/careers" },
+    { label: "Частые вопросы", href: "/#faq" },
   ] satisfies NavItem[],
   footerNavMobile: [
-    { label: "Направления", href: "#services" },
+    { label: "Направления", href: "/#services" },
     { label: "Кейсы", href: "/portfolio" },
-    { label: "Начать проект", href: "#lead-form" },
+    { label: "Начать проект", href: "/#lead-form" },
   ] satisfies NavItem[],
   // Личный кабинет клиента на том же домене (платформа Глори): вход по коду из письма.
   // `status` отвечает только «вошёл / не вошёл» — cookie кабинета лендингу не видна.

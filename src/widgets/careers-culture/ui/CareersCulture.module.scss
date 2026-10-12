@@ -1,0 +1,151 @@
+@use "shared/styles/abstracts" as *;
+
+.section {
+  padding: rem(80px) 0;
+  background: $color-bg-soft;
+
+  @include respond-to("lg") {
+    padding: rem(120px) 0;
+  }
+}
+
+.inner {
+  @include container;
+}
+
+.kicker {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: rem(13px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-primary;
+}
+
+.heading {
+  max-width: rem(760px);
+  margin-top: rem(12px);
+  font-size: rem(34px);
+  font-weight: $fw-bold;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+
+  @include respond-to("md") {
+    font-size: rem(52px);
+  }
+}
+
+.lead {
+  margin-top: rem(16px);
+  color: $color-text-muted;
+}
+
+.grid {
+  display: grid;
+  gap: rem(16px);
+  margin-top: rem(40px);
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.card {
+  height: rem(260px);
+  padding: 0;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  background: none;
+  cursor: pointer;
+  perspective: 1200px;
+}
+
+.wide {
+  @include respond-to("lg") {
+    grid-column: span 2;
+  }
+}
+
+.flipper {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: rem(24px);
+  border-radius: $radius-xl;
+  backface-visibility: hidden;
+  background: #fff;
+  box-shadow: 0 0 0 1px $color-border;
+
+  .red & {
+    background: $color-primary;
+    color: #fff;
+    box-shadow: none;
+  }
+
+  .dark & {
+    background: $color-bg-dark;
+    color: #fff;
+    box-shadow: none;
+  }
+}
+
+.back {
+  justify-content: flex-end;
+  transform: rotateY(180deg);
+  background: $color-bg-dark !important;
+  color: #fff;
+
+  .red & {
+    background: #fff !important;
+    color: $color-text;
+  }
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: rem(48px);
+  height: rem(48px);
+  border-radius: $radius-md;
+  font-size: rem(22px);
+  background: $color-primary-soft;
+  color: $color-primary;
+
+  .red &,
+  .dark & {
+    background: rgb(255 255 255 / 12%);
+    color: #fff;
+  }
+}
+
+.front {
+  margin-top: auto;
+  font-size: rem(26px);
+  font-weight: $fw-bold;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.hint {
+  margin-top: rem(10px);
+  font-size: rem(13px);
+  opacity: 0.55;
+}
+
+.backText {
+  font-size: rem(18px);
+  line-height: $lh-normal;
+}

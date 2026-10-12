@@ -1,0 +1,376 @@
+@use "shared/styles/abstracts" as *;
+
+// Состояния hover намеренно идут каскадом после базовых правил.
+/* stylelint-disable no-descending-specificity */
+
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  background: rgb(18 18 19 / 45%);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, rem(560px));
+  background: $color-bg;
+  box-shadow: -24px 0 64px rgb(0 0 0 / 18%);
+
+  @include respond-to("md") {
+    top: rem(12px);
+    right: rem(12px);
+    bottom: rem(12px);
+    border-radius: $radius-xl;
+    overflow: hidden;
+  }
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: rem(20px) rem(24px);
+  border-bottom: 1px solid $color-border;
+}
+
+.crumb {
+  font-size: rem(13px);
+  font-weight: $fw-medium;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $color-text-muted;
+}
+
+.close {
+  position: relative;
+  width: rem(40px);
+  height: rem(40px);
+  border: 0;
+  border-radius: 50%;
+  background: $color-surface-2;
+  cursor: pointer;
+  transition:
+    transform 0.3s,
+    background 0.2s;
+
+  span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: rem(16px);
+    height: 2px;
+    border-radius: 2px;
+    background: $color-text;
+    transform: translate(-50%, -50%) rotate(45deg);
+
+    & + span {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+  }
+
+  &:hover {
+    background: $color-primary-soft;
+    transform: rotate(90deg);
+  }
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: rem(28px) rem(24px) 0;
+
+  @include respond-to("md") {
+    padding-inline: rem(36px);
+  }
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(8px);
+  margin-bottom: rem(18px);
+}
+
+.chip,
+.chipAccent {
+  padding: rem(6px) rem(12px);
+  border-radius: $radius-pill;
+  font-size: rem(13px);
+  font-weight: $fw-medium;
+  background: $color-surface-2;
+  color: $color-text;
+}
+
+.chipAccent {
+  background: $color-primary-soft;
+  color: $color-primary;
+}
+
+.title {
+  font-size: rem(30px);
+  font-weight: $fw-bold;
+  line-height: $lh-snug;
+  letter-spacing: -0.02em;
+  color: $color-text-strong;
+
+  @include respond-to("md") {
+    font-size: rem(36px);
+  }
+}
+
+.pitch {
+  margin-top: rem(12px);
+  font-size: rem(17px);
+  color: $color-text-muted;
+}
+
+.salary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: rem(12px);
+  margin-top: rem(24px);
+  padding: rem(18px) rem(20px);
+  border-radius: $radius-lg;
+  background: $color-bg-dark;
+  color: #fff;
+
+  span {
+    font-size: rem(22px);
+    font-weight: $fw-bold;
+  }
+
+  small {
+    font-size: rem(13px);
+    color: $color-text-faint;
+  }
+}
+
+.block {
+  margin-top: rem(28px);
+
+  h3 {
+    margin-bottom: rem(12px);
+    font-size: rem(13px);
+    font-weight: $fw-semibold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $color-text-muted;
+  }
+
+  li {
+    position: relative;
+    padding: rem(8px) 0 rem(8px) rem(24px);
+    border-bottom: 1px dashed $color-border;
+    font-size: rem(16px);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: rem(18px);
+      left: rem(2px);
+      width: rem(8px);
+      height: rem(8px);
+      border-radius: 2px;
+      background: $color-primary;
+      transform: rotate(45deg);
+    }
+  }
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(8px);
+
+  span {
+    padding: rem(6px) rem(12px);
+    border: 1px solid $color-border-strong;
+    border-radius: $radius-sm;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: rem(13px);
+  }
+}
+
+.sticky {
+  position: sticky;
+  bottom: 0;
+  margin: rem(32px) rem(-24px) 0;
+  padding: rem(16px) rem(24px) rem(24px);
+  background: linear-gradient(to top, #fff 70%, rgb(255 255 255 / 0%));
+
+  @include respond-to("md") {
+    margin-inline: rem(-36px);
+    padding-inline: rem(36px);
+  }
+
+  > * {
+    width: 100%;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
+
+  .pitch {
+    margin: 0 0 rem(8px);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6px);
+
+  span {
+    font-size: rem(14px);
+    font-weight: $fw-medium;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: rem(14px) rem(16px);
+    border: 1px solid transparent;
+    border-radius: $radius-md;
+    font: inherit;
+    background: $color-surface-2;
+    color: $color-text;
+    resize: vertical;
+    transition:
+      border-color 0.2s,
+      background 0.2s,
+      box-shadow 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgb(204 0 0 / 10%);
+    }
+  }
+}
+
+.consent {
+  display: flex;
+  align-items: center;
+  gap: rem(10px);
+  font-size: rem(14px);
+  color: $color-text-muted;
+  cursor: pointer;
+
+  input {
+    width: rem(18px);
+    height: rem(18px);
+    accent-color: $color-primary;
+  }
+}
+
+.error {
+  overflow: hidden;
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  color: $color-primary;
+}
+
+.receipt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: rem(8px);
+  padding-bottom: rem(32px);
+
+  > button {
+    margin-top: rem(24px);
+    width: 100%;
+  }
+}
+
+.check {
+  display: grid;
+  place-items: center;
+  width: rem(72px);
+  height: rem(72px);
+  margin-bottom: rem(16px);
+  border-radius: 50%;
+  background: $color-primary;
+  color: #fff;
+  box-shadow: 0 12px 32px rgb(204 0 0 / 30%);
+}
+
+.track {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: rem(24px);
+  padding: rem(8px) rem(20px);
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  list-style: none;
+
+  li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: rem(14px);
+    padding: rem(12px) 0;
+    color: $color-text-faint;
+
+    i {
+      position: relative;
+      z-index: 1;
+      width: rem(12px);
+      height: rem(12px);
+      border: 2px solid $color-border-strong;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    &:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: rem(30px);
+      left: rem(5px);
+      width: 2px;
+      height: rem(28px);
+      background: $color-border;
+    }
+
+    em {
+      margin-left: auto;
+      padding: rem(2px) rem(10px);
+      border-radius: $radius-pill;
+      font-size: rem(12px);
+      font-style: normal;
+      background: $color-primary-soft;
+      color: $color-primary;
+    }
+  }
+
+  .trackDone {
+    font-weight: $fw-semibold;
+    color: $color-text;
+
+    i {
+      border-color: $color-primary;
+      background: $color-primary;
+      box-shadow: 0 0 0 5px rgb(204 0 0 / 15%);
+    }
+  }
+}

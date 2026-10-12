@@ -1,0 +1,230 @@
+@use "shared/styles/abstracts" as *;
+
+.section {
+  padding: rem(80px) 0;
+  background: $color-bg-dark;
+  color: #fff;
+
+  @include respond-to("lg") {
+    padding: rem(140px) 0;
+  }
+}
+
+.inner {
+  @include container;
+
+  display: grid;
+  gap: rem(48px);
+
+  @include respond-to("lg") {
+    grid-template-columns: 1fr 1.1fr;
+    gap: rem(80px);
+  }
+}
+
+.aside {
+  @include respond-to("lg") {
+    position: sticky;
+    top: rem(120px);
+    align-self: start;
+  }
+}
+
+.kicker {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: rem(13px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ff5c5c;
+}
+
+.heading {
+  margin-top: rem(12px);
+  font-size: rem(36px);
+  font-weight: $fw-bold;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+
+  @include respond-to("md") {
+    font-size: rem(56px);
+  }
+
+  span {
+    color: $color-text-faint;
+  }
+}
+
+.tracker {
+  display: none;
+  margin-top: rem(40px);
+  padding: rem(24px);
+  border: 1px solid $color-border-dark;
+  border-radius: $radius-xl;
+  background: linear-gradient(160deg, #2a2a2d, #1a1a1c);
+
+  @include respond-to("lg") {
+    display: block;
+  }
+}
+
+.trackerTop {
+  display: flex;
+  justify-content: space-between;
+  font-size: rem(14px);
+  color: $color-text-faint;
+}
+
+.mono {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.big {
+  height: rem(72px);
+  margin-top: rem(12px);
+  overflow: hidden;
+  font-size: rem(56px);
+  font-weight: $fw-bold;
+  line-height: rem(72px);
+  letter-spacing: -0.03em;
+
+  span {
+    display: inline-block;
+  }
+}
+
+.dots {
+  display: flex;
+  gap: rem(6px);
+  margin-top: rem(16px);
+
+  span {
+    flex: 1 1 0;
+    height: rem(6px);
+    border-radius: $radius-pill;
+    background: $color-primary;
+  }
+}
+
+.after {
+  margin-top: rem(16px);
+  font-size: rem(14px);
+  color: $color-text-faint;
+
+  b {
+    color: #fff;
+  }
+}
+
+.steps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: rem(24px);
+  padding-left: rem(4px);
+}
+
+.rail {
+  position: absolute;
+  top: rem(24px);
+  bottom: rem(24px);
+  left: rem(25px);
+  width: 2px;
+  background: $color-border-dark;
+
+  i {
+    display: block;
+    height: 100%;
+    background: $color-primary;
+    transform-origin: 50% 0;
+  }
+}
+
+.step {
+  position: relative;
+  display: grid;
+  grid-template-columns: rem(44px) 1fr;
+  gap: rem(20px);
+  padding: rem(4px) 0 rem(24px);
+
+  @include respond-to("lg") {
+    min-height: rem(220px);
+  }
+
+  p {
+    margin-top: rem(10px);
+    font-size: rem(17px);
+    color: $color-text-faint;
+  }
+}
+
+.node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: rem(44px);
+  height: rem(44px);
+  border: 2px solid $color-border-dark;
+  border-radius: 50%;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: $fw-semibold;
+  background: $color-bg-dark;
+  transition:
+    background 0.4s,
+    border-color 0.4s,
+    box-shadow 0.4s;
+
+  .stepOn & {
+    border-color: $color-primary;
+    background: $color-primary;
+    box-shadow: 0 0 0 8px rgb(204 0 0 / 20%);
+  }
+}
+
+.stepHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: rem(12px);
+  padding-top: rem(4px);
+
+  h3 {
+    font-size: rem(28px);
+    font-weight: $fw-bold;
+    letter-spacing: -0.02em;
+
+    @include respond-to("md") {
+      font-size: rem(36px);
+    }
+  }
+
+  span {
+    flex-shrink: 0;
+    padding: rem(4px) rem(12px);
+    border: 1px solid $color-border-dark;
+    border-radius: $radius-pill;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: rem(13px);
+    color: $color-text-faint;
+  }
+}
+
+.sla {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(8px);
+  color: #fff !important;
+  font-size: rem(15px) !important;
+
+  &::before {
+    content: "✓";
+    display: grid;
+    place-items: center;
+    width: rem(20px);
+    height: rem(20px);
+    border-radius: 50%;
+    font-size: rem(11px);
+    background: rgb(61 220 132 / 20%);
+    color: #3ddc84;
+  }
+}
