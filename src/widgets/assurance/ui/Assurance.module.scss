@@ -87,8 +87,13 @@
 
 // «Орбита» систем вокруг продукта
 .orbit {
+  // Эллипс, а не круг: подписи разной длины («Базы данных», «Платежи»)
+  // на круговой орбите радиусом 100px наезжали друг на друга.
+  --rx: clamp(#{rem(112px)}, 30vw, #{rem(150px)});
+  --ry: #{rem(96px)};
+
   position: relative;
-  height: rem(220px);
+  height: rem(250px);
   margin-bottom: rem(8px);
 
   &::before {
@@ -96,8 +101,8 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: rem(200px);
-    height: rem(200px);
+    width: calc(var(--rx) * 2);
+    height: calc(var(--ry) * 2);
     border: 1px dashed $color-border-strong;
     border-radius: 50%;
     translate: -50% -50%;
@@ -124,8 +129,8 @@
   --angle: calc(360deg / var(--n) * var(--i) - 90deg);
 
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: calc(50% + sin(var(--angle)) * var(--ry));
+  left: calc(50% + cos(var(--angle)) * var(--rx));
   padding: rem(6px) rem(12px);
   font-size: rem(12px);
   font-weight: $fw-semibold;
@@ -135,7 +140,7 @@
   border: 1px solid $color-border;
   border-radius: $radius-pill;
   box-shadow: $shadow-sm;
-  transform: translate(-50%, -50%) rotate(var(--angle)) translateX(rem(100px)) rotate(calc(-1 * var(--angle)));
+  translate: -50% -50%;
   animation: float 6s ease-in-out infinite;
   animation-delay: calc(var(--i) * -0.8s);
 }

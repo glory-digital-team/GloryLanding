@@ -108,10 +108,18 @@
 }
 
 .rotator {
-  display: block;
-  min-height: 2.2em; // фразы бывают в 2 строки — резервируем место, чтобы текст ниже не прыгал
+  display: grid; // все фразы в одной ячейке: размер = самой длинной фразе
   overflow: hidden;
   color: $color-primary;
+
+  > * {
+    grid-area: 1 / 1;
+  }
+}
+
+.sizer {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .word {
