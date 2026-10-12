@@ -6,11 +6,13 @@ import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui/Button";
 import { Logo } from "@/shared/ui/Logo";
 import { siteConfig } from "@/shared/config";
+import { CabinetLink, useCabinetSignedIn } from "@/features/cabinet-entry";
 import styles from "./Header.module.scss";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const signedIn = useCabinetSignedIn();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -48,9 +50,12 @@ export function Header() {
           ))}
         </nav>
 
-        <Button variant="primary" size="md" href="#lead-form" className={styles.cta}>
-          Начать проект
-        </Button>
+        <div className={styles.actions}>
+          <CabinetLink signedIn={signedIn} className={styles.cabinet} />
+          <Button variant="primary" size="md" href="#lead-form" className={styles.cta}>
+            Начать проект
+          </Button>
+        </div>
 
         {/* Figma 273:5714: бургер, три полоски 20×2 #C00, radius 100.
             Анимация дизайнера — «слияние»: крайние полоски съезжаются к центру
@@ -85,6 +90,11 @@ export function Header() {
             </a>
           ))}
         </nav>
+        <CabinetLink
+          signedIn={signedIn}
+          className={styles.mobileCta}
+          onClick={() => setMenuOpen(false)}
+        />
         <Button
           variant="primary"
           size="md"

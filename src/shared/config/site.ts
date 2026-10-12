@@ -35,6 +35,12 @@ export const siteConfig = {
     { label: "Кейсы", href: "/portfolio" },
     { label: "Начать проект", href: "#lead-form" },
   ] satisfies NavItem[],
+  // Личный кабинет клиента на том же домене (платформа Глори): вход по коду из письма.
+  // `status` отвечает только «вошёл / не вошёл» — cookie кабинета лендингу не видна.
+  cabinet: {
+    href: "/cabinet",
+    status: "/cabinet/api/status",
+  },
   contacts: {
     phone: "8 (993) 898-04-80",
     phoneHref: "tel:+79938980480",

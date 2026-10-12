@@ -80,6 +80,21 @@
   }
 }
 
+// «Войти» / «Личный кабинет» и «Начать проект» рядом; на мобильном обе — в меню
+.actions {
+  display: flex;
+  align-items: center;
+  gap: rem(8px);
+}
+
+.cabinet {
+  display: none;
+
+  @include respond-to("md") {
+    display: inline-flex;
+  }
+}
+
 // CTA-кнопка в pill — на мобильном скрыта (273:5713 hidden)
 .cta {
   display: none;
