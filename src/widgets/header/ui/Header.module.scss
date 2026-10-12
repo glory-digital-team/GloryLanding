@@ -96,8 +96,9 @@
   }
 }
 
-// CTA-кнопка в pill — на мобильном скрыта (273:5713 hidden)
-.cta {
+// CTA-кнопка в pill — на мобильном скрыта (273:5713 hidden).
+// Специфичность выше, чем у базового .button, иначе display кнопки перебивает.
+.actions .cta {
   display: none;
 
   @include respond-to("md") {
