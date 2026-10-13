@@ -51,13 +51,21 @@
   }
 }
 
+// Скругление = половина высоты одной строки (пилюля 40/47px + 2×4px), а не 999px:
+// на узком экране опции переносятся на несколько строк, и с «бесконечным»
+// радиусом подложка превращалась в овал, из-за краёв которого торчала активная пилюля.
 .pills {
   display: inline-flex;
   flex-wrap: wrap;
   gap: rem(4px);
+  max-width: 100%;
   padding: rem(4px);
-  border-radius: $radius-pill;
+  border-radius: rem(24px);
   background: $color-surface-2;
+
+  @include respond-to("md") {
+    border-radius: rem(28px);
+  }
 }
 
 .pill {
@@ -68,6 +76,7 @@
   font: inherit;
   font-size: rem(16px);
   font-weight: $fw-medium;
+  line-height: 1.5;
   background: transparent;
   color: $color-text-muted;
   cursor: pointer;

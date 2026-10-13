@@ -36,3 +36,6 @@ nohup.out
 shoot.mjs
 shoot-mobile.mjs
 overflow-check.mjs
+
+# Local Netlify folder
+.netlify
