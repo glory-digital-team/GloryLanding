@@ -15,8 +15,11 @@ export function Footer() {
     requisites,
     legal,
     copyright,
+    cabinet,
   } = siteConfig;
   const visibleSocials = socials.filter((social) => !social.hidden);
+  // Вход в личный кабинет — последним пунктом навигации и на десктопе, и на мобиле
+  const cabinetItem = { label: "Личный кабинет", href: cabinet.href };
 
   return (
     <footer className={styles.footer}>
@@ -68,7 +71,7 @@ export function Footer() {
             <nav className={styles.col} aria-label="Навигация в футере">
               <p className={styles.colTitle}>Навигация</p>
               <ul className={`${styles.list} ${styles.desktopOnly}`}>
-                {footerNav.map((item) => (
+                {[...footerNav, cabinetItem].map((item) => (
                   <li key={item.label}>
                     <a href={item.href} className={styles.link}>
                       {item.label}
@@ -77,7 +80,7 @@ export function Footer() {
                 ))}
               </ul>
               <ul className={`${styles.list} ${styles.mobileOnly}`}>
-                {footerNavMobile.map((item) => (
+                {[...footerNavMobile, cabinetItem].map((item) => (
                   <li key={item.label}>
                     <a href={item.href} className={styles.link}>
                       {item.label}
