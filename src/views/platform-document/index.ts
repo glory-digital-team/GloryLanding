@@ -1,2 +1,2 @@
 export { PlatformDocumentPage } from "./ui/PlatformDocumentPage";
-export { CONSENT_FALLBACK } from "./model/consent";
+export { PlatformDocumentUnavailable } from "./ui/PlatformDocumentUnavailable";

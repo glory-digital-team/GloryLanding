@@ -356,12 +356,8 @@
 }
 
 .policyLink {
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
   color: $color-primary;
-  cursor: pointer;
+  text-decoration: none;
 
   &:hover {
     color: $color-primary-hover;

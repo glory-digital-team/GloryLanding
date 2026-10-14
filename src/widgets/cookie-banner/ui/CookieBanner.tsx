@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useOverlays } from "@/shared/lib";
 import styles from "./CookieBanner.module.scss";
 
 const STORAGE_KEY = "glory-cookie-consent";
 
 // Баннер согласия на cookie (Figma «CookieBanner» 369:644).
 export function CookieBanner() {
-  const { openPolicy } = useOverlays();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -48,9 +46,9 @@ export function CookieBanner() {
           <button type="button" className={styles.accept} onClick={accept}>
             Принять
           </button>
-          <button type="button" className={styles.more} onClick={openPolicy}>
+          <a className={styles.more} href="/privacy/" target="_blank" rel="noopener">
             Подробнее
-          </button>
+          </a>
         </div>
       </div>
 

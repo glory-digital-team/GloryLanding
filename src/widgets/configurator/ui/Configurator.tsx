@@ -11,7 +11,7 @@ import {
   type SiteEstimate,
 } from "@/shared/api/cabinet";
 import { attributionNote, track } from "@/shared/analytics";
-import { cn, formatRuPhone, useOverlays } from "@/shared/lib";
+import { cn, formatRuPhone } from "@/shared/lib";
 import { CaseCard, type CaseStudy } from "@/entities/case";
 import {
   MODULES,
@@ -557,12 +557,11 @@ export function Configurator({ casesByType = {} }: ConfiguratorProps) {
   );
 }
 
-// Ссылка на политику внутри согласия — открывает LegalModal поверх страницы.
+// Ссылка на политику внутри согласия: текст документа живёт в «Глори.Штат» и открывается страницей.
 function PolicyInlineLink() {
-  const { openPolicy } = useOverlays();
   return (
-    <button type="button" className={styles.policyLink} onClick={openPolicy}>
+    <a className={styles.policyLink} href="/privacy/" target="_blank" rel="noopener">
       Политика конфиденциальности
-    </button>
+    </a>
   );
 }

@@ -104,13 +104,9 @@
 
 .policy {
   // Figma 191:310: спан «Политика конфиденциальности» — основной красный (без подчёркивания).
-  // Теперь это кнопка, открывающая модалку с текстом политики.
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
-  cursor: pointer;
+  // Ссылка на страницу /privacy/: утверждённый текст ведётся в «Глори.Штат».
   color: $color-primary;
+  text-decoration: none;
   transition: color 0.18s ease;
 
   &:hover {

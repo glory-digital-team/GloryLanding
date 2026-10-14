@@ -89,14 +89,10 @@
 }
 
 .more {
-  padding: 0;
-  border: 0;
-  background: none;
-  font-family: inherit;
+  color: $color-text-faint;
   font-size: rem(14px);
   line-height: rem(20px);
-  color: $color-text-faint;
-  cursor: pointer;
+  text-decoration: none;
   transition: color 0.18s ease;
 
   &:hover {

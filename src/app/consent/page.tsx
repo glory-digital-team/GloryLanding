@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { platformDocument } from "@/shared/platform/server";
-import { CONSENT_FALLBACK, PlatformDocumentPage } from "@/views/platform-document";
+import { PlatformDocumentPage, PlatformDocumentUnavailable } from "@/views/platform-document";
 
 export const metadata: Metadata = {
   title: "Согласие на обработку персональных данных — Глори.Цифра",
@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   },
 };
 
-// Текст ведётся в «Глори.Штат» (подпроект 12); пока там нет опубликованной версии — встроенный.
+// Текст ведётся только в «Глори.Штат» (подпроект 12); своей копии на сайте нет.
 export const revalidate = 300;
 
 export default async function Page() {
-  const document = (await platformDocument("pd_consent")) ?? CONSENT_FALLBACK;
-  return <PlatformDocumentPage document={document} />;
+  const document = await platformDocument("pd_consent");
+  return document === null ? <PlatformDocumentUnavailable /> : <PlatformDocumentPage document={document} />;
 }

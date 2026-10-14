@@ -4,7 +4,7 @@ import { useRef, useState, type FormEvent } from "react";
 import { CabinetCodeStep } from "@/features/cabinet-entry";
 import { isEmail, submitSiteRequest, type CodeSent } from "@/shared/api/cabinet";
 import { attributionNote, track } from "@/shared/analytics";
-import { formatRuPhone, useOverlays } from "@/shared/lib";
+import { formatRuPhone } from "@/shared/lib";
 import { Button } from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
 import styles from "./LeadForm.module.scss";
@@ -35,7 +35,6 @@ export function LeadForm({
   calculatorHref = "/raschet-stoimosti/",
   taskPlaceholder = "Например: заявки приходят в почту и Excel, хотим видеть статусы в одном месте",
 }: LeadFormProps) {
-  const { openPolicy } = useOverlays();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -154,9 +153,9 @@ export function LeadForm({
                 оферты
               </a>{" "}
               и согласен на обработку персональных данных.{" "}
-              <button type="button" className={styles.policy} onClick={openPolicy}>
+              <a className={styles.policy} href="/privacy/" target="_blank" rel="noopener">
                 Политика конфиденциальности
-              </button>
+              </a>
             </span>
           </label>
 

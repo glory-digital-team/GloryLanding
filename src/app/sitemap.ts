@@ -29,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/careers/", 0.5),
     page("/documents/", 0.2, LEGAL_UPDATED),
     page("/privacy/", 0.2, LEGAL_UPDATED),
+    page("/consent/", 0.2, LEGAL_UPDATED),
     page("/offer/", 0.2, LEGAL_UPDATED),
     page("/subscription-offer/", 0.2, LEGAL_UPDATED),
   ];
