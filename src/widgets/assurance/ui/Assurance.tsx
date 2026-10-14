@@ -1,7 +1,7 @@
 import Link from "next/link";
 import styles from "./Assurance.module.scss";
 
-const SYSTEMS = ["1С", "CRM", "ERP", "Платёжные сервисы", "Базы данных", "Аналитика", "Внешние API"];
+const SYSTEMS = ["1С", "CRM", "ERP", "Платежи", "Базы данных", "Аналитика", "Внешние API"];
 const HANDOVER = [
   "Репозиторий и доступы",
   "Техническая документация",

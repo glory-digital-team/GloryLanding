@@ -74,6 +74,18 @@ export function CareersHero() {
           >
             Ищем тех, кто
             <span className={styles.rotator} aria-live="polite">
+              {/* Невидимые «распорки» всех фраз в одной ячейке грида: блок сразу
+                  занимает размер самой длинной фразы, и при смене текста ширина/высота
+                  заголовка не меняются — вёрстка вокруг не дёргается. */}
+              {words.map((w) => (
+                <span key={`sizer-${w}`} className={`${styles.word} ${styles.sizer}`} aria-hidden="true">
+                  {w.split(" ").map((part, i) => (
+                    <span key={i} className={styles.wordPart}>
+                      {part}
+                    </span>
+                  ))}
+                </span>
+              ))}
               <AnimatePresence mode="wait">
                 <motion.span
                   key={words[word]}
