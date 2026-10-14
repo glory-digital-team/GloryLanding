@@ -30,4 +30,11 @@ export const DOCUMENTS: Document[] = [
     description: "Как мы защищаем ваши данные и что с ними делаем.",
     href: "/privacy/",
   },
+  {
+    id: "consent",
+    icon: "shield-check",
+    title: "Согласие на обработку ПДн",
+    description: "На что вы соглашаетесь, отправляя заявку или отклик.",
+    href: "/consent/",
+  },
 ];

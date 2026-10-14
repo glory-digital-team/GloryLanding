@@ -12,7 +12,8 @@ export class SiteApiError extends Error {
 
 const SITE_API = "/cabinet/api/site";
 
-async function post<T>(path: string, payload: unknown, fallback: string): Promise<T> {
+/** POST в API сайта Штата: ответ JSON или `SiteApiError` с текстом Штата (иначе `fallback`). */
+export async function postSite<T>(path: string, payload: unknown, fallback: string): Promise<T> {
   let response: Response;
   try {
     response = await fetch(`${SITE_API}${path}`, {
@@ -49,7 +50,7 @@ export interface SiteEstimate {
 }
 
 export function estimateSite(choice: SiteChoice) {
-  return post<SiteEstimate>("/estimate", choice, "Расчёт временно недоступен");
+  return postSite<SiteEstimate>("/estimate", choice, "Расчёт временно недоступен");
 }
 
 export interface SiteRequest extends SiteChoice {
@@ -68,16 +69,16 @@ export interface CodeSent {
 }
 
 export function submitSiteRequest(request: SiteRequest) {
-  return post<CodeSent>("/request", request, "Не удалось отправить заявку");
+  return postSite<CodeSent>("/request", request, "Не удалось отправить заявку");
 }
 
 export function resendCabinetCode(email: string) {
-  return post<CodeSent>("/code", { email }, "Не удалось отправить код");
+  return postSite<CodeSent>("/code", { email }, "Не удалось отправить код");
 }
 
 /** Код подошёл — cookie кабинета уже стоит, можно открывать `/cabinet`. */
 export function verifyCabinetCode(email: string, code: string) {
-  return post<{ ok: true }>("/verify", { email, code }, "Не удалось проверить код");
+  return postSite<{ ok: true }>("/verify", { email, code }, "Не удалось проверить код");
 }
 
 /** Почта похожа на настоящую: точная проверка — на сервере. */

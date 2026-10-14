@@ -6,7 +6,7 @@ import {
   DIRECTION_LABEL,
   DIRECTION_PERSON,
   FORMAT_LABEL,
-  vacancies,
+  useVacancies,
   type VacancyDirection,
   type VacancyFormat,
 } from "@/entities/vacancy";
@@ -40,6 +40,7 @@ function plural(n: number) {
 // Список вакансий с фильтром-предложением «Я — …, хочу работать …».
 export function Vacancies() {
   const { openVacancy, openApply } = useApply();
+  const vacancies = useVacancies();
   const [dir, setDir] = useState<Dir>("all");
   const [fmt, setFmt] = useState<Fmt>("all");
 
@@ -48,7 +49,7 @@ export function Vacancies() {
       vacancies.filter(
         (v) => (dir === "all" || v.direction === dir) && (fmt === "all" || v.format.includes(fmt)),
       ),
-    [dir, fmt],
+    [vacancies, dir, fmt],
   );
 
   return (

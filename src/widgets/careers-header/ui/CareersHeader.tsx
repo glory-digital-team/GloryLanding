@@ -34,9 +34,9 @@ export function CareersHeader() {
       <div className={styles.inner}>
         <Link href="/" className={styles.logo} aria-label="Глори.Цифра — на главную">
           <Logo size={36} wordSize={22} />
-          <span className={styles.section}>Карьера</span>
+          <span className={styles.section}>Команда</span>
         </Link>
-        <nav className={styles.nav} aria-label="Карьера">
+        <nav className={styles.nav} aria-label="Команда">
           {links.map((l) => (
             <a key={l.href} href={l.href}>
               {l.label}

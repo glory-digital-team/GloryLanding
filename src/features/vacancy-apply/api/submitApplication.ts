@@ -1,29 +1,46 @@
-// MVP-заглушка отправки отклика. Бэкенда для кандидатов пока нет:
-// ждём, генерируем номер отклика и возвращаем его, как будто заявка принята.
-// TODO: POST в платформу «Глори» (`/cabinet/api/...`, тип заявки «кандидат»)
-// или в Telegram-бота HR — см. предложения в Notion.
+import { postSite } from "@/shared/api/cabinet";
+
+// Отклик уходит в «Глори.Штат» (подпроект 12): раздел «Команда → Отклики», уведомление команде, кандидату — номер.
 export interface ApplicationPayload {
   vacancyId: string | null;
+  /** Название вакансии — для вакансии из встроенного списка (Штат недоступен), у неё нет id Штата. */
+  vacancyTitle: string | null;
   name: string;
   contact: string;
   link: string;
   message: string;
+  consent: boolean;
 }
 
 export interface ApplicationReceipt {
   number: string;
 }
 
-export async function submitApplication(payload: ApplicationPayload): Promise<ApplicationReceipt> {
-  await new Promise((r) => setTimeout(r, 1100));
-  if (typeof window !== "undefined") {
-    try {
-      const key = "glory-careers-applications";
-      const saved = JSON.parse(window.localStorage.getItem(key) ?? "[]") as unknown[];
-      window.localStorage.setItem(key, JSON.stringify([...saved, { ...payload, at: Date.now() }]));
-    } catch {
-      /* приватный режим — не критично */
-    }
-  }
-  return { number: `GL-${String(Math.floor(1000 + Math.random() * 9000))}` };
+/** Ссылку без протокола («github.com/me») дополняем до https: Штат принимает только веб-адреса. */
+const webLink = (value: string): string | null => {
+  const link = value.trim();
+  if (link === "") return null;
+  return /^https?:\/\//i.test(link) ? link : `https://${link}`;
+};
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export function submitApplication(payload: ApplicationPayload): Promise<ApplicationReceipt> {
+  const fromPlatform = payload.vacancyId !== null && UUID.test(payload.vacancyId);
+  const message =
+    !fromPlatform && payload.vacancyTitle !== null
+      ? `Вакансия: ${payload.vacancyTitle}\n\n${payload.message}`.trim()
+      : payload.message;
+  return postSite<ApplicationReceipt>(
+    "/applications",
+    {
+      vacancyId: fromPlatform ? payload.vacancyId : null,
+      name: payload.name,
+      contact: payload.contact,
+      link: webLink(payload.link),
+      message: message.trim() === "" ? null : message,
+      consent: payload.consent,
+    },
+    "Не получилось отправить отклик — попробуйте ещё раз или напишите нам в Telegram",
+  );
 }

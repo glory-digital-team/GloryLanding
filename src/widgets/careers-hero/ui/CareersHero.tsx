@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type PointerEvent } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { vacancies } from "@/entities/vacancy";
+import { useVacancies } from "@/entities/vacancy";
 import { useApply } from "@/features/vacancy-apply";
 import { Button } from "@/shared/ui/Button";
 import { DotField } from "./DotField";
@@ -20,6 +20,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export function CareersHero() {
   const { openApply } = useApply();
+  const vacancies = useVacancies();
   const [word, setWord] = useState(0);
   const [status, setStatus] = useState(0);
 
@@ -78,7 +79,11 @@ export function CareersHero() {
                   занимает размер самой длинной фразы, и при смене текста ширина/высота
                   заголовка не меняются — вёрстка вокруг не дёргается. */}
               {words.map((w) => (
-                <span key={`sizer-${w}`} className={`${styles.word} ${styles.sizer}`} aria-hidden="true">
+                <span
+                  key={`sizer-${w}`}
+                  className={`${styles.word} ${styles.sizer}`}
+                  aria-hidden="true"
+                >
                   {w.split(" ").map((part, i) => (
                     <span key={i} className={styles.wordPart}>
                       {part}

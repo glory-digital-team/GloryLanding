@@ -173,10 +173,20 @@ function ApplyForm({
     setPending(true);
     try {
       onDone(
-        await submitApplication({ vacancyId: vacancy?.id ?? null, name, contact, link, message }),
+        await submitApplication({
+          vacancyId: vacancy?.id ?? null,
+          vacancyTitle: vacancy?.title ?? null,
+          name,
+          contact,
+          link,
+          message,
+          consent,
+        }),
       );
-    } catch {
-      setError("Не получилось отправить. Попробуй ещё раз");
+    } catch (failure) {
+      setError(
+        failure instanceof Error ? failure.message : "Не получилось отправить. Попробуй ещё раз",
+      );
     } finally {
       setPending(false);
     }
@@ -231,7 +241,12 @@ function ApplyForm({
 
       <label className={styles.consent}>
         <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
-        <span>Согласен на обработку персональных данных</span>
+        <span>
+          Согласен на{" "}
+          <a href="/consent/" target="_blank" rel="noopener">
+            обработку персональных данных
+          </a>
+        </span>
       </label>
 
       <AnimatePresence>

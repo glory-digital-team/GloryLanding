@@ -79,7 +79,14 @@ export function AboutPage() {
           <div className={styles.quality}>
             <p>{pageBlock("/about/", "Как обеспечиваем качество").lines[0]}</p>
             <ul className={styles.tags}>
-              {["Review решений и кода", "QA критичных сценариев", "Безопасность и интеграции", "Performance budget", "Аналитика", "SEO-by-design"].map((t) => (
+              {[
+                "Review решений и кода",
+                "QA критичных сценариев",
+                "Безопасность и интеграции",
+                "Performance budget",
+                "Аналитика",
+                "SEO-by-design",
+              ].map((t) => (
                 <li key={t}>{t}</li>
               ))}
             </ul>
@@ -106,7 +113,7 @@ export function AboutPage() {
                 </li>
               ))}
               <li>
-                <Link href="/careers/">Карьера в Глори.Цифра →</Link>
+                <Link href="/careers/">Команда Глори.Цифра →</Link>
               </li>
             </ul>
           </div>
