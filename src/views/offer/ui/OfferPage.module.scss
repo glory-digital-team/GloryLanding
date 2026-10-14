@@ -198,9 +198,9 @@
   @include respond-to("lg") {
     display: block;
     position: sticky;
-    top: rem(100px);
+    top: rem(120px);
     width: rem(280px);
-    max-height: calc(100vh - rem(120px));
+    max-height: calc(100vh - rem(140px));
     overflow-y: auto;
     padding-right: $space-md;
   }

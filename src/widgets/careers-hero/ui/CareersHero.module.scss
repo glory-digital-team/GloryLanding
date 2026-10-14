@@ -38,7 +38,7 @@
 .inner {
   position: relative;
   display: grid;
-  gap: rem(48px);
+  gap: rem(32px);
   max-width: rem(1168px);
   margin-inline: auto;
   padding-inline: rem(16px);
@@ -50,6 +50,7 @@
   @include respond-to("lg") {
     grid-template-columns: 1.25fr 1fr;
     align-items: center;
+    gap: rem(48px);
   }
 }
 
@@ -155,6 +156,12 @@
   place-items: center;
   min-height: rem(380px);
   perspective: 1000px;
+
+  // Как на главной: на мобильном/планшете анимация — над текстом, а не после кнопок
+  @include respond-down("lg") {
+    order: -1;
+    min-height: rem(320px);
+  }
 }
 
 .ticket {
