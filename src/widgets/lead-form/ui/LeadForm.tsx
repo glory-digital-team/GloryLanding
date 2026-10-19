@@ -9,6 +9,12 @@ import { Button } from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
 import styles from "./LeadForm.module.scss";
 
+interface FieldErrors {
+  name?: string;
+  email?: string;
+  consent?: string;
+}
+
 interface LeadFormProps {
   /** Идентификатор формы для аналитики и якоря: home, service, case, contacts… */
   formId?: string;
@@ -42,6 +48,7 @@ export function LeadForm({
   const [consent, setConsent] = useState(false);
   const [pending, setPending] = useState(false);
   const [submitted, setSubmitted] = useState<CodeSent | null>(null);
+  const [errors, setErrors] = useState<FieldErrors>({});
   const [error, setError] = useState("");
   const started = useRef(false);
 
@@ -56,12 +63,25 @@ export function LeadForm({
     track("lead_form_error", { form_id: formId, reason });
   };
 
+  // Ошибка поля пропадает, как только его начали исправлять.
+  const clearError = (field: keyof FieldErrors) =>
+    setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
+
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
-    if (name.trim() === "") return fail("Как к вам обращаться?", "name");
-    if (!isEmail(email)) return fail("Проверьте почту", "email");
-    if (!consent) return fail("Подтвердите согласие на обработку данных", "consent");
+    // Проверяем все поля сразу, чтобы показать все ошибки за одну попытку.
+    const found: FieldErrors = {};
+    if (name.trim() === "") found.name = "Как к вам обращаться?";
+    if (email.trim() === "") found.email = "Укажите почту — пришлём на неё код входа в кабинет";
+    else if (!isEmail(email)) found.email = "Проверьте почту";
+    if (!consent) found.consent = "Нужно согласие на обработку данных";
+    setErrors(found);
+    const failed = Object.keys(found);
+    if (failed.length > 0) {
+      for (const reason of failed) track("lead_form_error", { form_id: formId, reason });
+      return;
+    }
     setPending(true);
     try {
       const comment = [
@@ -92,6 +112,7 @@ export function LeadForm({
   };
 
   const headingId = `lead-${formId}-title`;
+  const consentErrorId = `lead-${formId}-consent-error`;
 
   return (
     <section className={styles.section} id="lead-form" aria-labelledby={headingId}>
@@ -108,7 +129,11 @@ export function LeadForm({
               placeholder="Как к вам обращаться"
               autoComplete="name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              error={errors.name}
+              onChange={(e) => {
+                setName(e.target.value);
+                clearError("name");
+              }}
             />
             <Input
               label="Почта"
@@ -116,7 +141,11 @@ export function LeadForm({
               placeholder="name@company.ru"
               autoComplete="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              error={errors.email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                clearError("email");
+              }}
             />
           </div>
           <Input
@@ -139,25 +168,38 @@ export function LeadForm({
             />
           </label>
 
-          <label className={styles.consent}>
-            <input
-              type="checkbox"
-              className={styles.checkbox}
-              checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-            />
-            <span>
-              {/* Заявка сразу открывает личный кабинет: согласие — и с офертой, и на обработку данных. */}
-              Принимаю условия{" "}
-              <a href="/offer/" target="_blank" rel="noopener" className={styles.policy}>
-                оферты
-              </a>{" "}
-              и согласен на обработку персональных данных.{" "}
-              <a className={styles.policy} href="/privacy/" target="_blank" rel="noopener">
-                Политика конфиденциальности
-              </a>
-            </span>
-          </label>
+          <div className={styles.consentField}>
+            <label className={styles.consent}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={consent}
+                aria-invalid={errors.consent ? true : undefined}
+                aria-describedby={errors.consent ? consentErrorId : undefined}
+                onChange={(e) => {
+                  setConsent(e.target.checked);
+                  clearError("consent");
+                }}
+              />
+              <span>
+                {/* Только согласие на ПДн (152-ФЗ: отдельно от других документов). Оферту клиент
+                    принимает в личном кабинете, а не в заявке. */}
+                Согласен на{" "}
+                <a href="/consent/" target="_blank" rel="noopener" className={styles.policy}>
+                  обработку персональных данных
+                </a>
+                .{" "}
+                <a className={styles.policy} href="/privacy/" target="_blank" rel="noopener">
+                  Политика конфиденциальности
+                </a>
+              </span>
+            </label>
+            {errors.consent ? (
+              <p id={consentErrorId} className={styles.fieldError}>
+                {errors.consent}
+              </p>
+            ) : null}
+          </div>
 
           <p className={styles.error} role="alert" aria-live="assertive">
             {error}
@@ -165,8 +207,8 @@ export function LeadForm({
           {submitted ? (
             <div className={styles.codeStep}>
               <p className={styles.status} role="status">
-                Заявка принята. Менеджер изучит задачу и свяжется с вами, чтобы договориться
-                о первом разговоре. Расчёт и статус заявки будут в личном кабинете.
+                Заявка принята. Менеджер изучит задачу и свяжется с вами, чтобы договориться о
+                первом разговоре. Расчёт и статус заявки будут в личном кабинете.
               </p>
               <CabinetCodeStep sent={submitted} />
             </div>
@@ -182,7 +224,12 @@ export function LeadForm({
           >
             {pending ? "Отправляем..." : ctaLabel}
           </Button>
-          <Button href={calculatorHref} className={styles.fullBtn} data-soft="true" data-cta={`lead-${formId}-calc`}>
+          <Button
+            href={calculatorHref}
+            className={styles.fullBtn}
+            data-soft="true"
+            data-cta={`lead-${formId}-calc`}
+          >
             Сначала рассчитать стоимость
           </Button>
         </div>

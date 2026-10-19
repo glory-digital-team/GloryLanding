@@ -41,3 +41,16 @@
     box-shadow: 0 0 0 3px rgba($color-primary, 0.12);
   }
 }
+
+.invalid,
+.invalid:hover {
+  border-color: #b42318;
+}
+
+.error {
+  margin: 0;
+  font-size: rem(13px);
+  font-weight: $fw-medium;
+  line-height: rem(18px);
+  color: #b42318;
+}

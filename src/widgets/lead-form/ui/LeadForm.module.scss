@@ -223,3 +223,22 @@
 .error:empty {
   display: none;
 }
+
+.consentField {
+  display: flex;
+  flex-direction: column;
+  gap: rem(6px);
+}
+
+.fieldError {
+  margin: 0;
+  padding-left: rem(32px); // под текстом, а не под квадратом галочки
+  font-size: rem(13px);
+  font-weight: $fw-medium;
+  line-height: rem(18px);
+  color: #b42318;
+}
+
+.checkbox[aria-invalid="true"] {
+  border-color: #b42318;
+}
