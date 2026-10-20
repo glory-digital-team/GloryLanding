@@ -18,7 +18,7 @@ interface PortfolioProps {
 // при наведении/фокусе. На мобиле — лента карточек со scroll-snap.
 export function Portfolio({
   title = "Что уже сделали",
-  lead = "Каждый проект — это история: с чем пришёл клиент, что мы решили и как продукт живёт после запуска.",
+  lead = "В каждом кейсе рассказываем, с чем пришёл клиент, что мы сделали и как продукт работает после запуска.",
 }: PortfolioProps) {
   const [active, setActive] = useState(0);
   const current = CASES[active];
