@@ -40,6 +40,7 @@ export const siteConfig = {
     { label: "О компании", href: "/about/" },
     { label: "Команда", href: "/careers/" },
     { label: "Контакты", href: "/contacts/" },
+    { label: "Бесплатная диагностика", href: "/diagnostic/" },
     { label: "Рассчитать проект", href: "/raschet-stoimosti/" },
   ] satisfies NavItem[],
   footerNavMobile: [

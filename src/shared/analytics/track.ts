@@ -17,7 +17,10 @@ export type AnalyticsEvent =
   | "calculator_result_view"
   | "calculator_lead_submit"
   | "calculator_error"
-  | "diagnostic_check";
+  | "diagnostic_check"
+  | "diagnostic_page_view"
+  | "diagnostic_form_submit"
+  | "experiment_view";
 
 type Params = Record<string, string | number | boolean | null | undefined>;
 
@@ -25,7 +28,7 @@ const YM_ID = 109943467;
 
 declare global {
   interface Window {
-    ym?: (id: number, action: string, goal: string, params?: Params) => void;
+    ym?: (id: number, action: string, ...args: unknown[]) => void;
     dataLayer?: unknown[];
   }
 }
@@ -76,5 +79,16 @@ export function attributionNote(): string {
     return parts.length ? `Источник: ${parts.join("; ")}` : "";
   } catch {
     return "";
+  }
+}
+
+/** Параметры визита в Метрике (например, вариант A/B-теста): по ним сегментируются отчёты. */
+export function visitParams(params: Params): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.ym?.(YM_ID, "params", params);
+    (window.dataLayer ??= []).push({ event: "visit_params", ...params });
+  } catch {
+    // аналитика не должна ломать интерфейс
   }
 }
