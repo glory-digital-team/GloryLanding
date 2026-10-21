@@ -220,6 +220,79 @@
   }
 }
 
+// Выбор удобного времени разговора (вариант «диагностика»).
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(8px);
+}
+
+.slot {
+  height: rem(40px);
+  padding: 0 rem(14px);
+  font: inherit;
+  font-size: rem(14px);
+  font-weight: $fw-medium;
+  color: $color-text;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: $radius-pill;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  &:hover {
+    border-color: $color-primary;
+  }
+
+  &:focus-visible {
+    outline: rem(2px) solid $color-primary;
+    outline-offset: rem(2px);
+  }
+}
+
+.slotOn {
+  color: #fff;
+  background-color: $color-primary;
+  border-color: $color-primary;
+
+  &:hover {
+    background-color: $color-primary-hover;
+  }
+}
+
+.hint,
+.note {
+  margin: 0;
+  font-size: rem(13px);
+  line-height: 1.5;
+  color: $color-text-muted;
+}
+
+.note {
+  text-align: center;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .error:empty {
   display: none;
 }

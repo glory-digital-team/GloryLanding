@@ -1,0 +1,138 @@
+@use "shared/styles/abstracts" as *;
+
+.outcomes {
+  display: grid;
+  gap: rem(12px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: rem(16px);
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: rem(8px);
+    padding: rem(24px);
+    background: $color-bg-soft;
+    border-radius: rem(22px);
+  }
+
+  h3 {
+    font-size: rem(18px);
+    font-weight: $fw-bold;
+    color: $color-text-strong;
+  }
+
+  p {
+    color: $color-text-muted;
+  }
+
+  a {
+    color: inherit;
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+}
+
+.steps {
+  display: grid;
+  gap: rem(12px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: rem(16px);
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10px);
+    padding: rem(24px);
+    background: $color-bg;
+    border: 1px solid $color-border;
+    border-radius: rem(22px);
+  }
+
+  h3 {
+    font-size: rem(18px);
+    font-weight: $fw-bold;
+    color: $color-text-strong;
+  }
+
+  p {
+    color: $color-text-muted;
+  }
+}
+
+.stepNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(36px);
+  height: rem(36px);
+  font-weight: $fw-bold;
+  color: $color-primary;
+  background: $color-primary-soft;
+  border-radius: $radius-pill;
+}
+
+.after {
+  display: grid;
+  gap: rem(12px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: rem(16px);
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: rem(8px);
+    padding: rem(24px);
+    background: $color-bg-soft;
+    border-radius: rem(22px);
+  }
+
+  h3 {
+    font-size: rem(18px);
+    font-weight: $fw-bold;
+  }
+
+  p {
+    color: $color-text-muted;
+  }
+}
+
+// Ограничения мелким текстом сразу под формой, на том же фоне.
+.limits {
+  padding: 0 $space-md rem(48px);
+  background: $color-bg-soft;
+
+  p {
+    max-width: rem(928px);
+    margin-inline: auto;
+    font-size: rem(13px);
+    line-height: 1.5;
+    text-align: center;
+    color: $color-text-muted;
+  }
+
+  // На десктопе у карточки формы большой нижний отступ: подтягиваем текст к ней.
+  @include respond-to("md") {
+    margin-top: rem(-56px);
+    padding-bottom: rem(64px);
+  }
+}

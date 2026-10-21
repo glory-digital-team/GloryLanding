@@ -1,0 +1,102 @@
+@use "shared/styles/abstracts" as *;
+
+.wrap {
+  display: grid;
+  gap: rem(16px);
+
+  @include respond-to("lg") {
+    grid-template-columns: minmax(0, 1fr) rem(300px);
+    gap: rem(24px);
+    align-items: start;
+  }
+}
+
+.list {
+  display: grid;
+  gap: rem(10px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  gap: rem(14px);
+  align-items: flex-start;
+  width: 100%;
+  padding: rem(16px) rem(18px);
+  font: inherit;
+  font-size: rem(16px);
+  line-height: 1.5;
+  text-align: left;
+  color: $color-text;
+  cursor: pointer;
+  background: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    border-color: rgb(204 0 0 / 35%);
+  }
+
+  &:focus-visible {
+    outline: rem(2px) solid $color-primary;
+    outline-offset: rem(2px);
+  }
+}
+
+.box {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: rem(22px);
+  height: rem(22px);
+  margin-top: rem(1px);
+  color: transparent;
+  border: 2px solid $color-border-strong;
+  border-radius: rem(6px);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.itemOn {
+  background: $color-primary-soft;
+  border-color: $color-primary;
+
+  .box {
+    color: $color-text-invert;
+    background: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: rem(16px);
+  padding: rem(22px);
+  color: $color-text-invert;
+  background: $color-bg-dark;
+  border-radius: $radius-xl;
+
+  @include respond-to("lg") {
+    position: sticky;
+    top: rem(120px);
+  }
+}
+
+.verdict {
+  min-height: rem(72px);
+  font-size: rem(15px);
+  line-height: 1.5;
+}
+
+.cta {
+  width: 100%;
+}

@@ -36,6 +36,7 @@ const cards: Card[] = [
   ...CASES.map((c) => ({ path: `/cases/${c.slug}/`, eyebrow: `Кейс · ${c.industry}`, title: c.h1 })),
   { path: "/careers/", eyebrow: "Карьера", title: "Работа в Глори.Цифра" },
   { path: "/documents/", eyebrow: "Документы", title: "Юридические документы Глори.Цифра" },
+  { path: "/diagnostic/", eyebrow: "Бесплатная диагностика", title: "Где ваш бизнес теряет время и деньги на ручной работе" },
 ];
 
 const slug = (p: string) => (p === "/" ? "home" : p.replace(/^\/|\/$/g, "").replace(/\//g, "--"));
