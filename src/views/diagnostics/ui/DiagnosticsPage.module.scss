@@ -1,0 +1,92 @@
+@use "shared/styles/abstracts" as *;
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: rem(12px);
+  margin: 0;
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: rem(4px);
+  padding: rem(20px) rem(24px);
+  background: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: rem(20px);
+  box-shadow: $shadow-md;
+
+  dt {
+    font-size: rem(28px);
+    font-weight: $fw-extrabold;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: $color-primary;
+  }
+
+  dd {
+    margin: 0;
+    font-size: rem(15px);
+    line-height: 1.45;
+    color: $color-text-muted;
+  }
+}
+
+.areas {
+  display: grid;
+  gap: rem(12px);
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: rem(16px);
+  }
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.results {
+  display: grid;
+  gap: rem(12px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: result;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: rem(16px);
+  }
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10px);
+    padding: rem(24px);
+    background: $color-bg;
+    border-radius: rem(24px);
+    counter-increment: result;
+
+    &::before {
+      content: counter(result, decimal-leading-zero);
+      font-size: rem(12px);
+      font-weight: $fw-semibold;
+      letter-spacing: 0.06em;
+      color: $color-primary;
+    }
+  }
+
+  h3 {
+    font-size: rem(19px);
+    font-weight: $fw-bold;
+    color: $color-text-strong;
+  }
+
+  p {
+    font-size: rem(15px);
+    line-height: 1.55;
+    color: $color-text-muted;
+  }
+}

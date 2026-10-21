@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/services/", 0.9),
     ...SERVICES.map((s) => page(s.path, s.group === "extra" ? 0.7 : 0.8)),
     page("/raschet-stoimosti/", 0.8),
+    page("/besplatnaya-diagnostika/", 0.8, new Date("2026-10-21")),
     page("/cases/", 0.8),
     ...CASES.filter((c) => c.status === "published").map((c) => page(caseHref(c), 0.7)),
     page("/process/", 0.6),

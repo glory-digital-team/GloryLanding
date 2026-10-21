@@ -34,6 +34,7 @@ const cards: Card[] = [
     title: s.h1,
   })),
   ...CASES.map((c) => ({ path: `/cases/${c.slug}/`, eyebrow: `Кейс · ${c.industry}`, title: c.h1 })),
+  { path: "/besplatnaya-diagnostika/", eyebrow: "Бесплатно", title: "Бесплатная диагностика сайта и процессов" },
   { path: "/careers/", eyebrow: "Карьера", title: "Работа в Глори.Цифра" },
   { path: "/documents/", eyebrow: "Документы", title: "Юридические документы Глори.Цифра" },
 ];
