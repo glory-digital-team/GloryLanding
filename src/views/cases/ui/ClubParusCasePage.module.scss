@@ -1,31 +1,17 @@
 @use "shared/styles/abstracts" as *;
 
-// Кейс «Парус»: «бортовой журнал». Палитра и шрифты взяты с сайта клуба, поэтому
-// живут в локальных переменных страницы, а не в токенах студии.
+// Кейс «Парус» в фирменном стиле студии: графит, красный, сетка, Inter + IBM Plex Mono,
+// красная черта над заголовками и сквозная нумерация разделов.
 .page {
-  --navy: #12263c;
-  --navy-deep: #0b1a2b;
-  --navy-line: #2e4a6b;
-  --sand: #f6f1e7;
-  --paper: #fffdf8;
-  --paper-line: #e6dcc8;
-  --coral: #c8462e;
-  --coral-text: #b03a24; // coral для мелкого текста на светлом: контраст ≥ 4.5
-  --amber: #f2b33d;
-  --sky: #84b9e8;
-  --ink-soft: #3b4a5c;
-  --ink-muted: #5b6b7e;
-  --on-dark: #cfd8e3;
-  --serif: "PT Serif", georgia, serif;
-  --sans: "Golos Text", system-ui, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, monospace;
-  --pad-y: clamp(64px, 9vw, 112px);
+  --pad-y: clamp(72px, 9vw, 112px);
+  --red-bright: #ff3b3b; // красный для текста на тёмном: контраст ≥ 4.5
+  --grid-dark: rgb(255 255 255 / 6%);
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
 
   min-height: 100vh;
   overflow-x: clip;
-  color: var(--navy);
-  font-family: var(--sans);
-  background: var(--sand);
+  color: $color-text;
+  background: $color-bg-soft;
 }
 
 .content {
@@ -34,9 +20,28 @@
 
 .wrap {
   box-sizing: border-box;
-  max-width: rem(1240px);
+  max-width: rem(1168px); // 1120 контента + поля
   margin-inline: auto;
   padding-inline: $space-lg;
+
+  @include respond-down("sm") {
+    padding-inline: rem(20px);
+  }
+}
+
+.gridDark {
+  background-image:
+    linear-gradient(var(--grid-dark) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-dark) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.gridLight {
+  background-color: $color-bg;
+  background-image:
+    linear-gradient(#ececee 1px, transparent 1px),
+    linear-gradient(90deg, #ececee 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
 .eyebrow {
@@ -44,24 +49,34 @@
   font-family: var(--mono);
   font-size: rem(13px);
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--coral-text);
+  color: $color-primary;
+}
+
+.bar {
+  display: block;
+  width: 40px;
+  height: 4px;
+  margin-bottom: rem(20px);
+  background: $color-primary;
+  border-radius: 2px;
 }
 
 .h2 {
-  margin: rem(20px) 0 0;
-  font-family: var(--serif);
-  font-size: clamp(rem(34px), 4.5vw, rem(60px));
-  font-weight: 700;
+  margin: rem(16px) 0 0;
+  font-size: clamp(rem(34px), 4.6vw, rem(52px));
+  font-weight: 800;
   line-height: 1.05;
+  letter-spacing: -0.03em;
 }
 
-.text {
+.lead {
+  max-width: rem(680px);
   margin: rem(24px) 0 0;
   font-size: rem(19px);
   line-height: 1.6;
-  color: var(--ink-soft);
+  color: #52525b;
 }
 
 // ── Кнопки ──────────────────────────────────────
@@ -78,90 +93,88 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  min-height: rem(52px);
-  padding: rem(14px) rem(28px);
+  height: rem(52px);
+  padding: 0 rem(28px);
   border: 1px solid transparent;
   border-radius: 999px;
   font-size: rem(16px);
   font-weight: 600;
-  line-height: 1.2;
-  text-align: center;
   text-decoration: none;
   transition:
     background-color 0.2s ease,
-    transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
+    border-color 0.2s ease;
 
   &:focus-visible {
-    outline: 3px solid var(--amber);
+    outline: 3px solid var(--red-bright);
     outline-offset: 3px;
   }
 
   @include respond-down("sm") {
     width: 100%;
+    padding-inline: $space-md;
   }
 }
 
-.btnCoral {
+.btnRed {
   color: #fff;
-  background: var(--coral);
+  background: $color-primary;
 
   &:hover {
-    background: #a93823;
+    background: $color-primary-hover;
   }
 }
 
-.btnGhost {
-  font-weight: 500;
-  color: var(--sand);
-  border-color: #8b9bb0;
-
-  &:hover {
-    background: rgb(255 255 255 / 8%);
-  }
-}
-
-.btnNavy {
+.btnLine {
   color: #fff;
-  background: var(--navy);
+  border-color: #3f3f46;
 
   &:hover {
-    background: var(--navy-deep);
+    border-color: #71717a;
   }
 }
 
 .btnWhite {
-  color: var(--navy);
+  color: $color-bg-dark;
   background: #fff;
 
   &:hover {
-    background: var(--sand);
+    background: #ececee;
   }
 }
 
-// ── Отправление (hero) ─────────────────────────
+// ── Первый экран ────────────────────────────────
 
 .hero {
   position: relative;
-  color: var(--sand);
-  background: radial-gradient(1200px 600px at 85% 20%, #1e3d63 0%, #12263c 55%, #0b1a2b 100%);
+  overflow: hidden;
+  color: #fff;
+  background-color: $color-bg-footer;
+}
+
+.glow {
+  position: absolute;
+  top: -240px;
+  right: -200px;
+  width: 720px;
+  height: 720px;
+  background: radial-gradient(circle, rgb(204 0 0 / 55%) 0%, rgb(204 0 0 / 0%) 65%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .heroInner {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: rem(48px);
-  align-items: center;
+  align-items: flex-end;
   padding-top: rem(150px);
-  padding-bottom: rem(80px);
+  padding-bottom: rem(96px);
 
   @include respond-down("sm") {
-    gap: $space-lg;
+    gap: rem(32px);
     padding-top: rem(112px);
-    padding-bottom: rem(48px);
+    padding-bottom: rem(56px);
   }
 }
 
@@ -176,329 +189,239 @@
 }
 
 .heroText {
-  flex: 999 1 rem(560px);
+  flex: 1 1 rem(560px);
   min-width: 0;
 }
 
-.kicker {
-  display: inline-flex;
-  gap: 10px;
+.brandRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   align-items: center;
-  margin: 0;
-  font-family: var(--mono);
-  font-size: rem(13px);
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--amber);
+}
 
-  &::before {
-    content: "";
-    flex: 0 0 auto;
-    width: 28px;
-    height: 2px;
-    background: var(--amber);
-  }
+.brandMark {
+  display: block;
+  width: 44px;
+  height: 44px;
 }
 
 .title {
-  margin: rem(24px) 0 0;
-  font-family: var(--serif);
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: -0.02em;
+  margin: rem(40px) 0 0;
+  font-size: clamp(rem(40px), 6vw, rem(80px));
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+
+  @include respond-down("sm") {
+    margin-top: rem(28px);
+  }
 }
 
 // Видимая SEO-строка внутри h1: полное название кейса
 .titleLead {
   display: block;
   margin-bottom: rem(20px);
-  font-family: var(--sans);
-  font-size: rem(18px);
+  font-family: var(--mono);
+  font-size: rem(13px);
   font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: 0;
-  color: var(--on-dark);
-}
-
-.titleMain {
-  display: block;
-  font-size: clamp(rem(48px), 7.5vw, rem(112px));
-
-  em {
-    font-style: italic;
-    color: var(--amber);
-  }
-}
-
-.lead {
-  max-width: rem(600px);
-  margin: rem(28px) 0 0;
-  font-size: clamp(rem(18px), 2vw, rem(21px));
   line-height: 1.5;
-  color: var(--on-dark);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a1a1aa;
 }
 
-.heroVis {
-  display: flex;
-  flex: 1 1 rem(380px);
-  flex-direction: column;
-  align-items: center;
-  min-width: 0;
-
-  @include respond-down("sm") {
-    flex-basis: 100%;
-    flex-direction: row;
-    gap: $space-md;
-    order: -1;
-    justify-content: flex-start;
-  }
+.titleAccent {
+  color: var(--red-bright);
 }
 
-.emblem {
-  position: relative;
-  width: rem(400px);
-  max-width: 100%;
-  aspect-ratio: 530 / 560;
-
-  @include respond-down("sm") {
-    flex: 0 0 auto;
-    width: rem(112px);
-  }
-}
-
-.emblemRing {
-  object-fit: contain;
-  opacity: 0.35;
-}
-
-.emblemLogo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 58%;
-  height: auto;
-  transform: translate(-50%, -50%);
+.heroLead {
+  max-width: rem(580px);
+  margin: rem(28px) 0 0;
+  font-size: clamp(rem(18px), 2vw, rem(20px));
+  line-height: 1.55;
+  color: #d4d4d8;
 }
 
 .heroStat {
-  margin-top: $space-sm;
-  text-align: center;
+  flex: 0 0 auto;
+  min-width: 0;
 
   @include respond-down("sm") {
-    margin-top: 0;
-    text-align: left;
+    order: -1;
   }
 }
 
 .bigNum {
-  font-family: var(--serif);
-  font-size: clamp(rem(64px), 9vw, rem(96px));
-  font-weight: 700;
-  line-height: 0.9;
-  color: var(--amber);
+  font-size: clamp(rem(96px), 12vw, rem(144px));
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+
+  span {
+    color: $color-primary;
+  }
+
+  @include respond-down("sm") {
+    font-size: rem(120px);
+  }
 }
 
 .bigNumLabel {
-  margin-top: $space-sm;
+  margin: $space-md 0 0;
   font-family: var(--mono);
   font-size: rem(13px);
-  letter-spacing: 0.06em;
-  color: var(--on-dark);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a1a1aa;
 }
 
-.wave {
-  display: block;
-  width: 100%;
-  height: auto;
+.tags {
+  position: relative;
+  border-top: 1px solid #27272a;
 }
 
-.waveTop {
-  opacity: 0.85;
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding-block: 20px;
+  list-style: none;
 }
 
-// ── Глава 1: задача ─────────────────────────────
+.tag {
+  padding: $space-sm $space-md;
+  font-size: rem(14px);
+  color: #d4d4d8;
+  border: 1px solid #3f3f46;
+  border-radius: 999px;
+}
 
-.start {
+// ── Секции ──────────────────────────────────────
+
+.section {
   padding-block: var(--pad-y);
 }
 
-.startGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: rem(56px);
-  align-items: center;
-  margin-top: rem(20px);
+.light {
+  background: $color-bg-soft;
+}
 
-  @include respond-down("sm") {
-    gap: rem(32px);
+.white {
+  background: $color-bg;
+}
+
+// ── 01 Задача ───────────────────────────────────
+
+.diagram {
+  display: grid;
+  grid-template-columns: rem(300px) 1fr rem(340px);
+  align-items: center;
+  margin-top: rem(64px);
+
+  @include respond-down("lg") {
+    grid-template-columns: 1fr;
+    gap: $space-lg;
+    margin-top: rem(40px);
   }
 }
 
-.startText {
-  flex: 1 1 rem(380px);
-  min-width: 0;
-}
-
-.map {
-  position: relative;
-  flex: 1 1 rem(460px);
-  min-width: 0;
-  height: rem(420px);
+.sources {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
-  background-color: #eaf2fa;
-  background-image: radial-gradient(#c9dbec 1.2px, transparent 1.2px);
-  background-size: 22px 22px;
-  border: 1px solid var(--on-dark);
-  border-radius: rem(32px);
 
-  @include respond-down("sm") {
-    height: rem(380px);
+  @include respond-down("lg") {
+    flex-flow: row wrap;
   }
 }
 
-.island {
-  position: absolute;
-  padding: rem(14px) rem(20px);
-  font-weight: 700;
-  background: var(--sand);
-  border: 2px solid var(--navy);
-
-  &:nth-child(1) {
-    top: 10%;
-    left: 6%;
-    border-radius: 48% 52% 40% 60%;
-  }
-
-  &:nth-child(2) {
-    top: 6%;
-    left: 52%;
-    border-radius: 60% 40% 55% 45%;
-
-    @include respond-down("sm") {
-      right: 5%;
-      left: auto;
-    }
-  }
-
-  &:nth-child(3) {
-    top: 46%;
-    left: 4%;
-    border-radius: 45% 55% 60% 40%;
-  }
-
-  &:nth-child(4) {
-    top: 38%;
-    left: 66%;
-    color: #3c658f;
-    background: #e4ecf6;
-    border-color: #4c75a3;
-    border-radius: 55% 45% 40% 60%;
-
-    @include respond-down("sm") {
-      top: 42%;
-      right: 5%;
-      left: auto;
-    }
-  }
-
-  &:nth-child(5) {
-    top: 30%;
-    left: 30%;
-    border-radius: 50% 50% 45% 55%;
-  }
-}
-
-.port {
-  position: absolute;
-  bottom: rem(24px);
-  left: 50%;
-  padding: rem(18px) rem(26px);
-  color: var(--sand);
-  text-align: center;
-  background: var(--navy);
-  border-radius: rem(18px);
-  box-shadow: 0 16px 40px rgb(18 38 60 / 30%);
-  transform: translateX(-50%);
-
-  @include respond-down("sm") {
-    right: $space-md;
-    left: $space-md;
-    transform: none;
-  }
-}
-
-.portLabel {
-  display: block;
-  font-family: var(--mono);
-  font-size: rem(11px);
-  letter-spacing: 0.12em;
-  color: var(--amber);
-}
-
-.portName {
-  display: block;
-  font-family: var(--serif);
-  font-size: rem(22px);
-  font-weight: 700;
-
-  @include respond-to("sm") {
-    white-space: nowrap;
-  }
-}
-
-.boat {
-  position: absolute;
-  right: 14px;
-  bottom: 96px;
-  width: rem(110px);
-  list-style: none;
-
-  img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  @include respond-down("sm") {
-    right: auto;
-    bottom: 140px;
-    left: 12px;
-    width: rem(64px);
-  }
-}
-
-// ── Глава 2: курс ───────────────────────────────
-
-.course {
-  background: var(--paper);
-  border-block: 1px solid var(--paper-line);
-}
-
-.coursePad {
-  padding-block: var(--pad-y);
-}
-
-.motto {
-  margin: rem(20px) 0 0;
-  font-family: var(--serif);
-  font-size: clamp(rem(40px), 6vw, rem(88px));
-  font-style: italic;
-  line-height: 1;
-  color: var(--navy);
+.source {
+  display: flex;
+  gap: $space-md;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-md rem(20px);
+  font-weight: 600;
+  background: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $space-md;
 
   span {
-    display: block;
-    color: var(--coral-text);
+    font-family: var(--mono);
+    font-weight: 400;
+    color: #71717a;
+  }
+
+  @include respond-down("lg") {
+    flex: 1 1 40%;
   }
 }
 
-.steps {
+.lines {
+  display: block;
+  width: 100%;
+  height: rem(340px);
+
+  @include respond-down("lg") {
+    display: none;
+  }
+}
+
+.system {
+  position: relative;
+  padding: rem(32px);
+  overflow: hidden;
+  color: #fff;
+  background: $color-bg-dark;
+  border-radius: $space-lg;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: -80px;
+    bottom: -80px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgb(204 0 0 / 60%), rgb(204 0 0 / 0%) 70%);
+    border-radius: 50%;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .eyebrow {
+    color: var(--red-bright);
+  }
+}
+
+.systemTitle {
+  margin: 12px 0 0;
+  font-size: rem(28px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.systemText {
+  margin: $space-md 0 0;
+  font-size: rem(15px);
+  color: #a1a1aa;
+}
+
+// ── 02 Результат ────────────────────────────────
+
+.results {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(rem(170px), 1fr));
-  gap: $space-md;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, rem(300px)), 1fr));
+  gap: $space-lg;
   margin: rem(56px) 0 0;
   padding: 0;
   list-style: none;
@@ -508,425 +431,326 @@
   }
 }
 
-.step {
-  padding: rem(22px) rem(20px) rem(34px);
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+  justify-content: space-between;
+  box-sizing: border-box;
+  min-height: rem(260px);
+  padding: rem(36px);
   color: #fff;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
-
-  &:nth-child(1),
-  &:nth-child(5) {
-    background: var(--coral);
-  }
-
-  &:nth-child(2) {
-    color: var(--navy);
-    background: var(--amber);
-  }
-
-  &:nth-child(3) {
-    background: var(--navy);
-  }
-
-  &:nth-child(4) {
-    color: var(--navy);
-    background: var(--sky);
-  }
-}
-
-.stepNum {
-  font-family: var(--mono);
-  font-size: rem(12px);
-}
-
-.stepName {
-  margin-top: 6px;
-  font-size: rem(18px);
-  font-weight: 700;
-}
-
-// ── Глава 3: на борту ───────────────────────────
-
-.aboard {
-  padding-block: var(--pad-y);
-}
-
-.aboardGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: rem(56px);
-  align-items: flex-start;
-  margin-top: rem(56px);
-
-  @include respond-down("sm") {
-    gap: rem(32px);
-    margin-top: rem(40px);
-  }
-}
-
-.photos {
-  position: relative;
-  flex: 1 1 rem(460px);
-  min-width: 0;
-  height: rem(620px);
-
-  @include respond-down("sm") {
-    display: flex;
-    gap: $space-md;
-    height: auto;
-    margin-inline: -$space-lg;
-    padding: $space-lg $space-lg rem(32px);
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-
-    &:focus-visible {
-      outline: 3px solid var(--coral);
-      outline-offset: -3px;
-    }
-  }
-}
-
-.polaroid {
-  position: absolute;
-  margin: 0;
-  padding: 12px 12px 40px;
-  background: #fff;
-  box-shadow: 0 18px 40px rgb(18 38 60 / 18%);
-
-  img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-  }
-
-  figcaption {
-    position: absolute;
-    bottom: 10px;
-    left: 14px;
-    font-family: var(--serif);
-    font-size: rem(15px);
-    font-style: italic;
-  }
-
-  &:nth-of-type(1) {
-    top: 0;
-    left: 0;
-    width: 62%;
-    transform: rotate(-3deg);
-  }
-
-  &:nth-of-type(2) {
-    top: 120px;
-    right: 0;
-    width: 54%;
-    transform: rotate(4deg);
-  }
-
-  &:nth-of-type(3) {
-    bottom: 0;
-    left: 10%;
-    width: 56%;
-    transform: rotate(-1.5deg);
-  }
-
-  @include respond-down("sm") {
-    position: relative;
-    inset: auto !important;
-    flex: 0 0 72%;
-    width: auto !important;
-    scroll-snap-align: center;
-  }
-}
-
-.flags {
-  position: absolute;
-  top: -24px;
-  right: 4%;
-  width: rem(180px);
-  height: auto;
-  pointer-events: none;
-
-  @include respond-down("sm") {
-    display: none;
-  }
-}
-
-.manifest {
-  flex: 1 1 rem(400px);
-  min-width: 0;
-}
-
-.manifestHead {
-  margin: 0;
-  padding-bottom: 10px;
-  font-family: var(--mono);
-  font-size: rem(12px);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  border-bottom: 2px solid var(--navy);
-}
-
-.cargo {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: cargo;
-}
-
-.cargoItem {
-  display: flex;
-  gap: $space-md;
-  padding-block: rem(18px);
-  border-bottom: 1px dashed var(--on-dark);
-  counter-increment: cargo;
-
-  &:last-child {
-    border-bottom: 0;
-  }
-
-  &::before {
-    content: counter(cargo, decimal-leading-zero);
-    flex: 0 0 32px;
-    font-family: var(--mono);
-    font-size: rem(13px);
-    color: var(--coral-text);
-  }
-}
-
-.cargoTitle {
-  display: block;
-  font-size: rem(19px);
-  font-weight: 700;
-}
-
-.cargoText {
-  display: block;
-  margin-top: 2px;
-  color: var(--ink-muted);
-}
-
-// ── Глава 4: маяк ───────────────────────────────
-
-.mayak {
-  color: var(--sand);
-  background: var(--navy);
-}
-
-.mayakInner {
-  display: flex;
-  flex-wrap: wrap;
-  gap: rem(48px);
-  align-items: flex-end;
-  padding-block: var(--pad-y);
-
-  @include respond-down("sm") {
-    gap: $space-lg;
-  }
-}
-
-.lighthouse {
-  flex: 0 0 auto;
-  width: rem(230px);
-  max-width: 40%;
-  height: auto;
-
-  @include respond-down("sm") {
-    width: rem(120px);
-  }
-}
-
-.mayakBody {
-  flex: 999 1 rem(560px);
-  min-width: 0;
+  border-radius: $space-lg;
 
   .eyebrow {
-    color: var(--amber);
-  }
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(rem(260px), 1fr));
-  margin: rem(48px) 0 0;
-  border-top: 1px solid var(--navy-line);
-
-  @include respond-down("sm") {
-    margin-top: rem(32px);
-  }
-}
-
-.stat {
-  padding: rem(28px) $space-lg;
-  border-right: 1px solid var(--navy-line);
-
-  &:first-child {
-    padding-left: 0;
-  }
-
-  &:last-child {
-    border-right: 0;
+    color: #a1a1aa;
   }
 
   @include respond-down("sm") {
-    padding: $space-lg 0;
-    border-right: 0;
-    border-bottom: 1px solid var(--navy-line);
+    min-height: 0;
+    padding: rem(28px);
   }
 }
 
-// Число визуально над подписью, в DOM подпись (dt) идёт первой
-.statRev {
-  display: flex;
-  flex-direction: column-reverse;
-  justify-content: flex-end;
+.resultRed {
+  background: $color-primary;
+
+  .eyebrow {
+    color: #ffd4d4;
+  }
 }
 
-.statNum {
+.resultDark {
+  background: $color-bg-dark;
+}
+
+.resultWhite {
+  color: $color-text;
+  background: $color-bg;
+  border: 1px solid $color-border;
+
+  .eyebrow {
+    color: #71717a;
+  }
+}
+
+.resultNum {
   margin: 0;
-  font-family: var(--serif);
-  font-size: clamp(rem(72px), 8vw, rem(88px));
-  font-weight: 700;
+  font-size: clamp(rem(72px), 8vw, rem(96px));
+  font-weight: 900;
   line-height: 0.9;
-  color: var(--amber);
+  letter-spacing: -0.05em;
 }
 
-.statLabel {
+.resultLabel {
   margin: 12px 0 0;
-  color: var(--on-dark);
+  font-size: rem(17px);
 }
 
-.statWas {
+.was {
   margin: 0;
   font-family: var(--mono);
-  font-size: rem(14px);
-  color: #8b9bb0;
+  font-size: rem(15px);
+  color: #71717a;
   text-decoration: line-through;
 }
 
-.statNow {
+.now {
   margin: $space-sm 0 0;
-  font-family: var(--serif);
-  font-size: rem(32px);
-  font-weight: 700;
+  font-size: rem(36px);
+  font-weight: 800;
   line-height: 1.05;
+  letter-spacing: -0.02em;
 }
 
-.mayakNote {
-  margin: rem(28px) 0 0;
-  font-family: var(--serif);
-  font-size: rem(24px);
-  font-style: italic;
+.resultLabel.muted {
+  color: #52525b;
 }
 
-.mayakSource {
-  margin: $space-sm 0 0;
+.note {
+  margin: rem(20px) 0 0;
   font-family: var(--mono);
-  font-size: rem(12px);
-  color: #8b9bb0;
-}
+  font-size: rem(13px);
+  color: #52525b;
 
-.mayakActions {
-  margin-top: rem(32px);
-}
-
-// ── Глава 5: слово капитана ─────────────────────
-
-.captain {
-  padding-block: var(--pad-y);
-}
-
-.letter {
-  position: relative;
-  margin: 0;
-  padding: clamp(32px, 6vw, 80px);
-  background: var(--paper);
-  border: 1px solid var(--paper-line);
-  border-radius: 4px;
-  box-shadow: 0 30px 60px rgb(18 38 60 / 10%);
-}
-
-.stamp {
-  position: absolute;
-  top: -28px;
-  right: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: rem(120px);
-  height: rem(120px);
-  font-family: var(--mono);
-  font-size: rem(11px);
-  letter-spacing: 0.08em;
-  color: var(--coral-text);
-  text-align: center;
-  background: var(--paper);
-  border: 3px double var(--coral);
-  border-radius: 50%;
-  transform: rotate(-12deg);
-
-  @include respond-down("sm") {
-    top: -40px;
-    right: $space-md;
-    width: rem(88px);
-    height: rem(88px);
-    font-size: rem(9px);
+  a {
+    color: $color-primary;
+    text-underline-offset: 3px;
   }
 }
 
-.letter .eyebrow {
-  @include respond-down("sm") {
-    max-width: 58%;
+// ── 03 Слово клиенту ────────────────────────────
+
+.quoteSection {
+  color: #fff;
+  background-color: $color-primary;
+}
+
+.quoteInner {
+  padding-block: var(--pad-y);
+
+  .eyebrow {
+    color: #ffd4d4;
   }
 }
 
 .quote {
-  margin: $space-lg 0 0;
-  font-family: var(--serif);
-  font-size: clamp(rem(26px), 3.6vw, rem(48px));
-  line-height: 1.2;
-  color: var(--navy);
+  max-width: rem(960px);
+  margin: rem(28px) 0 0;
+  font-size: clamp(rem(28px), 4vw, rem(48px));
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
 .author {
   display: flex;
-  gap: 14px;
+  gap: $space-md;
   align-items: center;
-  margin-top: $space-lg;
+  margin-top: rem(40px);
+
+  @include respond-down("sm") {
+    margin-top: rem(28px);
+  }
 }
 
 .avatar {
-  display: flex;
+  display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   width: 56px;
   height: 56px;
-  font-family: var(--serif);
   font-size: rem(20px);
-  font-weight: 700;
-  color: var(--sand);
-  background: var(--navy);
+  font-weight: 800;
+  color: $color-primary;
+  background: #fff;
   border-radius: 50%;
 }
 
 .authorName {
   display: block;
+  font-size: rem(17px);
   font-style: normal;
   font-weight: 700;
 }
 
 .authorRole {
   display: block;
-  color: var(--ink-muted);
+  color: #ffd4d4;
 }
 
-// ── Глава 6: машинное отделение ─────────────────
+// ── 04 Что получили ─────────────────────────────
+
+.audiences {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, rem(320px)), 1fr));
+  gap: $space-lg;
+  margin-top: rem(56px);
+
+  @include respond-down("sm") {
+    margin-top: rem(40px);
+  }
+}
+
+.audience {
+  padding: rem(32px);
+  border: 1px solid $color-border;
+  border-radius: $space-lg;
+
+  .eyebrow {
+    color: #71717a;
+  }
+
+  @include respond-down("sm") {
+    padding: rem(24px);
+  }
+}
+
+.audienceDark {
+  color: #fff;
+  background: $color-bg-dark;
+  border-color: $color-bg-dark;
+
+  .eyebrow {
+    color: #a1a1aa;
+  }
+}
+
+.feats {
+  display: grid;
+  gap: rem(20px);
+  margin: rem(20px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feat {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 12px;
+}
+
+.featNum {
+  font-family: var(--mono);
+  color: $color-primary;
+
+  .audienceDark & {
+    color: var(--red-bright);
+  }
+}
+
+.featTitle {
+  display: block;
+  font-size: rem(19px);
+  font-weight: 700;
+}
+
+.featText {
+  display: block;
+  margin-top: 4px;
+  color: #52525b;
+
+  .audienceDark & {
+    color: #a1a1aa;
+  }
+}
+
+// ── 05 Как работали ─────────────────────────────
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin: rem(56px) 0 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  background: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $space-lg;
+
+  @include respond-down("lg") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-down("sm") {
+    grid-template-columns: 1fr;
+    margin-top: rem(40px);
+  }
+}
+
+.step {
+  padding: rem(28px) $space-lg;
+  border-left: 1px solid $color-border;
+
+  &:first-child {
+    border-left: 0;
+  }
+
+  @include respond-down("lg") {
+    border-top: 1px solid $color-border;
+
+    &:nth-child(odd) {
+      border-left: 0;
+    }
+
+    &:nth-child(-n + 2) {
+      border-top: 0;
+    }
+  }
+
+  @include respond-down("sm") {
+    border-left: 0;
+
+    &:nth-child(-n + 2) {
+      border-top: 1px solid $color-border;
+    }
+
+    &:first-child {
+      border-top: 0;
+    }
+  }
+}
+
+.stepNum {
+  font-family: var(--mono);
+  color: $color-primary;
+}
+
+.stepName {
+  margin-top: rem(32px);
+  font-size: rem(18px);
+  font-weight: 700;
+
+  @include respond-down("sm") {
+    margin-top: 12px;
+  }
+}
+
+.stepText {
+  margin-top: 6px;
+  font-size: rem(15px);
+  color: #52525b;
+}
+
+.stepLast {
+  color: #fff;
+  background: $color-bg-dark;
+
+  .stepNum {
+    color: var(--red-bright);
+  }
+
+  .stepText {
+    color: #a1a1aa;
+  }
+}
+
+// ── 06 Под капотом ──────────────────────────────
 
 .engine {
-  color: var(--on-dark);
-  background: var(--navy-deep);
+  color: #d4d4d8;
+  background-color: $color-bg-footer;
 }
 
 .engineInner {
@@ -945,21 +769,21 @@
   min-width: 0;
 
   .eyebrow {
-    color: var(--amber);
+    color: var(--red-bright);
   }
 
   .h2 {
-    font-size: clamp(rem(32px), 4vw, rem(52px));
-    color: var(--sand);
+    font-size: clamp(rem(32px), 4vw, rem(44px));
+    color: #fff;
   }
 
   p {
-    margin: 20px 0 0;
+    margin: rem(20px) 0 0;
     line-height: 1.6;
   }
 
   a {
-    color: var(--amber);
+    color: #fff;
     text-underline-offset: 3px;
   }
 }
@@ -970,144 +794,83 @@
   margin: 0;
   font-family: var(--mono);
   font-size: rem(14px);
-  line-height: 1.9;
 }
 
-.specRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
-  padding-block: 12px;
-  border-bottom: 1px solid #1e3350;
+.spec {
+  display: grid;
+  grid-template-columns: rem(160px) 1fr;
+  gap: $space-md;
+  padding-block: 14px;
+  border-bottom: 1px solid #27272a;
 
   &:last-child {
     border-bottom: 0;
   }
 
-  @include respond-down("sm") {
-    flex-wrap: nowrap;
-    gap: $space-md;
-  }
-
   dt {
-    flex: 0 0 140px;
-    color: #8b9bb0;
-
-    @include respond-down("sm") {
-      flex-basis: 88px;
-    }
+    color: #a1a1aa;
   }
 
   dd {
     margin: 0;
-    color: var(--sand);
+    color: #fff;
   }
-}
-
-// ── Глава 7: вахта продолжается ─────────────────
-
-.watch {
-  background: var(--sand);
-}
-
-.watchBody {
-  padding-top: rem(56px);
-  padding-bottom: rem(96px);
-  text-align: center;
 
   @include respond-down("sm") {
-    padding-bottom: rem(64px);
+    grid-template-columns: rem(96px) 1fr;
   }
 }
 
-.watchTitle {
-  max-width: rem(900px);
-  margin: 20px auto 0;
-  font-family: var(--serif);
-  font-size: clamp(rem(36px), 5vw, rem(72px));
-  font-weight: 700;
-  line-height: 1.02;
+// ── Призыв ──────────────────────────────────────
 
-  em {
-    font-style: italic;
-    color: var(--coral-text);
-  }
-}
-
-.watchText {
-  max-width: rem(620px);
-  margin: $space-lg auto 0;
-  font-size: rem(19px);
-  line-height: 1.6;
-  color: var(--ink-soft);
-}
-
-.waveMid {
-  max-height: rem(260px);
-  object-fit: cover;
-}
-
-// ── Следующий порт (CTA) ────────────────────────
-
-.next {
+.ctaBox {
   position: relative;
+  box-sizing: border-box;
+  padding: clamp(32px, 6vw, 72px);
+  overflow: hidden;
   color: #fff;
-  background: var(--coral);
+  background-color: $color-bg-dark;
+  border-radius: rem(32px);
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -200px;
+    left: -160px;
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, rgb(204 0 0 / 50%), rgb(204 0 0 / 0%) 65%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 
   .eyebrow {
-    color: #fdeceb;
+    color: var(--red-bright);
   }
-}
 
-.nextInner {
-  display: flex;
-  flex-wrap: wrap;
-  gap: rem(48px);
-  align-items: center;
-  justify-content: space-between;
-  padding-block: var(--pad-y);
-}
-
-.nextBody {
-  flex: 1 1 rem(520px);
-  min-width: 0;
-}
-
-.nextTitle {
-  margin: $space-md 0 0;
-  font-family: var(--serif);
-  font-size: clamp(rem(38px), 5.5vw, rem(80px));
-  font-weight: 700;
-  line-height: 1;
-}
-
-.nextText {
-  max-width: rem(560px);
-  margin: rem(20px) 0 0;
-  font-size: rem(20px);
-  line-height: 1.5;
-  color: #fdeceb;
-}
-
-.sail {
-  flex: 0 0 auto;
-  width: rem(240px);
-  max-width: 50%;
-  height: auto;
+  .h2 {
+    max-width: rem(760px);
+  }
 
   @include respond-down("sm") {
-    width: rem(160px);
-    margin-inline: auto;
+    border-radius: $space-lg;
   }
 }
 
-.waveBottom {
-  max-height: rem(200px);
-  object-fit: cover;
-  background: var(--sand);
+.ctaText {
+  max-width: rem(600px);
+  margin: rem(20px) 0 0;
+  font-size: rem(19px);
+  line-height: 1.55;
+  color: #d4d4d8;
 }
 
 .leadWrap {
-  padding-block: var(--pad-y);
-  background: var(--sand);
+  padding-bottom: var(--pad-y);
+  background: $color-bg-soft;
 }
