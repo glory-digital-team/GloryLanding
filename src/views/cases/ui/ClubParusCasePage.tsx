@@ -1,925 +1,414 @@
-"use client";
-
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
 import { LeadForm } from "@/widgets/lead-form";
-import { CaseLog } from "@/widgets/case-log";
 import { Breadcrumbs } from "@/shared/ui/Breadcrumbs";
+import { cn } from "@/shared/lib";
 import { getCase } from "@/entities/case";
 import { CaseRelated } from "./CaseRelated";
 import { CaseViewTracker } from "./CaseViewTracker";
 import styles from "./ClubParusCasePage.module.scss";
 
-/* ──────────────────────────────────────────────────
-   Хук: IntersectionObserver для fade-up анимаций
-   и запуска счётчиков при появлении в viewport.
-────────────────────────────────────────────────── */
-function useFadeUpObservables() {
-  useEffect(() => {
-    const elements = document.querySelectorAll<HTMLElement>(`.${styles.fadeUp}`);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add(styles.visible);
-
-            // Запускаем все счётчики внутри текущего блока
-            const counters = entry.target.querySelectorAll<HTMLElement>("[data-counter]");
-            counters.forEach((counter) => animateCounter(counter));
-
-            // Если сам элемент — счётчик
-            if (entry.target.hasAttribute("data-counter")) {
-              animateCounter(entry.target as HTMLElement);
-            }
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
-    );
-
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-}
-
-function animateCounter(el: HTMLElement) {
-  if (el.dataset.animated === "true") return;
-  el.dataset.animated = "true";
-
-  const target = parseFloat(el.dataset.target || "0");
-  const isDecimal = el.dataset.decimal === "true";
-  const duration = 1500;
-  const start = performance.now();
-
-  function update(now: number) {
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = target * eased;
-    el.textContent = isDecimal ? current.toFixed(1).replace(".", ",") : String(Math.round(current));
-    if (progress < 1) requestAnimationFrame(update);
-  }
-
-  requestAnimationFrame(update);
-}
-
-/* ──────────────────────────────────────────────────
-   Хук: параллакс-эффект для iframe-обёртки при скролле
-────────────────────────────────────────────────── */
-function useIframeParallax() {
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-
-    const onScroll = () => {
-      const scrollY = window.scrollY;
-      const rect = wrapper.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        const p = scrollY * 0.05;
-        wrapper.style.transform = `perspective(1200px) rotateX(${2 - p * 0.1}deg) translateY(${p}px)`;
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return wrapperRef;
-}
-
-/* ──────────────────────────────────────────────────
-   Компонент: превью сайта в «рамке» устройства с
-   мини-панелью браузера и реальным iframe внутри,
-   отмасштабированным через transform: scale.
-────────────────────────────────────────────────── */
-type DeviceSpec = {
-  /** Реальная ширина viewport сайта, который показываем */
-  viewportW: number;
-  /** Реальная высота viewport сайта */
-  viewportH: number;
-  /** Масштаб от реального viewport до «рамки» устройства */
-  scale: number;
-};
-
-function DeviceBrowser({ spec }: { spec: DeviceSpec }) {
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const [fallbackVisible, setFallbackVisible] = useState(false);
-
-  useEffect(() => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
-    const timeout = window.setTimeout(() => {
-      if (!iframe.dataset.loaded) setFallbackVisible(true);
-    }, 6000);
-    const onLoad = () => {
-      iframe.dataset.loaded = "true";
-      setFallbackVisible(false);
-    };
-    const onError = () => setFallbackVisible(true);
-    iframe.addEventListener("load", onLoad);
-    iframe.addEventListener("error", onError);
-    return () => {
-      window.clearTimeout(timeout);
-      iframe.removeEventListener("load", onLoad);
-      iframe.removeEventListener("error", onError);
-    };
-  }, []);
-
-  const scaledW = spec.viewportW * spec.scale;
-  const scaledH = spec.viewportH * spec.scale;
-
-  return (
-    <div
-      className={styles.deviceViewport}
-      style={{ width: `${scaledW}px`, height: `${scaledH}px` }}
-    >
-      <div className={styles.deviceBrowserBar}>
-        <span className={styles.deviceBrowserDot} />
-        <span className={styles.deviceBrowserDot} />
-        <span className={styles.deviceBrowserDot} />
-      </div>
-      <div
-        className={styles.deviceIframeWrap}
-        style={{
-          width: `${scaledW}px`,
-          height: `${scaledH - 18}px`,
-        }}
-      >
-        <div
-          style={{
-            width: `${spec.viewportW}px`,
-            height: `${spec.viewportH}px`,
-            transform: `scale(${spec.scale})`,
-            transformOrigin: "0 0",
-          }}
-        >
-          <iframe
-            ref={iframeRef}
-            className={styles.deviceIframe}
-            src="https://клубпарус.рф"
-            title="Сайт Клуба Парус"
-            loading="lazy"
-            sandbox="allow-same-origin allow-scripts"
-            style={{
-              width: `${spec.viewportW}px`,
-              height: `${spec.viewportH}px`,
-              display: "block",
-              border: "none",
-              background: "#fff",
-            }}
-          />
-        </div>
-        {fallbackVisible && (
-          <a
-            className={styles.deviceFallbackLink}
-            href="https://клубпарус.рф"
-            target="_blank"
-            rel="noopener"
-          >
-            клубпарус.рф ↗
-          </a>
-        )}
-      </div>
-    </div>
-  );
-}
-
-const DEVICES: Record<"phone" | "tablet" | "laptop" | "desktop", DeviceSpec> = {
-  phone: { viewportW: 390, viewportH: 844, scale: 0.27 },
-  tablet: { viewportW: 820, viewportH: 1180, scale: 0.23 },
-  laptop: { viewportW: 1440, viewportH: 900, scale: 0.21 },
-  desktop: { viewportW: 1920, viewportH: 1080, scale: 0.19 },
-};
-
-/* ──────────────────────────────────────────────────
-   Компонент: график производительности (случайные бары)
-────────────────────────────────────────────────── */
-function PerformanceChart() {
-  const barHeights = [
-    24, 38, 30, 52, 34, 46, 28, 58, 42, 32, 50, 26,
-    44, 36, 54, 30, 48, 34, 56, 40, 28, 52, 38, 60,
-  ];
-
-  return (
-    <div className={styles.seoMetricChart} aria-hidden="true">
-      {barHeights.map((height, index) => (
-        <span
-          className={`${styles.seoMetricChartBar} ${index >= 15 ? styles.active : ""}`}
-          key={index}
-          style={
-            {
-              "--bar-height": `${height}px`,
-              "--bar-delay": `${index * -0.11}s`,
-            } as React.CSSProperties
-          }
-        />
-      ))}
-    </div>
-  );
-}
-
-/* ──────────────────────────────────────────────────
-   Компонент: iframe с fallback-интерфейсом
-────────────────────────────────────────────────── */
-function HeroIframe() {
-  const wrapperRef = useIframeParallax();
-  const [fallbackVisible, setFallbackVisible] = useState(false);
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
-
-  useEffect(() => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
-
-    const timeout = window.setTimeout(() => {
-      try {
-        // Если за 5 секунд не загрузилось — показываем fallback
-        if (!iframe.dataset.loaded) {
-          setFallbackVisible(true);
-        }
-      } catch {
-        setFallbackVisible(true);
-      }
-    }, 5000);
-
-    const onLoad = () => {
-      iframe.dataset.loaded = "true";
-      setFallbackVisible(false);
-    };
-
-    const onError = () => setFallbackVisible(true);
-
-    iframe.addEventListener("load", onLoad);
-    iframe.addEventListener("error", onError);
-    return () => {
-      window.clearTimeout(timeout);
-      iframe.removeEventListener("load", onLoad);
-      iframe.removeEventListener("error", onError);
-    };
-  }, []);
-
-  return (
-    <div ref={wrapperRef} className={styles.heroIframeWrapper}>
-      <div className={styles.iframeBrowserBar}>
-        <div className={styles.iframeDots}>
-          <span className={styles.iframeDot} />
-          <span className={styles.iframeDot} />
-          <span className={styles.iframeDot} />
-        </div>
-        <div className={styles.iframeUrl}>
-          <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-          </svg>
-          клубпарус.рф
-        </div>
-      </div>
-      <iframe
-        ref={iframeRef}
-        className={styles.heroIframe}
-        src="https://клубпарус.рф"
-        title="Сайт Клуба Парус"
-        loading="lazy"
-        sandbox="allow-same-origin allow-scripts"
-      />
-      <div className={`${styles.iframeFallback} ${fallbackVisible ? styles.visible : ""}`}>
-        <p className={styles.iframeFallbackText}>
-          Сайт не удалось загрузить в превью. Откройте его в новой вкладке:
-        </p>
-        <a
-          href="https://клубпарус.рф"
-          target="_blank"
-          rel="noopener"
-          className={styles.iframeFallbackLink}
-        >
-          Открыть клубпарус.рф
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            aria-hidden="true"
-          >
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-            <polyline points="15 3 21 3 21 9" />
-            <line x1="10" y1="14" x2="21" y2="3" />
-          </svg>
-        </a>
-      </div>
-    </div>
-  );
-}
-
-/* ──────────────────────────────────────────────────
-   Компонент: страница кейса «Клуб «Парус»
-────────────────────────────────────────────────── */
 const PARUS = getCase("club-parus")!;
 
-// Авторская страница кейса «Парус» (живой iframe, устройства, графики) — эталон,
-// по которому собран общий шаблон кейса. Добавлены крошки, «бортовой журнал»,
-// связанные услуги и похожие проекты.
-export function ClubParusCasePage() {
-  useFadeUpObservables();
+const TAGS = ["НКО", "Автоматизация контента", "Интеграция с VK API", "Сопровождение"];
 
+const SOURCES = ["Кружки", "Мероприятия", "Видеоархив", "ВКонтакте", "Контент сайта"];
+
+const PARENTS = [
+  { title: "Каталог кружков с записью", text: "Нашёл кружок и записался прямо на сайте." },
+  {
+    title: "Архив мероприятий с поиском",
+    text: "Мероприятие находится по любому слову из описания.",
+  },
+  { title: "Видеоархив", text: "Записи клуба собраны в одном месте." },
+];
+
+const TEAM = [
+  { title: "Автозагрузка из ВКонтакте", text: "Записи сообщества попадают на сайт сами." },
+  { title: "CMS для команды", text: "Контент и архив команда правит сама." },
+  { title: "Модерация отзывов", text: "Отзывы появляются после проверки." },
+];
+
+const STEPS = [
+  { name: "Разбор процессов", text: "Как клуб работает сейчас" },
+  { name: "Две аудитории", text: "Родители и команда" },
+  { name: "Архитектура", text: "Данные и интеграции" },
+  { name: "Разработка", text: "Интерфейс и тесты" },
+  { name: "Запуск и сопровождение", text: "Работаем с клубом дальше" },
+];
+
+const SPECS = [
+  { key: "этапов", value: "11, от проектирования до запуска" },
+  { key: "загрузка", value: "< 2,5 сек" },
+  { key: "экраны", value: "320–1920 px" },
+  { key: "backend", value: "PHP 8.3+, Laravel 13" },
+  { key: "frontend", value: "React 19, Vite, Tailwind CSS 4" },
+  { key: "данные", value: "MySQL 8, MariaDB" },
+  { key: "интеграции", value: "VK API" },
+];
+
+// Кейс «Парус» в фирменном стиле студии. Серверный компонент без клиентского JS: весь контент
+// отдаётся в HTML. Шапка/подвал, крошки, форма и перелинковка общие с остальными кейсами.
+export function ClubParusCasePage() {
   return (
     <div className={styles.page}>
       <Header />
 
       <main className={styles.content}>
         <CaseViewTracker slug="club-parus" />
-        {/* ── Hero ─────────────────────────────────────── */}
-        <section className={styles.hero}>
-          <div className={styles.container}>
+
+        {/* Первый экран */}
+        <section className={cn(styles.hero, styles.gridDark)} aria-labelledby="parus-title">
+          <div className={styles.glow} aria-hidden="true" />
+          <div className={cn(styles.wrap, styles.heroInner)}>
             <Breadcrumbs
               items={[
                 { label: "Кейсы", href: "/cases/" },
                 { label: PARUS.name, href: "/cases/club-parus/" },
               ]}
               className={styles.crumbs}
+              tone="dark"
             />
-            <div className={`${styles.heroEyebrow} ${styles.fadeUp}`}>КЕЙС · САЙТ И ЦИФРОВАЯ СРЕДА ДЛЯ КЛУБА «ПАРУС»</div>
-            <h1 className={`${styles.heroTitle} ${styles.fadeUp}`}>
-              От нового сайта
-              <br />
-              к цифровому партнёрству
-            </h1>
-            <p className={`${styles.heroSubtitle} ${styles.fadeUp}`}>
-              Собрали в единую систему кружки, мероприятия, видеоархив и контент клуба — и продолжаем
-              развивать цифровую среду вместе с командой «Паруса».
-            </p>
-
-            {/* Glassmorphism meta panel с логотипом партнёра */}
-            <div className={`${styles.heroMetaPanel} ${styles.fadeUp}`}>
-              <div className={styles.partnerLogo}>
-                <div className={styles.partnerLogoMark}>
-                  <Image
-                    src="/portfolio/logo-parus.png"
-                    alt="Логотип АНО Клуб «Парус»"
-                    fill
-                    sizes="44px"
-                    style={{ objectFit: "contain" }}
-                  />
-                </div>
-                <div className={styles.partnerLogoInfo}>
-                  <span className={styles.partnerLogoLabel}>Клиент</span>
-                  <span className={styles.partnerLogoName}>
-                    Клуб <span>«Парус»</span>
-                  </span>
-                </div>
+            <div className={styles.heroText}>
+              <div className={styles.brandRow}>
+                <Image
+                  className={styles.brandMark}
+                  src="/logo-mark-light.svg"
+                  alt=""
+                  width={44}
+                  height={44}
+                  unoptimized
+                />
+                <p className={styles.titleLead} style={{ margin: 0 }}>
+                  Кейс 01 · АНО Клуб «Парус» · детский досуг
+                </p>
               </div>
-
-              <div className={styles.heroMetaItem}>
-                <span className={styles.heroMetaLabel}>Формат</span>
-                <span className={styles.heroMetaValue}>разработка + сопровождение</span>
-              </div>
-              <div className={styles.heroMetaItem}>
-                <span className={styles.heroMetaLabel}>Статус</span>
-                <span className={styles.heroMetaValue}>цифровой партнёр</span>
-              </div>
-            </div>
-
-            <HeroIframe />
-          </div>
-        </section>
-
-        {/* ── Stats Row ────────────────────────────────── */}
-        <section className={styles.statsRow}>
-          <div className={styles.container}>
-            <div className={styles.statsGrid}>
-              <div className={`${styles.statCard} ${styles.fadeUp}`}>
-                <div className={styles.statValue}>
-                  <span data-counter data-target="11">11</span>{" "}
-                  этапов
-                </div>
-                <div className={styles.statLabel}>Полный цикл от проектирования до запуска</div>
-              </div>
-              <div className={`${styles.statCard} ${styles.fadeUp}`}>
-                <div className={styles.statValue}>
-                  {"< "}
-                  <span data-counter data-target="2.5" data-decimal="true">2,5</span>{" "}
-                  сек
-                </div>
-                <div className={styles.statLabel}>Загрузка страниц</div>
-              </div>
-              <div className={`${styles.statCard} ${styles.fadeUp}`}>
-                <div className={styles.statValue}>320–1920 px</div>
-                <div className={styles.statLabel}>Полная адаптивность</div>
-              </div>
-              <div className={`${styles.statCard} ${styles.fadeUp}`}>
-                <div className={styles.statValue}>VK API</div>
-                <div className={styles.statLabel}>Автоматическая синхронизация контента</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Context ──────────────────────────────────── */}
-        <section className={styles.section} id="context">
-          <div className={styles.container}>
-            <h2 className={`${styles.sectionTitle} ${styles.fadeUp}`}>
-              Задача была больше,
-              <br />
-              чем новый сайт
-            </h2>
-            <p className={`${styles.sectionText} ${styles.fadeUp}`}>
-              Клуб «Парус» работает с детьми и родителями, организует кружки и мероприятия, ведёт
-              сообщество и большой архив материалов.
-            </p>
-            <p className={`${styles.sectionText} ${styles.fadeUp}`}>
-              До разработки нового сайта отдельные цифровые процессы существовали разрозненно:
-              информация о кружках, публикации во ВКонтакте, мероприятия и видеоархив требовали
-              отдельного управления.
-            </p>
-            <p className={`${styles.sectionText} ${styles.fadeUp}`}>
-              Нужно было создать единую цифровую среду, которая будет удобна одновременно для
-              родителей и команды клуба.
-            </p>
-
-            <div className={`${styles.contextVisual} ${styles.fadeUp}`}>
-              <div className={styles.contextScattered}>
-                <div className={styles.contextBlock}>
-                  <div className={styles.contextBlockIcon}>
-                    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                      <rect x="3" y="3" width="7" height="7" />
-                      <rect x="14" y="3" width="7" height="7" />
-                      <rect x="3" y="14" width="7" height="7" />
-                      <rect x="14" y="14" width="7" height="7" />
-                    </svg>
-                  </div>
-                  <div className={styles.contextBlockLabel}>Кружки</div>
-                </div>
-                <div className={styles.contextBlock}>
-                  <div className={styles.contextBlockIcon}>
-                    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                      <rect x="3" y="4" width="18" height="18" rx="2" />
-                      <line x1="16" y1="2" x2="16" y2="6" />
-                      <line x1="8" y1="2" x2="8" y2="6" />
-                      <line x1="3" y1="10" x2="21" y2="10" />
-                    </svg>
-                  </div>
-                  <div className={styles.contextBlockLabel}>Мероприятия</div>
-                </div>
-                <div className={styles.contextBlock}>
-                  <div className={styles.contextBlockIcon}>
-                    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                      <polygon points="5 3 19 12 5 21 5 3" />
-                    </svg>
-                  </div>
-                  <div className={styles.contextBlockLabel}>Видео</div>
-                </div>
-                <div className={styles.contextBlock}>
-                  <div className={styles.contextBlockIcon}>
-                    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                    </svg>
-                  </div>
-                  <div className={styles.contextBlockLabel}>VK</div>
-                </div>
-                <div className={styles.contextBlock}>
-                  <div className={styles.contextBlockIcon}>
-                    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                      <polyline points="14 2 14 8 20 8" />
-                      <line x1="16" y1="13" x2="8" y2="13" />
-                      <line x1="16" y1="17" x2="8" y2="17" />
-                    </svg>
-                  </div>
-                  <div className={styles.contextBlockLabel}>Контент</div>
-                </div>
-              </div>
-              <div className={styles.contextMerge}>
-                <div className={styles.contextMergeLine} />
-              </div>
-              <div className={styles.contextUnified}>
-                <div className={styles.contextUnifiedTitle}>Единая цифровая среда клуба</div>
-                <div className={styles.contextUnifiedSub}>Все процессы — в одной системе</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Approach ─────────────────────────────────── */}
-        <section className={styles.section} id="approach">
-          <div className={styles.container}>
-            <h2 className={`${styles.sectionTitle} ${styles.fadeUp}`}>Мы начали не с интерфейса</h2>
-            <div className={`${styles.approachQuote} ${styles.fadeUp}`}>
-              Сначала — процессы.
-              <br />
-              Потом — интерфейс.
-            </div>
-            <p className={`${styles.approachText} ${styles.fadeUp}`}>
-              Мы сначала определили, какие задачи сайт должен решать для двух основных групп
-              пользователей: родителей и команды клуба.
-            </p>
-            <p className={`${styles.approachText} ${styles.fadeUp}`}>
-              <strong>Для родителей</strong> — быстро найти нужный кружок, получить информацию,
-              записаться, посмотреть материалы и события.
-            </p>
-            <p className={`${styles.approachText} ${styles.fadeUp}`}>
-              <strong>Для команды клуба</strong> — управлять контентом, архивом и отзывами из
-              единой системы.
-            </p>
-            <p className={`${styles.approachText} ${styles.fadeUp}`}>
-              После этого перешли к проектированию интерфейсов и разработке.
-            </p>
-
-            <div className={`${styles.approachFlow} ${styles.fadeUp}`}>
-              <div className={styles.approachFlowStep}>Задачи</div>
-              <div className={styles.approachFlowArrow}>→</div>
-              <div className={styles.approachFlowStep}>Процессы</div>
-              <div className={styles.approachFlowArrow}>→</div>
-              <div className={styles.approachFlowStep}>Архитектура</div>
-              <div className={styles.approachFlowArrow}>→</div>
-              <div className={styles.approachFlowStep}>Интерфейс</div>
-              <div className={styles.approachFlowArrow}>→</div>
-              <div className={styles.approachFlowStep}>Продукт</div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Features Grid ────────────────────────────── */}
-        <section className={styles.section} id="features">
-          <div className={styles.container}>
-            <h2 className={`${styles.sectionTitle} ${styles.fadeUp}`}>Единая цифровая среда клуба</h2>
-
-            <div className={styles.featuresGrid}>
-              <div className={`${styles.featureCard} ${styles.fadeUp}`}>
-                <div className={styles.featureCardPreview}>
-                  <div className={styles.previewCatalog}>
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <div className={styles.previewCatalogItem} key={i}>
-                        <div className={styles.bar} />
-                        <div className={styles.bar} />
-                        <div className={styles.btn} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.featureCardTitle}>Каталог кружков</div>
-                <div className={styles.featureCardDesc}>
-                  Карточки кружков, подробная информация и возможность записи.
-                </div>
-              </div>
-
-              <div className={`${styles.featureCard} ${styles.fadeUp}`}>
-                <div className={styles.featureCardPreview}>
-                  <div className={styles.previewEvents}>
-                    <div className={styles.search} />
-                    {Array.from({ length: 3 }).map((_, i) => (
-                      <div className={styles.eventItem} key={i}>
-                        <div className={styles.eventDate} />
-                        <div className={styles.eventLines}>
-                          <div className={styles.line} />
-                          <div className={styles.line} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.featureCardTitle}>Архив мероприятий</div>
-                <div className={styles.featureCardDesc}>
-                  История мероприятий клуба с полнотекстовым поиском.
-                </div>
-              </div>
-
-              <div className={`${styles.featureCard} ${styles.fadeUp}`}>
-                <div className={styles.featureCardPreview}>
-                  <div className={styles.previewVideo}>
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <div className={styles.previewVideoItem} key={i}>
-                        <div className={styles.previewVideoThumb}>
-                          <div className={styles.play} />
-                        </div>
-                        <div className={styles.vline} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.featureCardTitle}>Видеоархив</div>
-                <div className={styles.featureCardDesc}>
-                  Собранная в одном месте коллекция видео клуба.
-                </div>
-              </div>
-
-              <div className={`${styles.featureCard} ${styles.fadeUp}`}>
-                <div className={styles.featureCardPreview}>
-                  <div className={styles.previewVk}>
-                    {Array.from({ length: 3 }).map((_, i) => (
-                      <div className={styles.previewVkItem} key={i}>
-                        <div className={styles.previewVkAvatar} />
-                        <div className={styles.previewVkContent}>
-                          <div className={styles.line} />
-                          <div className={styles.line} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.featureCardTitle}>Синхронизация с ВКонтакте</div>
-                <div className={styles.featureCardDesc}>
-                  Автоматическая загрузка записей и видео из сообщества клуба через VK API.
-                </div>
-              </div>
-
-              <div className={`${styles.featureCard} ${styles.fadeUp}`}>
-                <div className={styles.featureCardPreview}>
-                  <div className={styles.previewCms}>
-                    <div className={styles.previewCmsToolbar}>
-                      {Array.from({ length: 4 }).map((_, i) => (
-                        <div className={styles.tool} key={i} />
-                      ))}
-                    </div>
-                    <div className={styles.previewCmsEditor}>
-                      <div className={styles.line} />
-                      <div className={styles.line} />
-                      <div className={styles.line} />
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.featureCardTitle}>CMS</div>
-                <div className={styles.featureCardDesc}>
-                  Команда клуба самостоятельно управляет контентом сайта.
-                </div>
-              </div>
-
-              <div className={`${styles.featureCard} ${styles.fadeUp}`}>
-                <div className={styles.featureCardPreview}>
-                  <div className={styles.previewModeration}>
-                    {Array.from({ length: 2 }).map((_, i) => (
-                      <div className={styles.previewReview} key={i}>
-                        <div className={styles.previewReviewText}>
-                          <div className={styles.line} />
-                          <div className={styles.line} />
-                        </div>
-                        <div className={styles.previewReviewActions}>
-                          <span className={`${styles.action} ${styles.approve}`} />
-                          <span className={`${styles.action} ${styles.reject}`} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className={styles.featureCardTitle}>Модерация отзывов</div>
-                <div className={styles.featureCardDesc}>
-                  Отзывы проходят отдельный процесс модерации перед публикацией.
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── VK Integration ───────────────────────────── */}
-        <section className={styles.section}>
-          <div className={styles.container}>
-            <div className={`${styles.vkSection} ${styles.fadeUp}`}>
-              <h2 className={styles.sectionTitle} style={{ textAlign: "center" }}>
-                Контент больше не нужно
+              <h1 className={styles.title} id="parus-title">
+                <span className={styles.titleLead}>{PARUS.h1}</span>
+                Собрали клуб
                 <br />
-                переносить вручную
-              </h2>
-              <p className={`${styles.sectionText} ${styles.fadeUp}`} style={{ textAlign: "center", margin: `${"16px"} auto 0` }}>
-                Сайт автоматически получает необходимые материалы из сообщества Клуба «Парус»
-                через VK API.
+                в одну систему.
+                <br />
+                <span className={styles.titleAccent}>Заявок стало больше.</span>
+              </h1>
+              <p className={styles.heroLead}>
+                Кружки, мероприятия, видео, ВКонтакте и контент жили в разных местах. Мы соединили
+                их, автоматизировали обновление и остались с клубом на сопровождении.
               </p>
-              <div className={styles.vkFlow}>
-                <div className={styles.vkFlowNode}>ВКонтакте</div>
-                <div className={styles.vkFlowArrow} />
-                <div className={styles.vkFlowNode}>API</div>
-                <div className={styles.vkFlowArrow} />
-                <div className={styles.vkFlowNode}>Сайт</div>
-                <div className={styles.vkFlowArrow} />
-                <div className={styles.vkFlowNode}>Архив</div>
+              <div className={styles.actions}>
+                <Link
+                  href="/raschet-stoimosti/"
+                  className={cn(styles.btn, styles.btnRed)}
+                  data-cta="case_hero_calc_club-parus"
+                >
+                  Рассчитать похожий проект
+                </Link>
+                <a
+                  href="#result"
+                  className={cn(styles.btn, styles.btnLine)}
+                  data-cta="case_hero_result_club-parus"
+                >
+                  Смотреть результат ↓
+                </a>
               </div>
-              <p className={styles.vkNote}>
-                Интеграция сокращает ручную работу команды и помогает поддерживать сайт актуальным
-                без дополнительных усилий.
-              </p>
+            </div>
+            <div className={styles.heroStat}>
+              <div className={styles.bigNum}>
+                +20<span>%</span>
+              </div>
+              <p className={styles.bigNumLabel}>заявок на кружки в месяц</p>
+            </div>
+          </div>
+          <div className={styles.tags}>
+            <div className={styles.wrap}>
+              <ul className={styles.tagList} aria-label="Что входило в проект">
+                {TAGS.map((t) => (
+                  <li key={t} className={styles.tag}>
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
 
-        {/* ── SEO & Analytics ──────────────────────────── */}
-        <section className={styles.section}>
-          <div className={styles.container}>
-            <h2 className={`${styles.sectionTitle} ${styles.fadeUp}`}>Запустить сайт — недостаточно</h2>
-            <div className={styles.seoGrid}>
-              <div className={`${styles.seoCard} ${styles.fadeUp}`}>
-                <div className={styles.seoCardIcon}>
-                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                </div>
-                <div className={styles.seoCardTitle}>SEO</div>
-                <div className={styles.seoCardDesc}>
-                  Миграция домена с сохранением SEO-параметров и настройка микроразметки Schema.org.
-                </div>
-              </div>
-              <div className={`${styles.seoCard} ${styles.fadeUp}`}>
-                <div className={styles.seoCardIcon}>
-                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                    <line x1="18" y1="20" x2="18" y2="10" />
-                    <line x1="12" y1="20" x2="12" y2="4" />
-                    <line x1="6" y1="20" x2="6" y2="14" />
-                  </svg>
-                </div>
-                <div className={styles.seoCardTitle}>Аналитика</div>
-                <div className={styles.seoCardDesc}>
-                  Яндекс.Метрика и настроенные цели для отслеживания действий пользователей.
-                </div>
-              </div>
-              <div className={`${styles.seoCard} ${styles.fadeUp}`}>
-                <div className={styles.seoCardIcon}>
-                  <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                  </svg>
-                </div>
-                <div className={styles.seoCardTitle}>Производительность</div>
-                <div className={styles.seoCardDesc}>
-                  Загрузка страниц менее 2,5 секунды на любых устройствах.
-                </div>
-              </div>
-            </div>
-            <div className={`${styles.seoMetric} ${styles.fadeUp}`}>
-              <div className={styles.seoMetricValue}>
-                {"< "}
-                <span data-counter data-target="2.5" data-decimal="true">2,5</span>
-                {" сек"}
-              </div>
-              <PerformanceChart />
-            </div>
-          </div>
-        </section>
-
-        {/* ── Tech Stack ───────────────────────────────── */}
-        <section className={styles.section} id="tech">
-          <div className={styles.container}>
-            <h2 className={`${styles.sectionTitle} ${styles.fadeUp}`}>Под капотом</h2>
-            <p className={`${styles.sectionText} ${styles.fadeUp}`}>
-              Технологический стек, обеспечивающий надёжность и масштабируемость продукта.
-            </p>
-            <div className={styles.techGrid}>
-              <div className={`${styles.techCard} ${styles.fadeUp}`}>
-                <div className={styles.techCardLabel}>Backend</div>
-                <div className={styles.techCardValue}>
-                  PHP 8.3+
-                  <br />
-                  Laravel 13
-                </div>
-              </div>
-              <div className={`${styles.techCard} ${styles.fadeUp}`}>
-                <div className={styles.techCardLabel}>Frontend</div>
-                <div className={styles.techCardValue}>
-                  React 19
-                  <br />
-                  Vite · Tailwind CSS 4
-                </div>
-              </div>
-              <div className={`${styles.techCard} ${styles.fadeUp}`}>
-                <div className={styles.techCardLabel}>Database</div>
-                <div className={styles.techCardValue}>
-                  MySQL 8
-                  <br />
-                  MariaDB
-                </div>
-              </div>
-              <div className={`${styles.techCard} ${styles.fadeUp}`}>
-                <div className={styles.techCardLabel}>Integrations</div>
-                <div className={styles.techCardValue}>VK API</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Responsive / Devices ─────────────────────── */}
-        <section className={styles.section}>
-          <div className={styles.container}>
-            <h2 className={`${styles.sectionTitle} ${styles.fadeUp}`}>Один продукт — любой экран</h2>
-            <div className={`${styles.devicesShowcase} ${styles.fadeUp}`}>
-              <DeviceBrowser spec={DEVICES.phone} />
-              <DeviceBrowser spec={DEVICES.tablet} />
-              <DeviceBrowser spec={DEVICES.laptop} />
-              <DeviceBrowser spec={DEVICES.desktop} />
-            </div>
-            <div className={`${styles.devicesLabel} ${styles.fadeUp}`}>320 → 1920 px</div>
-          </div>
-        </section>
-
-        {/* ── Results ──────────────────────────────────── */}
-        <CaseLog entries={PARUS.log} project={PARUS.name} />
-
-        <section className={styles.resultsSection} id="result">
-          <div className={styles.container}>
-            <h2 className={`${styles.sectionTitle} ${styles.fadeUp}`} style={{ textAlign: "center" }}>
-              Что получилось
+        {/* 01 Задача */}
+        <section className={cn(styles.section, styles.gridLight)} aria-labelledby="parus-task">
+          <div className={styles.wrap}>
+            <span className={styles.bar} aria-hidden="true" />
+            <p className={styles.eyebrow}>01 · Задача</p>
+            <h2 className={styles.h2} id="parus-task" style={{ maxWidth: 820 }}>
+              Пять разрозненных мест вместо одной системы
             </h2>
-            <p className={`${styles.sectionText} ${styles.fadeUp}`} style={{ textAlign: "center", margin: "0 auto" }}>
-              Новый сайт стал единой точкой доступа к информации о клубе, кружках, мероприятиях и
-              видеоархиву. Родители получают удобный интерфейс для взаимодействия с клубом, а
-              команда — единую систему управления контентом.
+            <p className={styles.lead}>
+              Родителю было трудно найти кружок и записаться. Команда обновляла контент вручную и
+              редко, а записи ВКонтакте до сайта не доходили.
             </p>
-            <div className={styles.resultsMetrics}>
-              <div className={`${styles.resultCard} ${styles.fadeUp}`}>
-                <div className={styles.resultCardValue}>
-                  <span data-counter data-target="11">11</span>{" "}
-                  этапов
-                </div>
-                <div className={styles.resultCardLabel}>разработки</div>
-              </div>
-              <div className={`${styles.resultCard} ${styles.fadeUp}`}>
-                <div className={styles.resultCardValue}>
-                  {"< "}
-                  <span data-counter data-target="2.5" data-decimal="true">2,5</span>{" "}
-                  сек
-                </div>
-                <div className={styles.resultCardLabel}>загрузка страниц</div>
-              </div>
-              <div className={`${styles.resultCard} ${styles.fadeUp}`}>
-                <div className={styles.resultCardValue}>320–1920 px</div>
-                <div className={styles.resultCardLabel}>адаптив</div>
-              </div>
-              <div className={`${styles.resultCard} ${styles.fadeUp}`}>
-                <div className={styles.resultCardValue}>VK API</div>
-                <div className={styles.resultCardLabel}>автоматическая синхронизация</div>
+            <div className={styles.diagram}>
+              <ul className={styles.sources} aria-label="Что нужно было объединить">
+                {SOURCES.map((name, i) => (
+                  <li key={name} className={styles.source}>
+                    {name}
+                    <span aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+                  </li>
+                ))}
+              </ul>
+              <svg
+                className={styles.lines}
+                viewBox="0 0 400 340"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <g fill="none" stroke="#CC0000" strokeWidth="2">
+                  <path d="M0 30 C 200 30, 200 170, 400 170" />
+                  <path d="M0 100 C 200 100, 200 170, 400 170" />
+                  <path d="M0 170 L 400 170" />
+                  <path d="M0 240 C 200 240, 200 170, 400 170" />
+                  <path d="M0 310 C 200 310, 200 170, 400 170" />
+                </g>
+                <g fill="#CC0000">
+                  {[30, 100, 170, 240, 310].map((y) => (
+                    <circle key={y} cx="0" cy={y} r="5" />
+                  ))}
+                </g>
+              </svg>
+              <div className={styles.system}>
+                <p className={styles.eyebrow}>Одна система</p>
+                <p className={styles.systemTitle}>
+                  Сайт клуба с записью, архивом и автозагрузкой из ВКонтакте
+                </p>
+                <p className={styles.systemText}>CMS для команды · модерация отзывов · VK API</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── Continuation ─────────────────────────────── */}
-        <section className={styles.continuationSection}>
-          <div className={styles.container}>
-            <h2 className={`${styles.sectionTitle} ${styles.fadeUp}`} style={{ textAlign: "center" }}>
-              Но проект не закончился на релизе
+        {/* 02 Результат */}
+        <section
+          className={cn(styles.section, styles.light)}
+          id="result"
+          aria-labelledby="parus-result"
+        >
+          <div className={styles.wrap}>
+            <span className={styles.bar} aria-hidden="true" />
+            <p className={styles.eyebrow}>02 · Результат</p>
+            <h2 className={styles.h2} id="parus-result">
+              После запуска спрос на кружки вырос
             </h2>
-            <div className={`${styles.continuationBigText} ${styles.fadeUp}`}>
-              Сайт запустили.
+            <ul className={styles.results}>
+              <li className={cn(styles.result, styles.resultRed)}>
+                <p className={styles.eyebrow}>Заявки</p>
+                <div>
+                  <p className={styles.resultNum}>+20%</p>
+                  <p className={styles.resultLabel}>заявок на кружки в месяц</p>
+                </div>
+              </li>
+              <li className={cn(styles.result, styles.resultDark)}>
+                <p className={styles.eyebrow}>Звонки</p>
+                <div>
+                  <p className={styles.resultNum}>+30%</p>
+                  <p className={styles.resultLabel}>звонков с сайта</p>
+                </div>
+              </li>
+              <li className={cn(styles.result, styles.resultWhite)}>
+                <p className={styles.eyebrow}>Контент</p>
+                <div>
+                  <p className={styles.was}>вручную и редко</p>
+                  <p className={styles.now}>автоматически и часто</p>
+                  <p className={cn(styles.resultLabel, styles.muted)}>
+                    обновление контента на сайте
+                  </p>
+                </div>
+              </li>
+            </ul>
+            <p className={styles.note}>
+              Заявки и звонки: оценка клуба «Парус».
+              {PARUS.liveUrl ? (
+                <>
+                  {" "}
+                  <a
+                    href={PARUS.liveUrl}
+                    target="_blank"
+                    rel="noopener"
+                    data-cta="case_live_club-parus"
+                  >
+                    Открыть {PARUS.liveLabel} ↗
+                  </a>
+                </>
+              ) : null}
+            </p>
+          </div>
+        </section>
+
+        {/* 03 Слово клиенту */}
+        <section
+          className={cn(styles.quoteSection, styles.gridDark)}
+          aria-labelledby="parus-client"
+        >
+          <div className={cn(styles.wrap, styles.quoteInner)}>
+            <p className={styles.eyebrow} id="parus-client">
+              03 · Слово клиенту
+            </p>
+            <figure style={{ margin: 0 }}>
+              <blockquote className={styles.quote}>
+                «Георгий и его команда сделали нашему клубу отличный современный сайт. Всем вас
+                рекомендуем!»
+              </blockquote>
+              <figcaption className={styles.author}>
+                <span className={styles.avatar} aria-hidden="true">
+                  ТП
+                </span>
+                <span>
+                  <cite className={styles.authorName}>Татьяна Анатольевна Прохорова</cite>
+                  <span className={styles.authorRole}>директор АНО Клуб «Парус»</span>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+
+        {/* 04 Что получили */}
+        <section className={cn(styles.section, styles.white)} aria-labelledby="parus-got">
+          <div className={styles.wrap}>
+            <span className={styles.bar} aria-hidden="true" />
+            <p className={styles.eyebrow}>04 · Что получили</p>
+            <h2 className={styles.h2} id="parus-got">
+              Родителям проще записаться.
               <br />
-              Работу продолжили.
-            </div>
-            <p className={`${styles.continuationText} ${styles.fadeUp}`}>
-              После завершения разработки Клуб «Парус» перешёл на модель постпроектного
-              сопровождения. Теперь «Глори.Цифра» отвечает не только за созданный продукт, но и
-              за его дальнейшее развитие, поддержку и масштабирование.
-            </p>
-            <div className={`${styles.continuationFlow} ${styles.fadeUp}`}>
-              <div className={styles.continuationFlowStep}>Разработка</div>
-              <div className={styles.continuationFlowArrow}>→</div>
-              <div className={styles.continuationFlowStep}>Запуск</div>
-              <div className={styles.continuationFlowArrow}>→</div>
-              <div className={styles.continuationFlowStep}>Сопровождение</div>
-              <div className={styles.continuationFlowArrow}>→</div>
-              <div className={styles.continuationFlowStep}>Развитие</div>
+              Команде проще вести клуб.
+            </h2>
+            <div className={styles.audiences}>
+              <div className={styles.audience}>
+                <h3 className={styles.eyebrow}>Родителям</h3>
+                <ol className={styles.feats}>
+                  {PARENTS.map((f, i) => (
+                    <li key={f.title} className={styles.feat}>
+                      <span className={styles.featNum} aria-hidden="true">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div>
+                        <strong className={styles.featTitle}>{f.title}</strong>
+                        <span className={styles.featText}>{f.text}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <div className={cn(styles.audience, styles.audienceDark)}>
+                <h3 className={styles.eyebrow}>Команде клуба</h3>
+                <ol className={styles.feats}>
+                  {TEAM.map((f, i) => (
+                    <li key={f.title} className={styles.feat}>
+                      <span className={styles.featNum} aria-hidden="true">
+                        {String(i + 4).padStart(2, "0")}
+                      </span>
+                      <div>
+                        <strong className={styles.featTitle}>{f.title}</strong>
+                        <span className={styles.featText}>{f.text}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ── Partnership ──────────────────────────────── */}
-        <section className={styles.partnershipSection}>
-          <div className={styles.container}>
-            <div className={`${styles.partnershipCard} ${styles.fadeUp}`}>
-              <div className={styles.partnershipHeader}>Глори.Цифра × Клуб «Парус»</div>
-              <div className={styles.partnershipTitle}>Цифровое партнёрство</div>
-              <div className={styles.partnershipSubtitle}>Не просто подрядчик — часть команды</div>
-              <div className={styles.partnershipList}>
-                <div className={styles.partnershipListItem}>Разработка</div>
-                <div className={styles.partnershipListItem}>Сопровождение</div>
-                <div className={styles.partnershipListItem}>Развитие</div>
-                <div className={styles.partnershipListItem}>Масштабирование</div>
-              </div>
-              <p className={styles.partnershipQuote}>
-                Для нас цифровой продукт не заканчивается в момент релиза. Мы остаёмся рядом с
-                клиентом и продолжаем развивать систему вместе с его задачами.
+        {/* 05 Как работали */}
+        <section className={cn(styles.section, styles.gridLight)} aria-labelledby="parus-how">
+          <div className={styles.wrap}>
+            <span className={styles.bar} aria-hidden="true" />
+            <p className={styles.eyebrow}>05 · Как работали</p>
+            <h2 className={styles.h2} id="parus-how">
+              Сначала процессы. Потом интерфейс.
+            </h2>
+            <ol className={styles.steps}>
+              {STEPS.map((s, i) => (
+                <li
+                  key={s.name}
+                  className={cn(styles.step, i === STEPS.length - 1 && styles.stepLast)}
+                >
+                  <div className={styles.stepNum}>{String(i + 1).padStart(2, "0")}</div>
+                  <div className={styles.stepName}>{s.name}</div>
+                  <div className={styles.stepText}>{s.text}</div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* 06 Под капотом */}
+        <section className={cn(styles.engine, styles.gridDark)} aria-labelledby="parus-engine">
+          <div className={cn(styles.wrap, styles.engineInner)}>
+            <div className={styles.engineHead}>
+              <span className={styles.bar} aria-hidden="true" />
+              <p className={styles.eyebrow}>06 · Под капотом</p>
+              <h2 className={styles.h2} id="parus-engine">
+                Перенесли домен без потерь
+              </h2>
+              <p>
+                Сохранили SEO-параметры, настроили микроразметку Schema.org и Яндекс.Метрику с
+                целями. Услуги в этом проекте:{" "}
+                <Link href="/razrabotka-saitov/">разработка сайтов</Link>,{" "}
+                <Link href="/integracii/">интеграции</Link>, <Link href="/seo/">SEO</Link>,{" "}
+                <Link href="/podderzhka/">поддержка</Link>.
               </p>
+            </div>
+            <dl className={styles.specs}>
+              {SPECS.map((s) => (
+                <div key={s.key} className={styles.spec}>
+                  <dt>{s.key}</dt>
+                  <dd>{s.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+
+        {/* Призыв */}
+        <section className={cn(styles.section, styles.light)} id="cta" aria-labelledby="parus-cta">
+          <div className={styles.wrap}>
+            <div className={cn(styles.ctaBox, styles.gridDark)}>
+              <p className={styles.eyebrow}>Следующий проект</p>
+              <h2 className={styles.h2} id="parus-cta">
+                Нужна такая же система для вашего клуба или школы?
+              </h2>
+              <p className={styles.ctaText}>
+                Рассчитайте стоимость в калькуляторе или получите бесплатный экспресс-аудит на 15
+                минут.
+              </p>
+              <div className={styles.actions}>
+                <Link
+                  href="/raschet-stoimosti/"
+                  className={cn(styles.btn, styles.btnRed)}
+                  data-cta="case_footer_calc_club-parus"
+                >
+                  Рассчитать похожий проект
+                </Link>
+                <Link
+                  href="/diagnostic/"
+                  className={cn(styles.btn, styles.btnWhite)}
+                  data-cta="case_footer_audit_club-parus"
+                >
+                  Бесплатный экспресс-аудит
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
         <CaseRelated item={PARUS} />
 
-        {/* ── CTA / Lead Form ──────────────────────────── */}
-        <section className={styles.ctaSection}>
-          <div className={styles.container}>
-            <h2 className={`${styles.sectionTitle} ${styles.fadeUp}`} style={{ textAlign: "center" }}>
-              Следующий проект может начаться с задачи
-            </h2>
-            <p className={`${styles.sectionText} ${styles.fadeUp}`} style={{ textAlign: "center", margin: "0 auto" }}>
-              Расскажите, какую задачу нужно решить. Мы разберём процессы, предложим решение и
-              возьмём на себя его реализацию.
-            </p>
-            <div className={styles.leadFormWrap}>
-              <LeadForm formId="case_club-parus" title="Обсудить проект" text="" context="кейс Клуб «Парус»" />
-            </div>
-          </div>
-        </section>
+        <div className={styles.leadWrap}>
+          <LeadForm
+            formId="case_club-parus"
+            title="Обсудить проект"
+            text=""
+            context="кейс Клуб «Парус»"
+          />
+        </div>
       </main>
 
       <Footer />
